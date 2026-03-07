@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams, Link } from "react-router";
+import { useParams, Link, useNavigate } from "react-router";
 import {
   MapPin,
   Clock,
@@ -18,6 +18,7 @@ import {
   Building2,
   Zap,
 } from "lucide-react";
+import { useAuth } from "../hooks/useAuth";
 
 const missionsData: Record<string, any> = {
   "urban-garden": {
@@ -177,6 +178,8 @@ const relatedMissions = [
 
 export function MissionDetail() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const mission = missionsData[id || "urban-garden"] || missionsData["urban-garden"];
 
   const [activeRole, setActiveRole] = useState<"volunteer" | "professional">("volunteer");
@@ -185,9 +188,30 @@ export function MissionDetail() {
   const [submitted, setSubmitted] = useState(false);
   const [saved, setSaved] = useState(false);
 
+  // Redirect to auth if not logged in
+  const requireAuth = (action: () => void) => {
+    if (!user) {
+      navigate("/auth");
+      return;
+    }
+    action();
+  };
+
+  const handleSave = () => {
+    requireAuth(() => setSaved(!saved));
+  };
+
+  const handleShare = () => {
+    requireAuth(() => {
+      // Share functionality - for now just copy URL
+      navigator.clipboard.writeText(window.location.href);
+      alert("Mission link copied to clipboard!");
+    });
+  };
+
   const handleApply = (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    requireAuth(() => setSubmitted(true));
   };
 
   return (
@@ -440,7 +464,7 @@ export function MissionDetail() {
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
               <div className="space-y-2">
                 <button
-                  onClick={() => setSaved(!saved)}
+                  onClick={handleSave}
                   className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium border transition-colors ${
                     saved ? "bg-[#E6F4EE] border-[#2F8F6B]/30 text-[#0F3D2E]" : "border-gray-200 text-gray-600 hover:border-[#2F8F6B]/50"
                   }`}
@@ -448,7 +472,10 @@ export function MissionDetail() {
                   <Bookmark className={`w-4 h-4 ${saved ? "fill-[#2F8F6B] text-[#2F8F6B]" : ""}`} />
                   {saved ? "Saved!" : "Save Mission"}
                 </button>
-                <button className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium border border-gray-200 text-gray-600 hover:border-[#2F8F6B]/50 transition-colors">
+                <button 
+                  onClick={handleShare}
+                  className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium border border-gray-200 text-gray-600 hover:border-[#2F8F6B]/50 transition-colors"
+                >
                   <Share2 className="w-4 h-4" />
                   Share Mission
                 </button>

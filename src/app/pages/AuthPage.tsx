@@ -84,6 +84,7 @@ export function AuthPage() {
     if (error) {
       setError(error.message);
     } else {
+      console.log("User logged in successfully:", loginData.email);
       navigate("/dashboard");
     }
   };
