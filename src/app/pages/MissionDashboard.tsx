@@ -95,9 +95,9 @@ function getProjectImage(focusArea: string[] | undefined): string {
     return 'https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=600&fit=crop';
   }
   
-  // Disaster Response / Emergency - volunteers helping community
+  // Disaster Response / Emergency - relief workers
   if (area.includes('disaster') || area.includes('emergency') || area.includes('relief')) {
-    return 'https://images.unsplash.com/photo-1593113598332-cd288d649433?w=600&fit=crop';
+    return 'https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=600&fit=crop';
   }
   
   // Agriculture / Food - community farming

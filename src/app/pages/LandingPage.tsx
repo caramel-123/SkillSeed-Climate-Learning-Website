@@ -122,7 +122,7 @@ const roles = [
   },
 ];
 
-export function Landing() {
+export function LandingPage() {
   return (
     <div className="overflow-x-hidden">
 

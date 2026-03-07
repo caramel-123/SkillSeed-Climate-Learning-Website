@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
 import { Menu, X, Leaf, Sprout, ChevronDown, User, Settings, LogOut, TrendingUp } from "lucide-react";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../hooks/useAuth";
 
 const navLinks = [
   { label: "Match",     href: "/browse",    comingSoon: false },
@@ -11,12 +11,28 @@ const navLinks = [
 ];
 
 export function Navbar() {
-  const { user, login, logout } = useAuth();
+  const { user, signOut } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Helper to get user display name from Supabase user_metadata
+  const getUserName = () => {
+    if (!user) return "";
+    return user.user_metadata?.full_name || user.email?.split("@")[0] || "User";
+  };
+
+  // Helper to get avatar initials
+  const getAvatarInitials = () => {
+    const name = getUserName();
+    const parts = name.split(" ");
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+    return name.substring(0, 2).toUpperCase();
+  };
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -30,7 +46,7 @@ export function Navbar() {
   }, []);
 
   const handleLogout = () => {
-    logout();
+    signOut();
     setDropdownOpen(false);
     navigate("/");
   };
@@ -109,10 +125,10 @@ export function Navbar() {
                   >
                     <div className="w-7 h-7 rounded-lg flex items-center justify-center text-white text-sm"
                       style={{ background: "linear-gradient(135deg, #0F3D2E, #2F8F6B)", fontWeight: 700 }}>
-                      {user.avatar}
+                      {getAvatarInitials()}
                     </div>
                     <span className="text-sm" style={{ fontWeight: 500, color: "#374151" }}>
-                      {user.name.split(" ")[0]}
+                      {getUserName().split(" ")[0]}
                     </span>
                     <ChevronDown className="w-3.5 h-3.5" style={{ color: "#9CA3AF", transform: dropdownOpen ? "rotate(180deg)" : "none", transition: "transform 0.2s" }} />
                   </button>
@@ -128,10 +144,10 @@ export function Navbar() {
                         <div className="flex items-center gap-3">
                           <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white"
                             style={{ background: "linear-gradient(135deg, #0F3D2E, #2F8F6B)", fontWeight: 700 }}>
-                            {user.avatar}
+                            {getAvatarInitials()}
                           </div>
                           <div className="min-w-0">
-                            <p className="text-sm truncate" style={{ fontWeight: 700, color: "#0F3D2E" }}>{user.name}</p>
+                            <p className="text-sm truncate" style={{ fontWeight: 700, color: "#0F3D2E" }}>{getUserName()}</p>
                             <p className="text-xs truncate" style={{ color: "#9CA3AF" }}>{user.email}</p>
                           </div>
                         </div>
@@ -140,9 +156,7 @@ export function Navbar() {
                       {/* Menu items */}
                       <div className="py-1.5">
                         {[
-                          { icon: User, label: "Profile", href: "/dashboard" },
-                          { icon: TrendingUp, label: "Tracker", href: "/tracker" },
-                          { icon: Settings, label: "Settings", href: "/dashboard" },
+                          { icon: User, label: "Profile", href: "/tracker" },
                         ].map(({ icon: Icon, label, href }) => (
                           <Link
                             key={label}
@@ -179,7 +193,7 @@ export function Navbar() {
               /* ── LOGGED OUT ── */
               <>
                 <button
-                  onClick={() => login()}
+                  onClick={() => navigate("/auth")}
                   className="px-4 py-2 rounded-lg text-sm transition-colors duration-150"
                   style={{ color: "#374151", fontWeight: 500 }}
                   onMouseEnter={e => (e.currentTarget.style.background = "#F9FAFB")}
@@ -243,10 +257,10 @@ export function Navbar() {
                 <div className="flex items-center gap-3 px-3 py-2 rounded-xl" style={{ background: "#F9FAFB" }}>
                   <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-sm"
                     style={{ background: "linear-gradient(135deg, #0F3D2E, #2F8F6B)", fontWeight: 700 }}>
-                    {user.avatar}
+                    {getAvatarInitials()}
                   </div>
                   <div>
-                    <p className="text-sm" style={{ fontWeight: 600, color: "#0F3D2E" }}>{user.name}</p>
+                    <p className="text-sm" style={{ fontWeight: 600, color: "#0F3D2E" }}>{getUserName()}</p>
                     <p className="text-xs" style={{ color: "#9CA3AF" }}>{user.email}</p>
                   </div>
                 </div>
@@ -260,7 +274,7 @@ export function Navbar() {
                   style={{ background: "linear-gradient(135deg, #0F3D2E 0%, #2F8F6B 100%)", fontWeight: 600 }}>
                   Post a Project
                 </Link>
-                <button onClick={() => { logout(); setMobileOpen(false); navigate("/"); }}
+                <button onClick={() => { signOut(); setMobileOpen(false); navigate("/"); }}
                   className="text-center px-4 py-2.5 rounded-lg text-sm"
                   style={{ color: "#EF4444", fontWeight: 500, border: "1px solid #FECACA" }}>
                   Log Out
@@ -268,7 +282,7 @@ export function Navbar() {
               </>
             ) : (
               <>
-                <button onClick={() => { login(); setMobileOpen(false); }}
+                <button onClick={() => { navigate("/auth"); setMobileOpen(false); }}
                   className="text-center px-4 py-2.5 rounded-lg text-sm"
                   style={{ color: "#0F3D2E", fontWeight: 500, border: "1px solid #E5E7EB" }}>
                   Log In

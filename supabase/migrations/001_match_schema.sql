@@ -306,7 +306,7 @@ BEGIN
   VALUES (
     NEW.id,
     COALESCE(NEW.raw_user_meta_data->>'full_name', NEW.email),
-    COALESCE(NEW.raw_user_meta_data->>'user_type', 'volunteer')
+    'volunteer'  -- Default role_type; user_type (poster/responder) is stored in user metadata
   );
   RETURN NEW;
 END;

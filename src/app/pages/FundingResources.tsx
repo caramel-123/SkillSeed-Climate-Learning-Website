@@ -189,7 +189,7 @@ const RESOURCE_SECTIONS = [
 const TYPES = ["All", "Grant", "Fellowship", "In-kind Support", "Partnership"];
 const FOCUS_FILTERS = ["All Focus Areas", "Reforestation", "Marine", "Urban", "Agriculture", "Clean Energy", "Disaster Response", "Education", "Circular Economy"];
 
-export function Funding() {
+export function FundingResources() {
   const [search, setSearch] = useState("");
   const [selectedType, setSelectedType] = useState("All");
   const [selectedFocus, setSelectedFocus] = useState("All Focus Areas");

@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
+import { createProject } from "../utils/matchService";
 import {
   MapPin,
   Calendar,
   Clock,
   Users,
   AlertTriangle,
-  DollarSign,
   Eye,
   ChevronRight,
   CheckCircle,
@@ -19,23 +19,41 @@ import {
 const focusAreas = ["Disaster Response", "Reforestation", "Marine", "Urban", "Agriculture", "Education", "Energy", "Water Conservation"];
 
 export function PostProject() {
+  const navigate = useNavigate();
   const [tab, setTab] = useState<"ongoing" | "urgent">("ongoing");
   const [selectedFocus, setSelectedFocus] = useState<string[]>([]);
-  const [needsFunding, setNeedsFunding] = useState(false);
   const [volunteerCount, setVolunteerCount] = useState(5);
   const [professionalCount, setProfessionalCount] = useState(2);
   const [volunteerSkills, setVolunteerSkills] = useState<string[]>([]);
   const [professionalSkills, setProfessionalSkills] = useState<string[]>([]);
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     title: "",
     location: "",
     startDate: "",
     duration: "",
     description: "",
-    fundingAmount: "",
-    fundingType: "",
   });
+
+  const resetForm = () => {
+    setTab("ongoing");
+    setSelectedFocus([]);
+    setVolunteerCount(5);
+    setProfessionalCount(2);
+    setVolunteerSkills([]);
+    setProfessionalSkills([]);
+    setSubmitted(false);
+    setError(null);
+    setFormData({
+      title: "",
+      location: "",
+      startDate: "",
+      duration: "",
+      description: "",
+    });
+  };
 
   const toggleFocus = (area: string) => {
     setSelectedFocus(prev => prev.includes(area) ? prev.filter(a => a !== area) : [...prev, area]);
@@ -52,9 +70,41 @@ export function PostProject() {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setError(null);
+    setIsSubmitting(true);
+
+    try {
+      // Combine all skills needed
+      const allSkillsNeeded = [...new Set([...volunteerSkills, ...professionalSkills])];
+
+      const project = await createProject({
+        title: formData.title,
+        type: tab === "urgent" ? "urgent" : "project",
+        focus_area: selectedFocus,
+        location: formData.location || null,
+        description: formData.description || null,
+        volunteers_needed: volunteerCount,
+        professionals_needed: professionalCount,
+        skills_needed: allSkillsNeeded,
+        duration: formData.duration || null,
+        start_date: formData.startDate || null,
+        status: "open",
+        points: tab === "urgent" ? 200 : 100,
+      });
+
+      if (project) {
+        setSubmitted(true);
+      } else {
+        setError("Failed to create project. Please make sure you're logged in and try again.");
+      }
+    } catch (err) {
+      console.error("Error creating project:", err);
+      setError("An unexpected error occurred. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const allSkills = ["GIS Mapping", "Soil Science", "Forestry", "Community Organising", "Urban Farming", "Solar Installation", "Teaching", "Medical", "Construction", "Electrical"];
@@ -84,7 +134,7 @@ export function PostProject() {
             <Link to="/dashboard" className="w-full flex items-center justify-center gap-2 bg-[#0F3D2E] text-white py-3 rounded-xl font-semibold hover:bg-[#2F8F6B] transition-colors">
               View Matches <ChevronRight className="w-4 h-4" />
             </Link>
-            <button onClick={() => setSubmitted(false)} className="w-full text-sm text-gray-400 hover:text-gray-600 py-2">
+            <button onClick={resetForm} className="w-full text-sm text-gray-400 hover:text-gray-600 py-2">
               Post Another Project
             </button>
           </div>
@@ -157,7 +207,7 @@ export function PostProject() {
 
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-sm font-semibold text-[#0F3D2E] block mb-1.5 flex items-center gap-1">
+                    <label className="text-sm font-semibold text-[#0F3D2E] mb-1.5 flex items-center gap-1">
                       <MapPin className="w-3.5 h-3.5" /> Location *
                     </label>
                     <input
@@ -171,7 +221,7 @@ export function PostProject() {
                     />
                   </div>
                   <div>
-                    <label className="text-sm font-semibold text-[#0F3D2E] block mb-1.5 flex items-center gap-1">
+                    <label className="text-sm font-semibold text-[#0F3D2E] mb-1.5 flex items-center gap-1">
                       <Calendar className="w-3.5 h-3.5" /> Start Date
                     </label>
                     <input
@@ -183,7 +233,7 @@ export function PostProject() {
                     />
                   </div>
                   <div>
-                    <label className="text-sm font-semibold text-[#0F3D2E] block mb-1.5 flex items-center gap-1">
+                    <label className="text-sm font-semibold text-[#0F3D2E] mb-1.5 flex items-center gap-1">
                       <Clock className="w-3.5 h-3.5" /> Duration
                     </label>
                     <select
@@ -285,63 +335,23 @@ export function PostProject() {
                 ))}
               </div>
 
-              {/* Funding toggle */}
-              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-5">
-                <label className="flex items-center gap-3 cursor-pointer">
-                  <div
-                    onClick={() => setNeedsFunding(!needsFunding)}
-                    className={`w-12 h-6 rounded-full transition-colors flex items-center px-1 ${needsFunding ? "bg-[#2F8F6B]" : "bg-gray-200"}`}
-                  >
-                    <div className={`w-4 h-4 bg-white rounded-full shadow transition-transform ${needsFunding ? "translate-x-6" : "translate-x-0"}`} />
-                  </div>
-                  <span className="font-semibold text-[#0F3D2E]">This project needs funding support</span>
-                </label>
-
-                {needsFunding && (
-                  <div className="mt-4 pt-4 border-t border-gray-100 space-y-3">
-                    <div className="grid sm:grid-cols-2 gap-3">
-                      <div>
-                        <label className="text-sm font-semibold text-[#0F3D2E] block mb-1.5 flex items-center gap-1">
-                          <DollarSign className="w-3.5 h-3.5" /> Funding Amount Needed
-                        </label>
-                        <input
-                          name="fundingAmount"
-                          type="number"
-                          value={formData.fundingAmount}
-                          onChange={handleChange}
-                          placeholder="e.g. 50000"
-                          className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2F8F6B]/30"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-sm font-semibold text-[#0F3D2E] block mb-1.5">Funding Type</label>
-                        <select
-                          name="fundingType"
-                          value={formData.fundingType}
-                          onChange={handleChange}
-                          className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#2F8F6B]/30"
-                        >
-                          <option value="">Select type...</option>
-                          <option>Grant</option>
-                          <option>Donation</option>
-                          <option>Partnership</option>
-                          <option>In-kind Support</option>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
+              {/* Error message */}
+              {error && (
+                <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-red-700 text-sm">
+                  {error}
+                </div>
+              )}
 
               {/* Action buttons */}
               <div className="flex flex-wrap gap-3">
                 <button
                   type="submit"
-                  className="flex items-center gap-2 bg-[#0F3D2E] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#2F8F6B] transition-colors"
+                  disabled={isSubmitting}
+                  className="flex items-center gap-2 bg-[#0F3D2E] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#2F8F6B] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Post Project <ChevronRight className="w-4 h-4" />
+                  {isSubmitting ? "Posting..." : "Post Project"} <ChevronRight className="w-4 h-4" />
                 </button>
-                <button type="button" className="flex items-center gap-2 bg-white border border-gray-200 text-gray-700 px-6 py-3 rounded-xl font-semibold hover:bg-gray-50 transition-colors">
+                <button type="button" disabled={isSubmitting} className="flex items-center gap-2 bg-white border border-gray-200 text-gray-700 px-6 py-3 rounded-xl font-semibold hover:bg-gray-50 transition-colors disabled:opacity-50">
                   Save Draft
                 </button>
                 {tab !== "urgent" && (
