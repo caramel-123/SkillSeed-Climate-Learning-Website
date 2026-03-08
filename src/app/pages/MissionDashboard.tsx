@@ -53,67 +53,67 @@ function getCategoryStyle(focusArea: string[] | undefined): { color: string; ico
 function getProjectImage(focusArea: string[] | undefined): string {
   const area = focusArea?.[0]?.toLowerCase() || '';
   
-  // Energy / Solar / Renewable - people installing solar panels
+  // Energy / Solar / Renewable - workers installing solar panels
   if (area.includes('solar') || area.includes('energy') || area.includes('renewable')) {
-    return 'https://images.unsplash.com/photo-1559302504-64aae6ca6b6d?w=600&fit=crop';
+    return 'https://images.unsplash.com/photo-1509391366360-2e959784a276?w=600&fit=crop';
   }
   
   // Forest / Conservation / Reforestation - volunteers planting trees
   if (area.includes('forest') || area.includes('conservation') || area.includes('reforestation')) {
-    return 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&fit=crop';
+    return 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=600&fit=crop';
   }
   
-  // Education / Technology - workshop/training session
+  // Education / Technology - classroom/workshop setting
   if (area.includes('education') || area.includes('technology') || area.includes('literacy')) {
-    return 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&fit=crop';
+    return 'https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=600&fit=crop';
   }
   
-  // Water / Ocean - beach cleanup volunteers
+  // Water / Ocean - ocean conservation / beach cleanup
   if (area.includes('water') || area.includes('ocean') || area.includes('marine')) {
-    return 'https://images.unsplash.com/photo-1618477461853-cf6ed80faba5?w=600&fit=crop';
+    return 'https://images.unsplash.com/photo-1484291470158-b8f8d608850d?w=600&fit=crop';
   }
   
-  // Urban / Infrastructure / City - community garden
+  // Urban / Infrastructure / City - sustainable city / green buildings
   if (area.includes('urban') || area.includes('infrastructure') || area.includes('city')) {
-    return 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600&fit=crop';
+    return 'https://images.unsplash.com/photo-1518005020951-eccb494ad742?w=600&fit=crop';
   }
   
-  // Climate Science / Research - team collaboration
+  // Climate Science / Research - scientists in lab/field
   if (area.includes('climate science') || area.includes('research') || area.includes('data')) {
-    return 'https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?w=600&fit=crop';
+    return 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=600&fit=crop';
   }
   
-  // Policy / Finance / Advocacy - community meeting
+  // Policy / Finance / Advocacy - meeting / conference
   if (area.includes('policy') || area.includes('finance') || area.includes('advocacy')) {
-    return 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=600&fit=crop';
+    return 'https://images.unsplash.com/photo-1521791136064-7986c2920216?w=600&fit=crop';
   }
   
-  // Community / Grassroots - volunteers group
+  // Community / Grassroots - community gathering
   if (area.includes('community') || area.includes('grassroots') || area.includes('volunteer')) {
-    return 'https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=600&fit=crop';
+    return 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&fit=crop';
   }
   
-  // Disaster Response / Emergency - relief workers
+  // Disaster Response / Emergency - relief workers helping
   if (area.includes('disaster') || area.includes('emergency') || area.includes('relief')) {
-    return 'https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=600&fit=crop';
+    return 'https://images.unsplash.com/photo-1593113598332-cd288d649433?w=600&fit=crop';
   }
   
-  // Agriculture / Food - community farming
+  // Agriculture / Food - sustainable farming
   if (area.includes('agriculture') || area.includes('food') || area.includes('farming')) {
-    return 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=600&fit=crop';
+    return 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=600&fit=crop';
   }
   
-  // Storytelling / Media / Documentary - team filming
+  // Storytelling / Media / Documentary - filming / content creation
   if (area.includes('storytelling') || area.includes('media') || area.includes('documentary')) {
-    return 'https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=600&fit=crop';
+    return 'https://images.unsplash.com/photo-1485846234645-a62644f84728?w=600&fit=crop';
   }
   
-  // Default - diverse team collaboration
-  return 'https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?w=600&fit=crop';
+  // Default - diverse team collaboration on climate
+  return 'https://images.unsplash.com/photo-1552799446-159ba9523315?w=600&fit=crop';
 }
 
 const categories = ["All", "climate science", "renewable energy", "education", "urban planning", "climate finance", "technology", "advocacy"];
-const regions = ["All Regions", "Global", "North America", "Africa", "Caribbean", "West Coast", "Pacific Northwest", "Southwest"];
+const regions = ["All Regions", "Philippines", "Global", "Southeast Asia", "North America", "Africa", "Caribbean"];
 
 export function MissionDashboard() {
   const { user } = useAuth();
@@ -170,13 +170,27 @@ export function MissionDashboard() {
 
   const urgent = filtered.filter(m => m.type === "urgent");
   const regular = filtered.filter(m => m.type !== "urgent");
-  // Sort by urgency first, then by start_date for urgent projects
+  
+  // Sort helper: prioritize Philippines, then Remote/Global, then others
+  const regionPriority = (region: string | undefined) => {
+    if (region === 'Philippines') return 0;
+    if (region === 'Global' || region?.toLowerCase() === 'remote') return 1;
+    return 2;
+  };
+  
+  // Sort by urgency first, then by region priority, then by start_date
   const sorted = [
     ...urgent.sort((a, b) => {
+      const regionDiff = regionPriority(a.region) - regionPriority(b.region);
+      if (regionDiff !== 0) return regionDiff;
       if (a.start_date && b.start_date) return new Date(a.start_date).getTime() - new Date(b.start_date).getTime();
       return 0;
     }),
-    ...regular
+    ...regular.sort((a, b) => {
+      const regionDiff = regionPriority(a.region) - regionPriority(b.region);
+      if (regionDiff !== 0) return regionDiff;
+      return 0;
+    })
   ];
 
   // Loading state
