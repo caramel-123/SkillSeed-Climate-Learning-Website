@@ -151,18 +151,18 @@ export function LandingPage() {
           </p>
 
           <div className="flex flex-wrap gap-3 justify-center mb-10">
-            <Link to="/post-project"
+            <Link to="/dashboard"
               className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl text-white transition-all duration-200"
               style={{ background: "linear-gradient(135deg, #0F3D2E 0%, #2F8F6B 100%)", fontWeight: 700, fontFamily: "'Manrope', sans-serif", boxShadow: "0 4px 20px rgba(47,143,107,0.4)" }}
               onMouseEnter={e => (e.currentTarget.style.transform = "translateY(-2px)")}
               onMouseLeave={e => (e.currentTarget.style.transform = "translateY(0)")}>
               <Users className="w-4 h-4" /> Join a Project
             </Link>
-            <Link to="/signup"
+            <Link to="/hands-on"
               className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl transition-all duration-200"
               style={{ background: "white", border: "2px solid #0F3D2E", color: "#0F3D2E", fontWeight: 700, fontFamily: "'Manrope', sans-serif" }}
               onMouseEnter={e => (e.currentTarget.style.background = "#F0FDF6")}
-              onMouseLeave={e => (e.currentTarget.style.background = "white")}>
+              onMouseLeave={e => (e.currentTarget.style.background = "white")}> 
               <Sprout className="w-4 h-4" /> Learn New Skills
             </Link>
           </div>
