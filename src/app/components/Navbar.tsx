@@ -4,9 +4,9 @@ import { Menu, X, Sprout, ChevronDown, User, Settings, LogOut, TrendingUp } from
 import { useAuth } from "../hooks/useAuth";
 
 const navLinks = [
-  { label: "Work",     href: "/browse",    comingSoon: false },
+  { label: "Missions",     href: "/browse",    comingSoon: false },
   { label: "Community", href: "/community", comingSoon: false },
-  { label: "Hands-on",   href: "/academy",   comingSoon: false },
+  { label: "Hands-on",   href: "/hands-on",   comingSoon: false },
   { label: "Funding",   href: "/funding",   comingSoon: false },
 ];
 
@@ -184,7 +184,7 @@ export function Navbar() {
               /* ── LOGGED OUT ── */
               <>
                 <button
-                  onClick={() => navigate("/auth")}
+                  onClick={() => navigate("/auth?tab=login")}
                   className="px-4 py-2 rounded-lg text-sm transition-colors duration-150"
                   style={{ color: "#374151", fontWeight: 500 }}
                   onMouseEnter={e => (e.currentTarget.style.background = "#F9FAFB")}
@@ -192,14 +192,14 @@ export function Navbar() {
                 >
                   Log In
                 </button>
-                <Link
-                  to="/signup"
+                <button
+                  onClick={() => navigate("/auth?tab=signup")}
                   className="px-4 py-2 rounded-lg text-white text-sm transition-all flex items-center gap-1.5"
                   style={{ background: "linear-gradient(135deg, #0F3D2E 0%, #2F8F6B 100%)", fontWeight: 600, boxShadow: "0 2px 8px rgba(47,143,107,0.35)" }}
                 >
                   <Sprout className="w-3.5 h-3.5" />
                   Sign Up
-                </Link>
+                </button>
               </>
             )}
           </div>
@@ -268,17 +268,17 @@ export function Navbar() {
               </>
             ) : (
               <>
-                <button onClick={() => { navigate("/auth"); setMobileOpen(false); }}
+                <button onClick={() => { navigate("/auth?tab=login"); setMobileOpen(false); }}
                   className="text-center px-4 py-2.5 rounded-lg text-sm"
                   style={{ color: "#0F3D2E", fontWeight: 500, border: "1px solid #E5E7EB" }}>
                   Log In
                 </button>
-                <Link to="/signup" onClick={() => setMobileOpen(false)}
+                <button onClick={() => { navigate("/auth?tab=signup"); setMobileOpen(false); }}
                   className="text-center px-4 py-2.5 rounded-lg text-white text-sm flex items-center justify-center gap-1.5"
                   style={{ background: "linear-gradient(135deg, #0F3D2E 0%, #2F8F6B 100%)", fontWeight: 600 }}>
                   <Sprout className="w-3.5 h-3.5" />
                   Sign Up Free
-                </Link>
+                </button>
               </>
             )}
           </div>

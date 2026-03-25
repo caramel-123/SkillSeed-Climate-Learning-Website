@@ -8,9 +8,29 @@ import { CommunityChallenges } from "./pages/CommunityChallenges";
 import { AuthPage } from "./pages/AuthPage";
 import { PostProject } from "./pages/PostProject";
 import { FundingResources } from "./pages/FundingResources";
+import { EditFunding } from "./pages/EditFunding";
 import Academy from "./pages/Academy";
+import { HandsOnQuests } from "./pages/HandsOnQuests";
+import { QuestDetail } from "./pages/QuestDetail";
+import { VerifierDashboard } from "./pages/VerifierDashboard";
+import { VerifierLogin } from "./pages/VerifierLogin";
+import { VerifierGuard } from "./components/VerifierGuard";
 
 export const router = createBrowserRouter([
+  // Verifier portal routes (outside main layout)
+  {
+    path: "/verifier-login",
+    element: <VerifierLogin />,
+  },
+  {
+    path: "/verifier",
+    element: (
+      <VerifierGuard>
+        <VerifierDashboard />
+      </VerifierGuard>
+    ),
+  },
+  // Main app routes
   {
     path: "/",
     Component: Layout,
@@ -25,7 +45,12 @@ export const router = createBrowserRouter([
       { path: "auth", Component: AuthPage },
       { path: "post-project", Component: PostProject },
       { path: "funding", Component: FundingResources },
+      { path: "edit-funding/:fundingId", Component: EditFunding },
       { path: "academy", Component: Academy },
+      // Hands-on Quests system
+      { path: "hands-on", Component: HandsOnQuests },
+      { path: "quests", Component: HandsOnQuests },
+      { path: "quests/:questId", Component: QuestDetail },
     ],
   },
 ]);

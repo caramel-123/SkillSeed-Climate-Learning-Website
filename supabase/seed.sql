@@ -136,97 +136,151 @@ ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO public.projects (id, poster_id, title, type, focus_area, location, region, description, volunteers_needed, professionals_needed, skills_needed, status, duration, start_date, points) VALUES
 
--- Urgent Projects
+-- =====================
+-- URGENT PROJECTS (Philippines)
+-- =====================
+
+-- Urgent: Reforestation (Philippines)
 ('22222222-2222-2222-2222-222222222201', '11111111-0000-0000-0000-000000000001',
- 'Emergency Flood Response Data Collection', 'urgent',
- ARRAY['disaster response', 'climate adaptation'],
- 'Houston, TX', 'North America',
- 'Urgent need for volunteers to help collect and analyze flood damage data following recent storms. Data will inform city resilience planning and aid distribution.',
- 5, 2,
- ARRAY['data collection', 'field work', 'GIS mapping', 'data analysis', 'community engagement'],
- 'open', '2 weeks', '2026-03-10', 250),
+ 'Urgent: Typhoon-Damaged Forest Restoration', 'urgent',
+ ARRAY['reforestation', 'conservation'],
+ 'Sierra Madre, Quezon', 'Philippines',
+ 'Critical reforestation effort after Typhoon Kristine devastated 500 hectares of protected forest. We need volunteers for seedling planting and professionals for ecosystem assessment. Immediate help needed before monsoon season.',
+ 20, 3,
+ ARRAY['tree planting', 'conservation', 'field work', 'ecology', 'project management'],
+ 'open', '3 months', '2026-03-15', 350),
 
+-- Urgent: Disaster Response (Philippines)
 ('22222222-2222-2222-2222-222222222202', '11111111-0000-0000-0000-000000000002',
- 'Solar Panel Installation - Community Center', 'urgent',
- ARRAY['renewable energy', 'community resilience'],
- 'Oakland, CA', 'North America',
- 'Installing solar panels at a community center serving as a cooling/warming shelter. Need electricians and helpers for weekend installation.',
- 3, 1,
- ARRAY['solar installation', 'electrical engineering', 'project management'],
- 'open', '1 weekend', '2026-03-15', 200),
+ 'Urgent: Flood Relief Distribution in Mindanao', 'urgent',
+ ARRAY['disaster response', 'emergency relief'],
+ 'Cotabato City, Mindanao', 'Philippines',
+ 'Immediate volunteers needed to distribute relief goods to 2,000 families affected by severe flooding. Help with packing, logistics, and community coordination required.',
+ 15, 2,
+ ARRAY['logistics', 'community engagement', 'coordination', 'field work', 'translation'],
+ 'open', '2 weeks', '2026-03-10', 300),
 
--- Regular Projects
+-- =====================
+-- REGULAR PROJECTS (Philippines)
+-- =====================
+
+-- Renewable Energy (Philippines)
 ('22222222-2222-2222-2222-222222222203', '11111111-0000-0000-0000-000000000003',
- 'Climate Education App for Youth', 'project',
- ARRAY['education', 'climate literacy'],
- 'Remote', 'Global',
- 'Developing an interactive mobile app teaching climate science concepts to middle school students. Need UX designers, developers, and climate educators.',
- 2, 3,
- ARRAY['UX design', 'UI design', 'react', 'education', 'content creation'],
- 'open', '3 months', '2026-04-01', 300),
-
-('22222222-2222-2222-2222-222222222204', '11111111-0000-0000-0000-000000000004',
- 'African Climate Finance Research Report', 'project',
- ARRAY['climate finance', 'policy'],
- 'Remote', 'Africa',
- 'Research project analyzing green finance flows in Sub-Saharan Africa. Looking for researchers and data analysts to compile a comprehensive report.',
- 1, 2,
- ARRAY['research', 'data analysis', 'climate finance', 'report writing', 'economics'],
- 'open', '2 months', '2026-03-20', 350),
-
-('22222222-2222-2222-2222-222222222205', '11111111-0000-0000-0000-000000000005',
- 'Urban Forest Mapping Initiative', 'project',
- ARRAY['urban planning', 'conservation'],
- 'Seattle, WA', 'North America',
- 'Mapping urban tree coverage to identify areas for new planting and assess carbon sequestration potential. GIS skills essential.',
- 4, 1,
- ARRAY['GIS mapping', 'data collection', 'field work', 'data analysis', 'urban planning'],
- 'open', '6 weeks', '2026-04-15', 200),
-
-('22222222-2222-2222-2222-222222222206', '11111111-0000-0000-0000-000000000001',
- 'Carbon Footprint Calculator Tool', 'project',
- ARRAY['carbon accounting', 'technology'],
- 'Remote', 'Global',
- 'Building an open-source carbon footprint calculator for small businesses. Need developers and carbon accounting experts.',
- 2, 2,
- ARRAY['web development', 'react', 'carbon accounting', 'UX design', 'API development'],
+ 'Solar Microgrid Installation for Island Barangays', 'project',
+ ARRAY['renewable energy', 'solar'],
+ 'Palawan', 'Philippines',
+ 'Installing solar microgrids in off-grid island communities in Palawan. Seeking electrical engineers and volunteers for community training on system maintenance.',
+ 8, 2,
+ ARRAY['solar installation', 'electrical engineering', 'community training', 'project management'],
  'open', '2 months', '2026-04-01', 280),
 
+-- Education (Philippines)
+('22222222-2222-2222-2222-222222222204', '11111111-0000-0000-0000-000000000004',
+ 'Climate Literacy Program for Public Schools', 'project',
+ ARRAY['education', 'climate literacy'],
+ 'Metro Manila', 'Philippines',
+ 'Developing and delivering climate education modules for Grade 7-10 students in public schools. Need educators and content creators fluent in Filipino.',
+ 6, 2,
+ ARRAY['education', 'curriculum design', 'Filipino', 'content creation', 'public speaking'],
+ 'open', '6 months', '2026-04-15', 250),
+
+-- Urban Planning (Philippines)
+('22222222-2222-2222-2222-222222222205', '11111111-0000-0000-0000-000000000005',
+ 'Urban Green Corridor Mapping - Cebu City', 'project',
+ ARRAY['urban planning', 'green infrastructure'],
+ 'Cebu City', 'Philippines',
+ 'Mapping potential green corridors and urban forest sites in Cebu City to improve air quality and reduce urban heat island effect. GIS skills required.',
+ 4, 2,
+ ARRAY['GIS mapping', 'urban planning', 'data analysis', 'field surveys', 'stakeholder engagement'],
+ 'open', '3 months', '2026-05-01', 220),
+
+-- Agriculture (Philippines)
+('22222222-2222-2222-2222-222222222206', '11111111-0000-0000-0000-000000000001',
+ 'Sustainable Rice Farming Training Program', 'project',
+ ARRAY['agriculture', 'sustainable farming'],
+ 'Nueva Ecija', 'Philippines',
+ 'Training rice farmers on sustainable farming practices including alternate wetting and drying (AWD) technique to reduce methane emissions. Need agricultural experts and community trainers.',
+ 5, 2,
+ ARRAY['agriculture', 'community training', 'field work', 'Filipino', 'project coordination'],
+ 'open', '4 months', '2026-04-01', 200),
+
+-- Marine/Water (Philippines)
 ('22222222-2222-2222-2222-222222222207', '11111111-0000-0000-0000-000000000002',
- 'Community Solar Workshop Series', 'project',
- ARRAY['renewable energy', 'education'],
- 'Austin, TX', 'North America',
- 'Organizing monthly workshops teaching community members about solar energy basics and installation. Need presenters and event coordinators.',
- 5, 1,
- ARRAY['renewable energy', 'public speaking', 'event planning', 'community engagement', 'education'],
- 'open', 'ongoing', '2026-03-25', 150),
+ 'Coral Reef Restoration Project - Bohol', 'project',
+ ARRAY['marine conservation', 'ocean'],
+ 'Panglao, Bohol', 'Philippines',
+ 'Community-based coral reef restoration project. Training local fisherfolk in coral gardening techniques and reef monitoring. Divers and marine biologists needed.',
+ 10, 2,
+ ARRAY['scuba diving', 'marine biology', 'community engagement', 'data collection', 'conservation'],
+ 'open', '6 months', '2026-05-15', 320),
 
-('22222222-2222-2222-2222-222222222208', '11111111-0000-0000-0000-000000000004',
- 'Climate Storytelling Documentary', 'project',
- ARRAY['communications', 'advocacy'],
- 'Multiple locations', 'Africa',
- 'Producing a documentary highlighting climate change impacts on African communities. Need filmmakers, photographers, and storytellers.',
- 3, 2,
- ARRAY['videography', 'photography', 'storytelling', 'content creation', 'translation'],
- 'open', '4 months', '2026-05-01', 400),
+-- =====================
+-- REMOTE / GLOBAL PROJECTS
+-- =====================
 
-('22222222-2222-2222-2222-222222222209', '11111111-0000-0000-0000-000000000003',
- 'Sustainable Fashion Impact Report', 'project',
- ARRAY['sustainability', 'research'],
- 'Remote', 'Global',
- 'Research project quantifying the environmental impact of fast fashion and developing sustainability guidelines for consumers.',
- 2, 1,
- ARRAY['research', 'data analysis', 'report writing', 'sustainability', 'communications'],
- 'open', '6 weeks', '2026-04-10', 180),
+-- Climate Science (Philippines - remote work)
+('22222222-2222-2222-2222-222222222208', '11111111-0000-0000-0000-000000000003',
+ 'Open Source Climate Data Dashboard for PAGASA', 'project',
+ ARRAY['climate science', 'data analysis'],
+ 'Remote (Philippines-based)', 'Philippines',
+ 'Building an open-source dashboard visualizing Philippine climate data for PAGASA researchers and local government units. Need data scientists, developers, and climate researchers.',
+ 3, 3,
+ ARRAY['python', 'data visualization', 'react', 'climate science', 'API development'],
+ 'open', '4 months', '2026-04-01', 300),
 
+-- Policy/Finance (Philippines)
+('22222222-2222-2222-2222-222222222209', '11111111-0000-0000-0000-000000000004',
+ 'Green Finance Assessment for Philippine LGUs', 'project',
+ ARRAY['climate finance', 'policy'],
+ 'Makati City', 'Philippines',
+ 'Research project assessing climate finance readiness of local government units in the Philippines. Looking for economists, researchers, and policy analysts familiar with LGU operations.',
+ 2, 3,
+ ARRAY['research', 'economics', 'data analysis', 'report writing', 'climate finance'],
+ 'open', '3 months', '2026-04-15', 350),
+
+-- Storytelling/Media (Philippines)
 ('22222222-2222-2222-2222-222222222210', '11111111-0000-0000-0000-000000000005',
- 'Green Infrastructure Grant Proposal', 'project',
- ARRAY['green infrastructure', 'funding'],
- 'Seattle, WA', 'North America',
- 'Writing a federal grant proposal for green stormwater infrastructure projects. Need experienced grant writers and project planners.',
- 1, 2,
- ARRAY['grant writing', 'green infrastructure', 'project management', 'stakeholder management', 'reporting'],
- 'open', '1 month', '2026-03-18', 220)
+ 'Kwentong Klima: Filipino Climate Champions', 'project',
+ ARRAY['storytelling', 'media'],
+ 'Nationwide', 'Philippines',
+ 'Producing a documentary series highlighting grassroots climate champions across Philippine provinces. Need filmmakers, editors, and community coordinators fluent in Filipino dialects.',
+ 4, 2,
+ ARRAY['videography', 'video editing', 'storytelling', 'Filipino', 'project coordination'],
+ 'open', '6 months', '2026-05-01', 400),
+
+-- Community/Grassroots (Philippines)
+('22222222-2222-2222-2222-222222222211', '11111111-0000-0000-0000-000000000001',
+ 'Kabataan Para sa Kalikasan Youth Network', 'project',
+ ARRAY['community', 'grassroots organizing'],
+ 'Metro Manila', 'Philippines',
+ 'Building a network connecting young Filipino climate activists for knowledge sharing and collaborative campaigns. Need community managers, social media specialists, and event coordinators.',
+ 5, 2,
+ ARRAY['community management', 'social media', 'event planning', 'Filipino', 'outreach'],
+ 'open', '4 months', '2026-04-01', 250),
+
+-- =====================
+-- INTERNATIONAL / REMOTE PROJECTS (Limited)
+-- =====================
+
+-- Global Remote Project
+('22222222-2222-2222-2222-222222222212', '11111111-0000-0000-0000-000000000003',
+ 'Global Climate Tech Open Source Tools', 'project',
+ ARRAY['technology', 'climate science'],
+ 'Remote', 'Global',
+ 'Contributing to open-source climate technology tools used worldwide. Flexible remote work for developers interested in climate impact.',
+ 3, 2,
+ ARRAY['python', 'javascript', 'open source', 'climate modeling', 'documentation'],
+ 'open', '6 months', '2026-04-15', 280),
+
+-- Southeast Asia Regional
+('22222222-2222-2222-2222-222222222213', '11111111-0000-0000-0000-000000000004',
+ 'ASEAN Climate Adaptation Research Network', 'project',
+ ARRAY['research', 'policy'],
+ 'Remote', 'Southeast Asia',
+ 'Regional research collaboration on climate adaptation strategies across ASEAN countries. Remote coordination with occasional travel to partner countries.',
+ 2, 3,
+ ARRAY['research', 'climate adaptation', 'policy analysis', 'report writing', 'stakeholder engagement'],
+ 'open', '8 months', '2026-05-01', 320)
 
 ON CONFLICT (id) DO NOTHING;
 
@@ -239,49 +293,49 @@ INSERT INTO public.connections (id, project_id, poster_id, responder_id, role, m
 
 -- Accepted connections
 ('33333333-3333-3333-3333-333333333301',
- '22222222-2222-2222-2222-222222222201', -- Flood Response
+ '22222222-2222-2222-2222-222222222201', -- Reforestation (urgent)
  '11111111-0000-0000-0000-000000000001', -- Poster
  '11111111-0000-0000-0000-000000000007', -- Sofia (data analyst)
  'volunteer',
- 'I have experience with data analysis and would love to help with flood damage assessment.',
+ 'I have experience with conservation projects and would love to help with reforestation efforts.',
  'accepted', 3),
 
 ('33333333-3333-3333-3333-333333333302',
- '22222222-2222-2222-2222-222222222203', -- Climate Education App
+ '22222222-2222-2222-2222-222222222208', -- Climate Data Dashboard
  '11111111-0000-0000-0000-000000000003', -- Poster
  '11111111-0000-0000-0000-000000000011', -- Michael (developer)
  'professional',
- 'Full-stack developer with React experience. Excited about climate education!',
+ 'Full-stack developer with React and data viz experience. Excited about climate science!',
  'accepted', 2),
 
 -- Pending connections
 ('33333333-3333-3333-3333-333333333303',
- '22222222-2222-2222-2222-222222222205', -- Urban Forest Mapping
+ '22222222-2222-2222-2222-222222222205', -- Urban Green Corridor Cebu
  '11111111-0000-0000-0000-000000000005', -- Poster
  '11111111-0000-0000-0000-000000000008', -- Alex (student with GIS)
  'volunteer',
- 'Environmental science student with GIS experience. Looking to gain field experience.',
+ 'Environmental science student with GIS experience. Would love to help map Cebu City.',
  'pending', 2),
 
 ('33333333-3333-3333-3333-333333333304',
- '22222222-2222-2222-2222-222222222208', -- Documentary
- '11111111-0000-0000-0000-000000000004', -- Poster
+ '22222222-2222-2222-2222-222222222210', -- Kwentong Klima Documentary
+ '11111111-0000-0000-0000-000000000005', -- Poster
  '11111111-0000-0000-0000-000000000013', -- David (photographer)
  'volunteer',
- 'Professional photographer with climate documentation experience in West Africa.',
+ 'Professional photographer with climate documentation experience. Excited about the Kwentong Klima series.',
  'pending', 4),
 
 ('33333333-3333-3333-3333-333333333305',
- '22222222-2222-2222-2222-222222222210', -- Grant Proposal
- '11111111-0000-0000-0000-000000000005', -- Poster
- '11111111-0000-0000-0000-000000000015', -- Hannah (grant writer)
+ '22222222-2222-2222-2222-222222222202', -- Flood Relief (urgent)
+ '11111111-0000-0000-0000-000000000002', -- Poster
+ '11111111-0000-0000-0000-000000000014', -- Maria (community organizer)
  'volunteer',
- 'Experienced grant writer for environmental nonprofits. Have written successful EPA grants.',
- 'pending', 2),
+ 'Experienced community organizer. I can help coordinate relief distribution in Mindanao.',
+ 'pending', 3),
 
 -- Sample declined
 ('33333333-3333-3333-3333-333333333306',
- '22222222-2222-2222-2222-222222222202', -- Solar Installation
+ '22222222-2222-2222-2222-222222222203', -- Solar Microgrid Palawan
  '11111111-0000-0000-0000-000000000002', -- Poster
  '11111111-0000-0000-0000-000000000008', -- Alex (no electrical skills)
  'volunteer',

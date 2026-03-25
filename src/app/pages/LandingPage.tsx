@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import {
   Sprout,
   Users,
@@ -19,14 +19,15 @@ import {
   Clock,
   Play,
   TrendingUp,
+  Heart,
+  Eye,
+  Loader2,
 } from "lucide-react";
+import { useAuth } from "../hooks/useAuth";
+import { fetchAllQuests } from "../utils/questService";
+import type { Quest } from "../types/database";
 
 const IMG_COMMUNITY = "https://images.unsplash.com/photo-1768306662463-4e3f6c858889?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjbGltYXRlJTIwYWN0aW9uJTIwdm9sdW50ZWVyJTIwY29tbXVuaXR5JTIwb3V0ZG9vcnxlbnwxfHx8fDE3NzI4NTQ4ODJ8MA&ixlib=rb-4.1.0&q=80&w=1080";
-const IMG_GARDEN = "https://images.unsplash.com/photo-1769690093872-b6909c820a0e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx1cmJhbiUyMGdhcmRlbiUyMHJvb2Z0b3AlMjBncmVlbiUyMGNpdHl8ZW58MXx8fHwxNzcyODU0ODgyfDA&ixlib=rb-4.1.0&q=80&w=1080";
-const IMG_TREE = "https://images.unsplash.com/photo-1637552481611-1f36222fb188?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0cmVlJTIwcGxhbnRpbmclMjByZWZvcmVzdGF0aW9uJTIwaGFuZHMlMjBzb2lsfGVufDF8fHx8MTc3Mjg1NDg4NHww&ixlib=rb-4.1.0&q=80&w=1080";
-const IMG_SOLAR = "https://images.unsplash.com/photo-1626793369994-a904d2462888?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzb2xhciUyMHBhbmVsJTIwaW5zdGFsbGF0aW9uJTIwcmVuZXdhYmxlJTIwZW5lcmd5JTIwd29ya2VyfGVufDF8fHx8MTc3Mjg0MTkxNHww&ixlib=rb-4.1.0&q=80&w=1080";
-const IMG_COMPOST = "https://images.unsplash.com/photo-1680847307417-b6ae9b78cda6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb21wb3N0aW5nJTIwb3JnYW5pYyUyMHdhc3RlJTIwc3VzdGFpbmFibGUlMjBsaXZpbmd8ZW58MXx8fHwxNzcyODU0ODg3fDA&ixlib=rb-4.1.0&q=80&w=1080";
-const IMG_REPAIR = "https://images.unsplash.com/photo-1633991810204-8f75dafdd324?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyZXBhaXIlMjB3b3Jrc2hvcCUyMHRvb2xzJTIwY29tbXVuaXR5JTIwdXBjeWNsaW5nfGVufDF8fHx8MTc3Mjg1NDg4OHww&ixlib=rb-4.1.0&q=80&w=1080";
 
 function useCounter(target: number, duration = 2000, trigger = false) {
   const [count, setCount] = useState(0);
@@ -64,12 +65,14 @@ function AnimatedStat({ value, suffix, label, desc }: { value: number; suffix: s
   );
 }
 
-const missionCards = [
-  { title: "Urban Composting", cat: "Soil & Waste", pts: 120, duration: "2 weeks", img: IMG_COMPOST, color: "#2F8F6B", diff: "Beginner" },
-  { title: "Solar Energy Basics", cat: "Clean Energy", pts: 200, duration: "3 weeks", img: IMG_SOLAR, color: "#F59E0B", diff: "Intermediate" },
-  { title: "Urban Gardening", cat: "Food & Nature", pts: 160, duration: "4 weeks", img: IMG_GARDEN, color: "#10B981", diff: "Beginner" },
-  { title: "Repair Café Skills", cat: "Circular Economy", pts: 80, duration: "1 week", img: IMG_REPAIR, color: "#3B82F6", diff: "Beginner" },
-];
+// Tier-based color mapping for quest cards
+function getQuestColor(quest: Quest): string {
+  if (quest.category?.toLowerCase().includes("energy")) return "#F59E0B";
+  if (quest.category?.toLowerCase().includes("waste") || quest.category?.toLowerCase().includes("soil")) return "#2F8F6B";
+  if (quest.category?.toLowerCase().includes("nature") || quest.category?.toLowerCase().includes("tree") || quest.category?.toLowerCase().includes("forest")) return "#059669";
+  if (quest.tier === "advanced") return "#3B82F6";
+  return "#2F8F6B";
+}
 
 const testimonials = [
   { name: "Maria Santos", role: "Urban Gardener · Quezon City", text: "SkillSeed helped me turn my rooftop into a productive food garden. The composting mission changed everything — I now teach my neighbors!", avatar: "MS", stars: 5 },
@@ -77,52 +80,103 @@ const testimonials = [
   { name: "Lena Cruz", role: "Community Organizer · Cebu", text: "Our barangay is running 3 repair cafés after learning through SkillSeed. The community challenges keep everyone motivated.", avatar: "LC", stars: 5 },
 ];
 
-const roles = [
-  {
-    id: "learner",
-    icon: Sprout,
-    title: "I'm a Learner",
-    subtitle: "Beginner-friendly",
-    desc: "Build green skills from scratch and participate in real climate missions — no experience needed.",
-    cta: "Start Learning",
-    href: "/signup",
-    bg: "#F0FDF6",
-    border: "#BBF7D0",
-    iconBg: "#E6F4EE",
-    iconColor: "#2F8F6B",
-    textColor: "#0F3D2E",
-  },
-  {
-    id: "jobready",
-    icon: Wrench,
-    title: "I'm Job Ready",
-    subtitle: "Skilled volunteer",
-    desc: "Deploy your existing skills on real climate projects and build a verified impact portfolio.",
-    cta: "Offer My Skills",
-    href: "/signup",
-    bg: "#F0F7FF",
-    border: "#BAE0FD",
-    iconBg: "#DBEAFE",
-    iconColor: "#1E6B9A",
-    textColor: "#1E3A5F",
-  },
-  {
-    id: "org",
-    icon: Building2,
-    title: "I'm an Organization",
-    subtitle: "Project coordinator",
-    desc: "Post climate projects and get matched with skilled volunteers and professionals immediately.",
-    cta: "Post a Project",
-    href: "/post-project",
-    bg: "#0F3D2E",
-    border: "#0F3D2E",
-    iconBg: "rgba(255,255,255,0.15)",
-    iconColor: "white",
-    textColor: "white",
-  },
-];
-
 export function LandingPage() {
+  const { user, loading: authLoading } = useAuth();
+  const navigate = useNavigate();
+  const [quests, setQuests] = useState<Quest[]>([]);
+  const [questsLoading, setQuestsLoading] = useState(true);
+
+  // Fetch real quests on mount
+  useEffect(() => {
+    async function loadQuests() {
+      try {
+        const data = await fetchAllQuests();
+        setQuests(data);
+      } catch (err) {
+        console.error("Error fetching quests for landing:", err);
+      } finally {
+        setQuestsLoading(false);
+      }
+    }
+    loadQuests();
+  }, []);
+
+  // Take first 4 quests for display
+  const displayQuests = quests.slice(0, 4);
+
+  // Role card routing — auth-aware
+  const handleRoleClick = (roleId: string) => {
+    if (!user) {
+      navigate("/auth");
+      return;
+    }
+    // Logged-in users go to the appropriate page
+    switch (roleId) {
+      case "learner":
+        navigate("/hands-on");
+        break;
+      case "jobready":
+        navigate("/dashboard");
+        break;
+      case "org":
+        navigate("/post-project");
+        break;
+      default:
+        navigate("/dashboard");
+    }
+  };
+
+  // Auth-aware CTA
+  const handleJoinProject = () => {
+    if (!user) {
+      navigate("/auth");
+    } else {
+      navigate("/dashboard");
+    }
+  };
+
+  const roles = [
+    {
+      id: "learner",
+      icon: Sprout,
+      title: "I'm a Learner",
+      subtitle: "Beginner-friendly",
+      desc: "Build green skills from scratch and participate in real climate missions — no experience needed.",
+      cta: "Start Learning",
+      bg: "#F0FDF6",
+      border: "#BBF7D0",
+      iconBg: "#E6F4EE",
+      iconColor: "#2F8F6B",
+      textColor: "#0F3D2E",
+    },
+    {
+      id: "jobready",
+      icon: Wrench,
+      title: "I'm Job Ready",
+      subtitle: "Skilled volunteer",
+      desc: "Deploy your existing skills on real climate projects and build a verified impact portfolio.",
+      cta: "Offer My Skills",
+      bg: "#F0F7FF",
+      border: "#BAE0FD",
+      iconBg: "#DBEAFE",
+      iconColor: "#1E6B9A",
+      textColor: "#1E3A5F",
+    },
+    {
+      id: "org",
+      icon: Building2,
+      title: "I'm an Organization",
+      subtitle: "Project coordinator",
+      desc: "Post climate projects and get matched with skilled volunteers and professionals immediately.",
+      cta: "Post a Project",
+      bg: "#0F3D2E",
+      border: "#0F3D2E",
+      iconBg: "rgba(255,255,255,0.15)",
+      iconColor: "white",
+      textColor: "white",
+    },
+  ];
+
   return (
     <div className="overflow-x-hidden">
 
@@ -132,38 +186,30 @@ export function LandingPage() {
         <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "radial-gradient(#0F3D2E 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
 
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          {/* Pill badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-7"
-            style={{ background: "#E6F4EE", border: "1px solid #BBF7D0" }}>
-            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse inline-block" />
-            <span className="text-sm" style={{ color: "#0F3D2E", fontWeight: 600 }}>
-              1,240+ active climate missions · 87 countries
-            </span>
-          </div>
-
           <h1 className="mb-5" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, fontSize: "clamp(2.4rem, 5.5vw, 4rem)", lineHeight: 1.1, color: "#0F3D2E", letterSpacing: "-0.02em" }}>
-            Grow Your Climate Skills.<br />
-            <span style={{ color: "#2F8F6B" }}>Make Real Impact.</span>
+            Where climate action<br />
+            <span style={{ color: "#2F8F6B" }}>finds its people.</span>
           </h1>
 
           <p className="mb-8 mx-auto text-lg" style={{ color: "#6B7280", lineHeight: 1.7, maxWidth: "580px" }}>
             SkillSeed connects learners, skilled volunteers, and organizations to short, real-world climate missions. Learn by doing. Track your impact. Join the movement.
           </p>
 
+
           <div className="flex flex-wrap gap-3 justify-center mb-10">
-            <Link to="/post-project"
-              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl text-white transition-all duration-200"
-              style={{ background: "linear-gradient(135deg, #0F3D2E 0%, #2F8F6B 100%)", fontWeight: 700, fontFamily: "'Manrope', sans-serif", boxShadow: "0 4px 20px rgba(47,143,107,0.4)" }}
+            <button onClick={handleJoinProject}
+              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl text-white transition-all duration-200 cursor-pointer"
+              style={{ background: "linear-gradient(135deg, #0F3D2E 0%, #2F8F6B 100%)", fontWeight: 700, fontFamily: "'Manrope', sans-serif", boxShadow: "0 4px 20px rgba(47,143,107,0.4)", border: "none" }}
               onMouseEnter={e => (e.currentTarget.style.transform = "translateY(-2px)")}
               onMouseLeave={e => (e.currentTarget.style.transform = "translateY(0)")}>
-              <Users className="w-4 h-4" /> Post a Project
-            </Link>
-            <Link to="/signup"
+              <Users className="w-4 h-4" /> Join a Project
+            </button>
+            <Link to="/hands-on"
               className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl transition-all duration-200"
               style={{ background: "white", border: "2px solid #0F3D2E", color: "#0F3D2E", fontWeight: 700, fontFamily: "'Manrope', sans-serif" }}
               onMouseEnter={e => (e.currentTarget.style.background = "#F0FDF6")}
-              onMouseLeave={e => (e.currentTarget.style.background = "white")}>
-              <Sprout className="w-4 h-4" /> Offer My Skills
+              onMouseLeave={e => (e.currentTarget.style.background = "white")}> 
+              <Sprout className="w-4 h-4" /> Learn New Skills
             </Link>
           </div>
 
@@ -191,38 +237,37 @@ export function LandingPage() {
           </div>
         </div>
 
-        {/* Mission cards strip */}
+        {/* Mission & Vision cards */}
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-0">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            {missionCards.map((card, i) => (
-              <Link key={i} to="/mission/1"
-                className="group rounded-2xl overflow-hidden transition-all duration-300 block"
-                style={{ background: "white", border: "1px solid #E5E7EB", boxShadow: "0 2px 12px rgba(0,0,0,0.06)" }}
-                onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.boxShadow = "0 12px 32px rgba(15,61,46,0.12)"; }}
-                onMouseLeave={e => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "0 2px 12px rgba(0,0,0,0.06)"; }}>
-                <div className="relative h-36 overflow-hidden">
-                  <img src={card.img} alt={card.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                  <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 60%)" }} />
-                  <span className="absolute bottom-2 left-2 px-2 py-0.5 rounded-full text-xs" style={{ background: "rgba(255,255,255,0.9)", color: card.color, fontWeight: 700 }}>
-                    {card.diff}
-                  </span>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div className="rounded-2xl p-8 text-left" style={{ background: "#F0FDF6", border: "1px solid #BBF7D0" }}>
+              <div className="flex items-center gap-2.5 mb-4">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "#E6F4EE" }}>
+                  <Heart className="w-5 h-5" style={{ color: "#2F8F6B" }} />
                 </div>
-                <div className="p-3.5">
-                  <span className="text-xs" style={{ color: "#9CA3AF" }}>{card.cat}</span>
-                  <h4 className="mt-0.5 mb-2" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 700, color: "#0F3D2E", fontSize: "0.875rem" }}>
-                    {card.title}
-                  </h4>
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs flex items-center gap-1" style={{ color: "#9CA3AF" }}>
-                      <Clock className="w-3 h-3" /> {card.duration}
-                    </span>
-                    <span className="text-xs flex items-center gap-1" style={{ color: "#FBBF24", fontWeight: 700 }}>
-                      <Zap className="w-3 h-3" /> {card.pts} pts
-                    </span>
-                  </div>
+                <span className="text-xs font-bold uppercase tracking-wider" style={{ color: "#2F8F6B", letterSpacing: "0.1em" }}>Our Mission</span>
+              </div>
+              <h3 className="mb-3" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, color: "#0F3D2E", fontSize: "1.15rem", lineHeight: 1.4 }}>
+                Connect. Build capacity. Deploy the people the climate crisis needs.
+              </h3>
+              <p style={{ color: "#4B5563", lineHeight: 1.9, fontSize: "0.9rem" }}>
+                Starting in the Philippines, where the need is greatest, and growing into a global network. Rooted in community, driven by people, and open to every nation ready to act.
+              </p>
+            </div>
+            <div className="rounded-2xl p-8 text-left" style={{ background: "#F0F7FF", border: "1px solid #BAE0FD" }}>
+              <div className="flex items-center gap-2.5 mb-4">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "#DBEAFE" }}>
+                  <Eye className="w-5 h-5" style={{ color: "#1E6B9A" }} />
                 </div>
-              </Link>
-            ))}
+                <span className="text-xs font-bold uppercase tracking-wider" style={{ color: "#1E6B9A", letterSpacing: "0.1em" }}>Our Vision</span>
+              </div>
+              <h3 className="mb-3" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, color: "#1E3A5F", fontSize: "1.15rem", lineHeight: 1.4 }}>
+                A world where no climate crisis goes unanswered.
+              </h3>
+              <p style={{ color: "#4B5563", lineHeight: 1.9, fontSize: "0.9rem" }}>
+                Because the people and skills to respond already exist in every community. The Philippines leads the way: the nation that faces the most, teaches the most. From its shores, Skill Seed grows outward — because every climate issue has a human-driven solution.
+              </p>
+            </div>
           </div>
           {/* ground fade */}
           <div className="h-12 w-full" style={{ background: "linear-gradient(to bottom, transparent, #F0F9F5)" }} />
@@ -298,9 +343,10 @@ export function LandingPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {roles.map(({ id, icon: Icon, title, subtitle, desc, cta, href, bg, border, iconBg, iconColor, textColor }) => (
-              <div key={id} className="rounded-2xl p-8 flex flex-col group transition-all duration-300"
+            {roles.map(({ id, icon: Icon, title, subtitle, desc, cta, bg, border, iconBg, iconColor, textColor }) => (
+              <div key={id} className="rounded-2xl p-8 flex flex-col group transition-all duration-300 cursor-pointer"
                 style={{ background: bg, border: `1.5px solid ${border}` }}
+                onClick={() => handleRoleClick(id)}
                 onMouseEnter={e => (e.currentTarget.style.transform = "translateY(-3px)")}
                 onMouseLeave={e => (e.currentTarget.style.transform = "none")}>
                 <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-5" style={{ background: iconBg }}>
@@ -316,81 +362,85 @@ export function LandingPage() {
                 <p className="text-sm mb-6 flex-1" style={{ color: id === "org" ? "rgba(255,255,255,0.72)" : "#6B7280", lineHeight: 1.7 }}>
                   {desc}
                 </p>
-                <Link to={href}
+                <span
                   className="inline-flex items-center gap-2 text-sm"
                   style={{ color: id === "org" ? "white" : "#0F3D2E", fontWeight: 700, fontFamily: "'Manrope', sans-serif" }}>
                   {cta} <ArrowRight className="w-4 h-4" />
-                </Link>
+                </span>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ════════════════ FEATURED MISSIONS ════════════════ */}
+      {/* ════════════════ FEATURED QUESTS ════════════════ */}
       <section className="py-20" style={{ background: "#F9FAFB" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-end justify-between mb-10">
             <div>
               <span className="inline-block px-3 py-1 rounded-full text-xs mb-3"
                 style={{ background: "#E6F4EE", color: "#2F8F6B", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" }}>
-                Missions
+                Quests
               </span>
               <h2 style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, color: "#0F3D2E", fontSize: "clamp(1.6rem, 3vw, 2.2rem)" }}>
                 Start Your Climate Journey
               </h2>
             </div>
-            <Link to="/browse" className="hidden sm:inline-flex items-center gap-1.5 text-sm"
+            <Link to="/hands-on" className="hidden sm:inline-flex items-center gap-1.5 text-sm"
               style={{ color: "#2F8F6B", fontWeight: 600 }}>
-              View all missions <ArrowRight className="w-4 h-4" />
+              View all quests <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {[
-              { icon: Recycle, title: "Urban Composting", cat: "Soil & Waste", diff: "Beginner", dur: "2 weeks", pts: 120, img: IMG_COMPOST, color: "#2F8F6B", org: "EcoAction PH" },
-              { icon: Sun, title: "Solar Energy Basics", cat: "Clean Energy", diff: "Intermediate", dur: "3 weeks", pts: 200, img: IMG_SOLAR, color: "#F59E0B", org: "SunPower NGO" },
-              { icon: Wrench, title: "Repair Café Skills", cat: "Circular Economy", diff: "Beginner", dur: "1 week", pts: 80, img: IMG_REPAIR, color: "#3B82F6", org: "Repair Circle PH" },
-              { icon: TreePine, title: "Community Reforestation", cat: "Nature", diff: "Beginner", dur: "2 days", pts: 60, img: IMG_TREE, color: "#059669", org: "Green Luzon" },
-            ].map((m, i) => {
-              const Icon = m.icon;
-              return (
-                <Link key={i} to="/mission/1" className="group rounded-2xl overflow-hidden block transition-all duration-300"
-                  style={{ background: "white", border: "1px solid #E5E7EB", boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }}
-                  onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 8px 28px rgba(15,61,46,0.12)"; e.currentTarget.style.transform = "translateY(-3px)"; }}
-                  onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 1px 4px rgba(0,0,0,0.04)"; e.currentTarget.style.transform = "none"; }}>
-                  <div className="relative h-44 overflow-hidden">
-                    <img src={m.img} alt={m.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                    <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.45) 0%, transparent 55%)" }} />
-                    <span className="absolute top-3 left-3 px-2.5 py-1 rounded-full text-xs"
-                      style={{ background: "rgba(255,255,255,0.92)", color: m.color, fontWeight: 700 }}>
-                      {m.cat}
-                    </span>
-                    <span className="absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs"
-                      style={{ background: "rgba(0,0,0,0.45)", color: "white", fontWeight: 600 }}>
-                      {m.diff}
-                    </span>
-                  </div>
-                  <div className="p-4">
-                    <p className="text-xs mb-1" style={{ color: "#9CA3AF" }}>{m.org}</p>
-                    <h3 className="mb-3" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 700, color: "#0F3D2E", fontSize: "0.95rem" }}>{m.title}</h3>
-                    <div className="flex items-center justify-between pt-3" style={{ borderTop: "1px solid #F3F4F6" }}>
-                      <span className="text-xs flex items-center gap-1" style={{ color: "#9CA3AF" }}>
-                        <Clock className="w-3 h-3" /> {m.dur}
+          {questsLoading ? (
+            <div className="flex justify-center py-16">
+              <Loader2 className="w-8 h-8 animate-spin" style={{ color: "#2F8F6B" }} />
+            </div>
+          ) : displayQuests.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              {displayQuests.map((quest) => {
+                const color = getQuestColor(quest);
+                return (
+                  <Link key={quest.id} to={`/quests/${quest.id}`} className="group rounded-2xl overflow-hidden block transition-all duration-300"
+                    style={{ background: "white", border: "1px solid #E5E7EB", boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }}
+                    onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 8px 28px rgba(15,61,46,0.12)"; e.currentTarget.style.transform = "translateY(-3px)"; }}
+                    onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 1px 4px rgba(0,0,0,0.04)"; e.currentTarget.style.transform = "none"; }}>
+                    <div className="relative h-44 overflow-hidden flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${color}15, ${color}35)` }}>
+                      <span className="text-6xl transition-transform duration-500 group-hover:scale-110">{quest.badge_icon || "🌿"}</span>
+                      <span className="absolute top-3 left-3 px-2.5 py-1 rounded-full text-xs"
+                        style={{ background: "rgba(255,255,255,0.92)", color: color, fontWeight: 700 }}>
+                        {quest.category || quest.tier}
                       </span>
-                      <span className="text-xs flex items-center gap-1" style={{ color: "#FBBF24", fontWeight: 700 }}>
-                        <Zap className="w-3 h-3 fill-current" /> {m.pts} pts
+                      <span className="absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs"
+                        style={{ background: "rgba(0,0,0,0.45)", color: "white", fontWeight: 600 }}>
+                        {quest.tier === "beginner" ? "Beginner" : "Advanced"}
                       </span>
                     </div>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
+                    <div className="p-4">
+                      <p className="text-xs mb-1" style={{ color: "#9CA3AF" }}>{quest.tier === "beginner" ? "🌱 Badge Quest" : "🏆 Certificate Quest"}</p>
+                      <h3 className="mb-3" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 700, color: "#0F3D2E", fontSize: "0.95rem" }}>{quest.title}</h3>
+                      <div className="flex items-center justify-between pt-3" style={{ borderTop: "1px solid #F3F4F6" }}>
+                        <span className="text-xs flex items-center gap-1" style={{ color: "#9CA3AF" }}>
+                          <Clock className="w-3 h-3" /> ~{quest.estimated_days} days
+                        </span>
+                        <span className="text-xs flex items-center gap-1" style={{ color: "#FBBF24", fontWeight: 700 }}>
+                          <Zap className="w-3 h-3 fill-current" /> {quest.points_reward} pts
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="text-center py-12 bg-white rounded-2xl border border-gray-100">
+              <p className="text-sm" style={{ color: "#9CA3AF" }}>Quests coming soon — check back shortly!</p>
+            </div>
+          )}
 
           <div className="text-center mt-8 sm:hidden">
-            <Link to="/browse" className="inline-flex items-center gap-1.5 text-sm" style={{ color: "#2F8F6B", fontWeight: 600 }}>
-              View all missions <ArrowRight className="w-4 h-4" />
+            <Link to="/hands-on" className="inline-flex items-center gap-1.5 text-sm" style={{ color: "#2F8F6B", fontWeight: 600 }}>
+              View all quests <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         </div>
@@ -450,19 +500,19 @@ export function LandingPage() {
             Start your first climate mission today — it only takes 10 minutes to get going.
           </p>
           <div className="flex flex-wrap gap-3 justify-center">
-            <Link to="/signup"
+            <Link to="/auth"
               className="inline-flex items-center gap-2 px-8 py-4 rounded-xl text-white transition-all"
               style={{ background: "#2F8F6B", fontWeight: 700, fontFamily: "'Manrope', sans-serif", boxShadow: "0 4px 20px rgba(0,0,0,0.3)" }}
               onMouseEnter={e => (e.currentTarget.style.background = "#1EB89A")}
               onMouseLeave={e => (e.currentTarget.style.background = "#2F8F6B")}>
               <Sprout className="w-4 h-4" /> Join for Free
             </Link>
-            <Link to="/browse"
+            <Link to="/hands-on"
               className="inline-flex items-center gap-2 px-8 py-4 rounded-xl transition-all"
               style={{ background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.3)", color: "white", fontWeight: 600 }}
               onMouseEnter={e => (e.currentTarget.style.background = "rgba(255,255,255,0.2)")}
               onMouseLeave={e => (e.currentTarget.style.background = "rgba(255,255,255,0.12)")}>
-              Browse Missions <ArrowRight className="w-4 h-4" />
+              Browse Quests <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         </div>

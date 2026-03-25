@@ -19,9 +19,10 @@ import {
   Briefcase,
   Heart,
   BookOpen,
+  Trash2,
 } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
-import { getProjects, getMyProjects } from "../utils/matchService";
+import { getProjects, getMyProjects, deleteProject } from "../utils/matchService";
 import type { Project } from "../types/database";
 
 // Helper function to get category color based on focus area
@@ -52,67 +53,67 @@ function getCategoryStyle(focusArea: string[] | undefined): { color: string; ico
 function getProjectImage(focusArea: string[] | undefined): string {
   const area = focusArea?.[0]?.toLowerCase() || '';
   
-  // Energy / Solar / Renewable - people installing solar panels
+  // Energy / Solar / Renewable - workers installing solar panels
   if (area.includes('solar') || area.includes('energy') || area.includes('renewable')) {
-    return 'https://images.unsplash.com/photo-1559302504-64aae6ca6b6d?w=600&fit=crop';
+    return 'https://images.unsplash.com/photo-1509391366360-2e959784a276?w=600&fit=crop';
   }
   
   // Forest / Conservation / Reforestation - volunteers planting trees
   if (area.includes('forest') || area.includes('conservation') || area.includes('reforestation')) {
-    return 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&fit=crop';
+    return 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=600&fit=crop';
   }
   
-  // Education / Technology - workshop/training session
+  // Education / Technology - classroom/workshop setting
   if (area.includes('education') || area.includes('technology') || area.includes('literacy')) {
-    return 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&fit=crop';
+    return 'https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=600&fit=crop';
   }
   
-  // Water / Ocean - beach cleanup volunteers
+  // Water / Ocean - ocean conservation / beach cleanup
   if (area.includes('water') || area.includes('ocean') || area.includes('marine')) {
-    return 'https://images.unsplash.com/photo-1618477461853-cf6ed80faba5?w=600&fit=crop';
+    return 'https://images.unsplash.com/photo-1484291470158-b8f8d608850d?w=600&fit=crop';
   }
   
-  // Urban / Infrastructure / City - community garden
+  // Urban / Infrastructure / City - sustainable city / green buildings
   if (area.includes('urban') || area.includes('infrastructure') || area.includes('city')) {
-    return 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600&fit=crop';
+    return 'https://images.unsplash.com/photo-1518005020951-eccb494ad742?w=600&fit=crop';
   }
   
-  // Climate Science / Research - team collaboration
+  // Climate Science / Research - scientists in lab/field
   if (area.includes('climate science') || area.includes('research') || area.includes('data')) {
-    return 'https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?w=600&fit=crop';
+    return 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=600&fit=crop';
   }
   
-  // Policy / Finance / Advocacy - community meeting
+  // Policy / Finance / Advocacy - meeting / conference
   if (area.includes('policy') || area.includes('finance') || area.includes('advocacy')) {
-    return 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=600&fit=crop';
+    return 'https://images.unsplash.com/photo-1521791136064-7986c2920216?w=600&fit=crop';
   }
   
-  // Community / Grassroots - volunteers group
+  // Community / Grassroots - community gathering
   if (area.includes('community') || area.includes('grassroots') || area.includes('volunteer')) {
-    return 'https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=600&fit=crop';
+    return 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&fit=crop';
   }
   
-  // Disaster Response / Emergency - relief workers
+  // Disaster Response / Emergency - relief workers helping
   if (area.includes('disaster') || area.includes('emergency') || area.includes('relief')) {
-    return 'https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=600&fit=crop';
+    return 'https://images.unsplash.com/photo-1593113598332-cd288d649433?w=600&fit=crop';
   }
   
-  // Agriculture / Food - community farming
+  // Agriculture / Food - sustainable farming
   if (area.includes('agriculture') || area.includes('food') || area.includes('farming')) {
-    return 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=600&fit=crop';
+    return 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=600&fit=crop';
   }
   
-  // Storytelling / Media / Documentary - team filming
+  // Storytelling / Media / Documentary - filming / content creation
   if (area.includes('storytelling') || area.includes('media') || area.includes('documentary')) {
-    return 'https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=600&fit=crop';
+    return 'https://images.unsplash.com/photo-1485846234645-a62644f84728?w=600&fit=crop';
   }
   
-  // Default - diverse team collaboration
-  return 'https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?w=600&fit=crop';
+  // Default - diverse team collaboration on climate
+  return 'https://images.unsplash.com/photo-1552799446-159ba9523315?w=600&fit=crop';
 }
 
 const categories = ["All", "climate science", "renewable energy", "education", "urban planning", "climate finance", "technology", "advocacy"];
-const regions = ["All Regions", "Global", "North America", "Africa", "Caribbean", "West Coast", "Pacific Northwest", "Southwest"];
+const regions = ["All Regions", "Philippines", "Global", "Southeast Asia", "North America", "Africa", "Caribbean"];
 
 export function MissionDashboard() {
   const { user } = useAuth();
@@ -169,13 +170,27 @@ export function MissionDashboard() {
 
   const urgent = filtered.filter(m => m.type === "urgent");
   const regular = filtered.filter(m => m.type !== "urgent");
-  // Sort by urgency first, then by start_date for urgent projects
+  
+  // Sort helper: prioritize Philippines, then Remote/Global, then others
+  const regionPriority = (region: string | undefined) => {
+    if (region === 'Philippines') return 0;
+    if (region === 'Global' || region?.toLowerCase() === 'remote') return 1;
+    return 2;
+  };
+  
+  // Sort by urgency first, then by region priority, then by start_date
   const sorted = [
     ...urgent.sort((a, b) => {
+      const regionDiff = regionPriority(a.region) - regionPriority(b.region);
+      if (regionDiff !== 0) return regionDiff;
       if (a.start_date && b.start_date) return new Date(a.start_date).getTime() - new Date(b.start_date).getTime();
       return 0;
     }),
-    ...regular
+    ...regular.sort((a, b) => {
+      const regionDiff = regionPriority(a.region) - regionPriority(b.region);
+      if (regionDiff !== 0) return regionDiff;
+      return 0;
+    })
   ];
 
   // Loading state
@@ -248,6 +263,7 @@ export function MissionDashboard() {
                 <Briefcase className="w-4 h-4" />
                 Professionals
               </button>
+              {user && (
               <button
                 onClick={() => setWorkTab('my_projects')}
                 className={`px-5 py-2 rounded-full text-sm font-medium transition flex items-center gap-2 ${
@@ -259,6 +275,7 @@ export function MissionDashboard() {
                 <Target className="w-4 h-4" />
                 My Projects
               </button>
+              )}
             </div>
             <Link
               to="/post-project"
@@ -434,6 +451,23 @@ export function MissionDashboard() {
                           )}
                         </div>
 
+                        {/* Compensation badge - Professionals tab only */}
+                        {(mission.professionals_needed ?? 0) > 0 && workTab === 'professionals' && (
+                          <div className="mb-3">
+                            {mission.compensation_min ? (
+                              <span className="bg-blue-50 border border-blue-100 text-blue-700 
+                                               text-xs font-semibold px-3 py-1 rounded-full">
+                                💰 ₱{mission.compensation_min.toLocaleString()} – ₱{mission.compensation_max?.toLocaleString()}
+                              </span>
+                            ) : (
+                              <span className="bg-gray-50 border border-gray-100 text-gray-400 
+                                               text-xs px-3 py-1 rounded-full">
+                                💰 Compensation negotiable
+                              </span>
+                            )}
+                          </div>
+                        )}
+
                         {/* Skills needed — max 3 shown */}
                         <div className="flex flex-wrap gap-1 mb-4">
                           {mission.skills_needed?.slice(0, 3).map(skill => (
@@ -499,7 +533,7 @@ export function MissionDashboard() {
                         </div>
                         <p className="text-sm text-gray-600 mt-2 line-clamp-2">{mission.description}</p>
                         <div className="flex items-center justify-between mt-3">
-                          <div className="flex gap-3 text-xs text-gray-500">
+                          <div className="flex gap-3 text-xs text-gray-500 flex-wrap items-center">
                             <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{mission.duration || "Flexible"}</span>
                             {(mission.volunteers_needed ?? 0) > 0 && (
                               <span className="flex items-center gap-1 text-green-700">
@@ -510,6 +544,20 @@ export function MissionDashboard() {
                               <span className="flex items-center gap-1 text-blue-700">
                                 <Briefcase className="w-3 h-3" />{mission.professionals_needed} professionals
                               </span>
+                            )}
+                            {/* Compensation badge - Professionals tab only */}
+                            {(mission.professionals_needed ?? 0) > 0 && workTab === 'professionals' && (
+                              mission.compensation_min ? (
+                                <span className="bg-blue-50 border border-blue-100 text-blue-700 
+                                                 text-xs font-semibold px-2 py-0.5 rounded-full">
+                                  💰 ₱{mission.compensation_min.toLocaleString()} – ₱{mission.compensation_max?.toLocaleString()}
+                                </span>
+                              ) : (
+                                <span className="bg-gray-50 border border-gray-100 text-gray-400 
+                                                 text-xs px-2 py-0.5 rounded-full">
+                                  💰 Negotiable
+                                </span>
+                              )
                             )}
                           </div>
                           {/* CTA — outline for owners, filled for others */}
@@ -534,24 +582,46 @@ export function MissionDashboard() {
         )}
 
         {workTab === "my_projects" && (
-          <MyProjectsView projects={myProjects} />
+          <MyProjectsView 
+            projects={myProjects} 
+            onDelete={(projectId) => setMyProjects(prev => prev.filter(p => p.id !== projectId))}
+          />
         )}
       </div>
     </div>
   );
 }
 
-function MyProjectsView({ projects }: { projects: Project[] }) {
+function MyProjectsView({ projects, onDelete }: { projects: Project[]; onDelete: (id: string) => void }) {
   const activeProjects = projects.filter(p => p.status === 'open' && p.type !== 'urgent');
   const urgentProjects = projects.filter(p => p.type === 'urgent');
-  const draftProjects = projects.filter(p => p.status === 'draft');
+  const [deleting, setDeleting] = useState<string | null>(null);
+
+  const handleDelete = async (projectId: string) => {
+    const confirmed = window.confirm(
+      'Are you sure you want to delete this project? This cannot be undone.'
+    );
+    if (!confirmed) return;
+
+    setDeleting(projectId);
+    try {
+      const success = await deleteProject(projectId);
+      if (success) {
+        onDelete(projectId);
+      } else {
+        alert('Failed to delete project.');
+      }
+    } catch (err) {
+      console.error('Error deleting project:', err);
+      alert('Failed to delete project.');
+    } finally {
+      setDeleting(null);
+    }
+  };
 
   const getStatusBadge = (project: Project) => {
     if (project.type === 'urgent') {
       return <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-red-100 text-red-700 flex items-center gap-1"><AlertTriangle className="w-3 h-3" />Urgent</span>;
-    }
-    if (project.status === 'draft') {
-      return <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">Draft</span>;
     }
     return <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-green-100 text-green-700">Active</span>;
   };
@@ -575,11 +645,10 @@ function MyProjectsView({ projects }: { projects: Project[] }) {
   return (
     <div>
       {/* Summary strip */}
-      <div className="grid grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-2 gap-4 mb-6">
         {[
           { label: "Active Projects", value: activeProjects.length, color: "bg-green-50 text-green-700 border-green-100" },
           { label: "Urgent Projects", value: urgentProjects.length, color: "bg-red-50 text-red-700 border-red-100" },
-          { label: "Drafts", value: draftProjects.length, color: "bg-amber-50 text-amber-700 border-amber-100" },
         ].map(item => (
           <div key={item.label} className={`rounded-xl border p-4 text-center ${item.color}`}>
             <div className="text-3xl font-[Manrope] font-bold">{item.value}</div>
@@ -622,6 +691,14 @@ function MyProjectsView({ projects }: { projects: Project[] }) {
                 >
                   Edit
                 </Link>
+                <button
+                  onClick={() => handleDelete(project.id)}
+                  disabled={deleting === project.id}
+                  className="text-sm font-medium text-red-400 border border-red-200 px-3 py-1.5 rounded-lg hover:bg-red-50 transition-colors disabled:opacity-50 flex items-center gap-1"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  {deleting === project.id ? '...' : ''}
+                </button>
               </div>
             </div>
           </div>

@@ -76,6 +76,7 @@ export function Footer() {
                 { label: "Privacy Policy", to: "/" },
                 { label: "Terms of Service", to: "/" },
                 { label: "Contact Us", to: "/" },
+                { label: "Verifier Portal", to: "/verifier-login" },
               ].map((item) => (
                 <li key={item.label}>
                   <Link to={item.to} className="text-[#A8D5BF] text-sm hover:text-white transition-colors">

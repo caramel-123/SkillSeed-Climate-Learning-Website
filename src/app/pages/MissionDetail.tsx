@@ -18,9 +18,10 @@ import {
   Building2,
   Zap,
   Loader2,
+  Trash2,
 } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
-import { getProjectById, applyToProject, getConnectionsForProject, updateConnectionStatus } from "../utils/matchService";
+import { getProjectById, applyToProject, getConnectionsForProject, updateConnectionStatus, deleteProject } from "../utils/matchService";
 import type { Project, ConnectionWithDetails } from "../types/database";
 
 const missionsData: Record<string, any> = {
@@ -199,6 +200,7 @@ export function MissionDetail() {
   const [loading, setLoading] = useState(true);
   const [applying, setApplying] = useState(false);
   const [applyError, setApplyError] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   // Ownership check using useAuth user.id directly
   const isOwner = user && dbProject && String(dbProject.poster_id) === String(user.id);
@@ -244,6 +246,22 @@ export function MissionDetail() {
     const updated = await updateConnectionStatus(connectionId, action);
     if (updated) {
       setApplicants(prev => prev.map(a => a.id === connectionId ? { ...a, status: action } : a));
+    }
+  };
+
+  // Handle delete project
+  const handleDelete = async () => {
+    if (!dbProject?.id) return;
+    if (!confirm('Are you sure you want to delete this project? This cannot be undone.')) return;
+    
+    setDeleting(true);
+    const success = await deleteProject(dbProject.id);
+    setDeleting(false);
+    
+    if (success) {
+      navigate('/missions?tab=my');
+    } else {
+      alert('Failed to delete project. Please try again.');
     }
   };
 
@@ -512,6 +530,14 @@ export function MissionDetail() {
                     className="flex-1 flex items-center justify-center gap-2 bg-[#1a3a2a] text-white text-sm py-3 rounded-xl hover:bg-green-900 transition font-medium"
                   >
                     👥 {showApplicants ? 'Hide Applicants' : 'View Applicants'}
+                  </button>
+                  <button
+                    onClick={handleDelete}
+                    disabled={deleting}
+                    className="flex-1 flex items-center justify-center gap-2 border-2 border-red-500 text-red-600 text-sm py-3 rounded-xl hover:bg-red-50 transition font-medium disabled:opacity-50"
+                  >
+                    {deleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+                    {deleting ? 'Deleting...' : 'Delete Project'}
                   </button>
 
                   {/* Applicants Section */}

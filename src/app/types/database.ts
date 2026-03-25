@@ -27,6 +27,7 @@ export interface Profile {
   verified: boolean;
   credentials_url: string | null;
   avatar_url: string | null;
+  is_verifier: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -47,6 +48,9 @@ export interface Project {
   duration: string | null;
   start_date: string | null;
   points: number;
+  compensation_min: number | null;
+  compensation_max: number | null;
+  compensation_currency: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -275,6 +279,9 @@ export interface ProjectInsert {
   duration?: string | null;
   start_date?: string | null;
   points?: number;
+  compensation_min?: number | null;
+  compensation_max?: number | null;
+  compensation_currency?: string | null;
 }
 
 export interface ProjectUpdate {
@@ -291,6 +298,9 @@ export interface ProjectUpdate {
   duration?: string | null;
   start_date?: string | null;
   points?: number;
+  compensation_min?: number | null;
+  compensation_max?: number | null;
+  compensation_currency?: string | null;
 }
 
 export interface ConnectionInsert {
@@ -432,3 +442,84 @@ export const REGION_OPTIONS = [
 ] as const;
 
 export type Region = typeof REGION_OPTIONS[number];
+
+// ============================================================================
+// Quest Types (Hands-on Tab)
+// ============================================================================
+
+export type QuestTier = 'beginner' | 'advanced';
+export type QuestProgressStatus = 'in_progress' | 'submitted' | 'verified' | 'rejected';
+
+export interface QuestStep {
+  step: number;
+  title: string;
+  instruction: string;
+}
+
+export interface Quest {
+  id: string;
+  title: string;
+  description: string | null;
+  tier: QuestTier;
+  category: string | null;
+  badge_name: string | null;
+  badge_icon: string | null;
+  certificate_name: string | null;
+  steps: QuestStep[] | null;
+  points_reward: number;
+  estimated_days: number;
+  created_at: string;
+}
+
+export interface QuestProgress {
+  id: string;
+  quest_id: string;
+  user_id: string;
+  status: QuestProgressStatus;
+  current_step: number;
+  photo_url: string | null;
+  reflection: string | null;
+  submitted_at: string | null;
+  verified_at: string | null;
+  verified_by: string | null;
+  rejection_reason: string | null;
+  ai_confidence: number | null;
+  ai_reasoning: string | null;
+  ai_recommendation: string | null;
+  created_at: string;
+}
+
+export interface Badge {
+  id: string;
+  name: string;
+  icon: string;
+  description: string | null;
+  quest_id: string | null;
+  tier: QuestTier | null;
+}
+
+export interface UserBadge {
+  id: string;
+  user_id: string;
+  badge_id: string;
+  quest_id: string | null;
+  earned_at: string;
+}
+
+// Extended types with relations
+export interface QuestProgressWithQuest extends QuestProgress {
+  quests?: Quest;
+}
+
+export interface QuestProgressWithDetails extends QuestProgress {
+  quests?: Quest;
+  profiles?: Profile;
+}
+
+export interface UserBadgeWithDetails extends UserBadge {
+  badges?: Badge;
+}
+
+export interface QuestWithProgress extends Quest {
+  quest_progress?: QuestProgress[];
+}

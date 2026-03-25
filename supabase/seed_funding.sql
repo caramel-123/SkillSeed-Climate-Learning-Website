@@ -1,0 +1,160 @@
+-- SkillSeed Funding Opportunities Seed Data
+-- Migration: seed_funding.sql
+-- Created: 2026-03-08
+
+-- =============================================================================
+-- SEED FUNDING OPPORTUNITIES
+-- =============================================================================
+INSERT INTO public.funding_opportunities 
+  (funder_name, title, description, type, focus_areas, eligibility, amount_min, amount_max, currency, region, deadline, apply_url, status)
+VALUES
+(
+  'UNDP', 
+  'Ecosystem Restoration & Biodiversity Grant',
+  'Supports large-scale ecosystem restoration projects focusing on coastal, forest, and grassland habitats across Southeast Asia.',
+  'Grant', 
+  ARRAY['Reforestation', 'Marine'],
+  'NGOs, Government bodies, Community groups with 3+ years track record',
+  NULL, 
+  50000, 
+  'USD', 
+  'Southeast Asia',
+  '2026-04-30', 
+  'https://undp.org', 
+  'active'
+),
+(
+  'USAID', 
+  'Disaster Resilience & Community Preparedness',
+  'Funds community-led initiatives that strengthen disaster preparedness and build local resilience capabilities.',
+  'Grant', 
+  ARRAY['Disaster Response'],
+  'Local NGOs and community organizations in disaster-prone regions',
+  10000, 
+  75000, 
+  'USD', 
+  'Philippines',
+  '2026-05-15', 
+  'https://usaid.gov', 
+  'active'
+),
+(
+  'Forest Foundation Philippines', 
+  'Community Forest Stewardship Programme',
+  'Supports indigenous and local community groups in sustainable forest management and conservation.',
+  'Grant', 
+  ARRAY['Reforestation', 'Agriculture'],
+  'Indigenous community groups, forest-adjacent communities',
+  200000, 
+  500000, 
+  'PHP', 
+  'Philippines',
+  '2026-03-31', 
+  'https://forestfoundation.ph', 
+  'active'
+),
+(
+  'Asian Development Bank', 
+  'Clean Energy Access Fellowship',
+  'Fellowship for emerging leaders working on clean energy access in underserved communities.',
+  'Fellowship', 
+  ARRAY['Energy'],
+  'Individuals with 2+ years experience in energy or development sector',
+  NULL, 
+  NULL, 
+  'PHP', 
+  'Asia Pacific',
+  '2026-06-01', 
+  'https://adb.org', 
+  'active'
+),
+(
+  'GIZ Philippines', 
+  'Renewable Energy Access Fund',
+  'Funds renewable energy projects that expand energy access to off-grid and underserved communities.',
+  'Grant', 
+  ARRAY['Energy'],
+  'Social enterprises and NGOs working on energy access in off-grid communities',
+  15000, 
+  40000, 
+  'EUR', 
+  'Philippines',
+  '2026-07-20', 
+  'https://giz.de', 
+  'active'
+),
+(
+  'Patagonia Environmental', 
+  'Marine Conservation Partnership',
+  'Partnership grants for grassroots marine conservation efforts, particularly coral reef and seagrass restoration.',
+  'Partnership', 
+  ARRAY['Marine'],
+  'Community groups and NGOs working on marine ecosystem protection',
+  8000, 
+  25000, 
+  'USD', 
+  'Global',
+  '2026-08-15', 
+  'https://patagonia.com', 
+  'active'
+),
+(
+  'JICA', 
+  'Agricultural Innovation & Food Security Grant',
+  'Supports innovative agricultural projects that improve food security and climate-resilient farming practices.',
+  'Grant', 
+  ARRAY['Agriculture'],
+  'Farmer cooperatives, agricultural NGOs, research institutions',
+  15000, 
+  50000, 
+  'USD', 
+  'Philippines',
+  '2026-09-30', 
+  'https://jica.go.jp', 
+  'active'
+),
+(
+  'Skoll Foundation', 
+  'Social Enterprise Climate Impact Award',
+  'Recognizes and funds social entrepreneurs tackling climate change with scalable, evidence-based solutions.',
+  'Fellowship', 
+  ARRAY['Energy', 'Agriculture', 'Reforestation'],
+  'Social enterprises with proven climate impact model operating for 2+ years',
+  NULL, 
+  100000, 
+  'USD', 
+  'Global',
+  '2026-10-01', 
+  'https://skoll.org', 
+  'active'
+),
+(
+  'GrowLocal PH', 
+  'Micro-Grant for Urban Garden Community Projects',
+  'Small grants to help community groups establish urban food gardens in shared spaces, schools, and public areas.',
+  'Grant', 
+  ARRAY['Agriculture', 'Urban'],
+  'Community groups, barangay associations, and urban farming cooperatives',
+  15000, 
+  50000, 
+  'PHP', 
+  'Philippines',
+  '2026-04-20', 
+  'https://growlocal.ph', 
+  'active'
+),
+(
+  'ReCircle Community Fund', 
+  'Seed Funding for Zero-Waste Initiatives',
+  'Supports zero-waste champions with seed funding, tools, and network access to launch community recycling and repair initiatives.',
+  'In-kind Support', 
+  ARRAY['Urban'],
+  'Volunteer groups, social enterprises, and youth-led organisations working on waste reduction',
+  2000, 
+  8000, 
+  'USD', 
+  'Southeast Asia',
+  '2026-05-05', 
+  'https://recircle.org', 
+  'active'
+);
