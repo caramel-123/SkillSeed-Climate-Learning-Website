@@ -317,11 +317,10 @@ export function LandingPage() {
       {/* ════════════════ STATS ════════════════ */}
       <section className="py-16" style={{ background: "#0F3D2E" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
             <AnimatedStat value={12840} suffix="+" label="Active Members" desc="across 87 countries" />
             <AnimatedStat value={1240} suffix="+" label="Missions Completed" desc="verified impact" />
             <AnimatedStat value={87} suffix="" label="Countries Reached" desc="and growing" />
-            <AnimatedStat value={94600} suffix="kg" label="CO₂ Avoided" desc="this year" />
           </div>
         </div>
       </section>
