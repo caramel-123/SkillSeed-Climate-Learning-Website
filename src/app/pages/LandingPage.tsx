@@ -186,9 +186,9 @@ export function LandingPage() {
         <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "radial-gradient(#0F3D2E 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
 
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="mb-5" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, fontSize: "clamp(2.4rem, 5.5vw, 4rem)", lineHeight: 1.1, color: "#0F3D2E", letterSpacing: "-0.02em" }}>
+          <h1 className="mb-5 text-[#0F3D2E] dark:text-[#B7C96A]" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, fontSize: "clamp(2.4rem, 5.5vw, 4rem)", lineHeight: 1.1, letterSpacing: "-0.02em" }}>
             Where climate action<br />
-            <span style={{ color: "#2F8F6B" }}>finds its people.</span>
+            <span className="text-[#2F8F6B] dark:text-[#BEEBD7]">finds its people.</span>
           </h1>
 
           <p className="mb-8 mx-auto text-lg" style={{ color: "#6B7280", lineHeight: 1.7, maxWidth: "580px" }}>

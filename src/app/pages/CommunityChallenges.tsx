@@ -352,7 +352,7 @@ export function CommunityChallenges() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#F9FDFB]">
+      <div className="min-h-screen bg-[#F9FDFB] dark:bg-[#0D1F18]">
         <div className="bg-gradient-to-br from-[#0F3D2E] to-[#1A5C43] py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="h-8 w-72 bg-white/20 rounded animate-pulse mb-3" />
@@ -406,7 +406,7 @@ export function CommunityChallenges() {
   const featured = featuredChallenge ?? null;
 
   return (
-    <div className="min-h-screen bg-[#F9FDFB]">
+    <div className="min-h-screen bg-[#F9FDFB] dark:bg-[#0D1F18]">
       {/* Create Challenge Modal */}
       <CreateChallengeModal
         open={createModalOpen}
@@ -433,13 +433,13 @@ export function CommunityChallenges() {
             <div>
               <div className="flex items-center gap-2 mb-2">
                 <Trophy className="w-6 h-6 text-amber-400" />
-                <span className="text-[#6DD4A8] font-semibold text-sm uppercase tracking-wider">Community Challenges</span>
+                <span className="text-[#6DD4A8] font-semibold text-sm tracking-wide">Community Challenges</span>
               </div>
-              <h1 className="text-white font-[Manrope] font-bold text-3xl md:text-4xl mb-2">
+              <h1 className="text-[#BEEBD7] dark:text-[#B7C96A] font-[Manrope] font-bold text-3xl md:text-4xl mb-2">
                 Compete. Collaborate. Impact.
               </h1>
-              <p className="text-[#A8D5BF] max-w-lg">
-                Join collective challenges that multiply your impact. Every action counts toward a shared climate goal.
+              <p className="text-white max-w-lg text-sm md:text-base">
+                Join challenges that turn small actions into visible progress for your community.
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
@@ -463,7 +463,7 @@ export function CommunityChallenges() {
               <div className="text-2xl font-[Manrope] font-bold text-white">
                 {communityStats.totalChallengers.toLocaleString()}
               </div>
-              <div className="text-[#A8D5BF] text-xs mt-0.5">Active Challengers</div>
+              <div className="text-white text-xs mt-0.5">Active members</div>
             </div>
             <div className="bg-white/10 backdrop-blur rounded-xl p-4 text-center">
               <div className="flex justify-center mb-1 text-[#6DD4A8]">
@@ -472,7 +472,7 @@ export function CommunityChallenges() {
               <div className="text-2xl font-[Manrope] font-bold text-white">
                 {communityStats.activeChallenges}
               </div>
-              <div className="text-[#A8D5BF] text-xs mt-0.5">Challenges Running</div>
+              <div className="text-white text-xs mt-0.5">Running now</div>
             </div>
             <div className="bg-white/10 backdrop-blur rounded-xl p-4 text-center">
               <div className="flex justify-center mb-1 text-[#6DD4A8]">
@@ -481,7 +481,7 @@ export function CommunityChallenges() {
               <div className="text-2xl font-[Manrope] font-bold text-white">
                 {communityStats.totalActions.toLocaleString()}
               </div>
-              <div className="text-[#A8D5BF] text-xs mt-0.5">Impact Actions</div>
+              <div className="text-white text-xs mt-0.5">Actions</div>
             </div>
             <div className="bg-white/10 backdrop-blur rounded-xl p-4 text-center">
               <div className="flex justify-center mb-1 text-[#6DD4A8]">
@@ -490,7 +490,7 @@ export function CommunityChallenges() {
               <div className="text-2xl font-[Manrope] font-bold text-white">
                 {challenges.length}
               </div>
-              <div className="text-[#A8D5BF] text-xs mt-0.5">Active Challenges</div>
+              <div className="text-white text-xs mt-0.5">Challenges</div>
             </div>
           </div>
         </div>
@@ -504,17 +504,17 @@ export function CommunityChallenges() {
             <div className="bg-white rounded-2xl border border-gray-100 shadow-[0_6px_20px_rgba(15,61,46,0.08)] p-5 mb-6 transition-all duration-300 ease-out motion-reduce:transition-none hover:shadow-[0_10px_24px_rgba(15,61,46,0.10)]">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Community goal (this week)</p>
+                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Community goal</p>
                   <p className="font-[Manrope] font-bold text-[#0F3D2E] text-lg mt-1">
-                    Reach {weeklyGoal.toLocaleString()} impact actions together
+                    Reach {weeklyGoal.toLocaleString()} actions this week
                   </p>
                   <p className="text-sm text-gray-500 mt-1">
-                    Small actions compound into real community resilience.
+                    Build momentum together with consistent small wins.
                   </p>
                 </div>
                 <div className="text-right flex-shrink-0">
                   <p className="text-sm font-bold text-[#0F3D2E]">{communityStats.totalActions.toLocaleString()}</p>
-                  <p className="text-xs text-gray-400">actions so far</p>
+                  <p className="text-xs text-gray-500">actions so far</p>
                 </div>
               </div>
               <div className="mt-4">
@@ -524,7 +524,7 @@ export function CommunityChallenges() {
                     style={{ width: `${Math.round(weeklyProgress * 100)}%` }}
                   />
                 </div>
-                <div className="flex items-center justify-between mt-2 text-xs text-gray-400">
+                <div className="flex items-center justify-between mt-2 text-xs text-gray-500">
                   <span>Progress</span>
                   <span>{Math.round(weeklyProgress * 100)}%</span>
                 </div>
@@ -654,18 +654,16 @@ export function CommunityChallenges() {
             {activeTab !== "feed" && featured && (
               <div className="bg-white rounded-2xl border border-[#2F8F6B]/30 shadow-[0_6px_20px_rgba(15,61,46,0.08)] overflow-hidden mb-6 transition-all duration-300 ease-out motion-reduce:transition-none hover:shadow-[0_12px_26px_rgba(15,61,46,0.12)]">
                 <div className="bg-gradient-to-r from-[#2F8F6B] to-[#0F3D2E] px-4 py-2 flex items-center justify-between">
-                  <span className="text-white text-xs font-bold uppercase tracking-wide">Featured this week</span>
-                  <span className="text-[#D4F3E6] text-[11px]">Most completions + urgency score</span>
+                  <span className="text-white text-xs font-semibold tracking-wide">Featured this week</span>
+                  <span className="text-[#D4F3E6] text-xs">Most completions and urgency</span>
                 </div>
                 <div className="p-4 sm:p-5">
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <h3 className="font-[Manrope] font-bold text-[#0F3D2E] text-xl">{featured.title}</h3>
-                      <p className="text-sm text-gray-500 mt-1">
-                        Why featured: highest community activity this week with strong momentum.
-                      </p>
+                      <p className="text-sm text-gray-500 mt-1">Featured for the highest activity this week.</p>
                     </div>
-                    <span className="text-sm font-bold text-[#2F8F6B]">+{featured.points_reward} pts</span>
+                    <span className="text-sm font-bold text-[#2F8F6B]">+{featured.points_reward} points</span>
                   </div>
                   <div className="flex flex-wrap gap-3 mt-4 text-sm text-gray-500">
                     <span className="inline-flex items-center gap-1.5"><Users className="w-4 h-4" /> {featured.participant_count.toLocaleString()} joined</span>
@@ -680,7 +678,7 @@ export function CommunityChallenges() {
                       disabled={!user || joiningId === featured.id}
                       className="px-4 py-2 rounded-xl text-sm font-semibold bg-[#0F3D2E] text-white hover:bg-[#2F8F6B] transition-all duration-300 delay-75 motion-reduce:transition-none hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50"
                     >
-                      {joiningId === featured.id ? "Joining..." : joinedChallengeIds.has(featured.id) ? "Joined" : "Join in 1 tap"}
+                      {joiningId === featured.id ? "Joining..." : joinedChallengeIds.has(featured.id) ? "Joined" : "Join now"}
                     </button>
                     <button
                       onClick={() => setSelectedChallenge(featured)}
@@ -702,10 +700,10 @@ export function CommunityChallenges() {
                       <Camera className="w-8 h-8 text-[#2F8F6B]" />
                     </div>
                     <h3 className="font-[Manrope] font-bold text-[#0F3D2E] text-lg mb-2">
-                      No Submissions Yet
+                      No submissions yet
                     </h3>
                     <p className="text-gray-500 text-sm">
-                      Be the first to complete a challenge and share your impact!
+                      Complete a challenge to start the community feed.
                     </p>
                   </div>
                 </div>
@@ -732,13 +730,13 @@ export function CommunityChallenges() {
                   <Trophy className="w-8 h-8 text-[#2F8F6B]" />
                 </div>
                 <h3 className="font-[Manrope] font-bold text-[#0F3D2E] text-lg mb-2">
-                  {activeTab === "joined" ? "No Joined Challenges" : activeTab === "featured" ? "No Top Challenge Yet" : "No Challenges Found"}
+                  {activeTab === "joined" ? "No joined challenges" : activeTab === "featured" ? "No top challenge yet" : "No challenges found"}
                 </h3>
                 <p className="text-gray-500 text-sm">
                   {activeTab === "joined"
-                    ? "Join a challenge to start making an impact!"
+                    ? "Join a challenge to get started."
                     : activeTab === "featured"
-                    ? "The top challenge is calculated based on activity. Check back soon!"
+                    ? "The top challenge is calculated from activity. Check back soon."
                     : "Check back soon for new challenges."}
                 </p>
                 <div className="flex flex-wrap justify-center gap-2 mt-5">
@@ -780,7 +778,7 @@ export function CommunityChallenges() {
                         <div className="bg-gradient-to-r from-[#2F8F6B] to-[#0F3D2E] px-4 py-1.5 flex items-center justify-between gap-2">
                           <div className="flex items-center gap-2">
                             <Flame className="w-3.5 h-3.5 text-amber-300" />
-                            <span className="text-white text-xs font-bold">
+                              <span className="text-white text-xs font-semibold">
                               {challenge.is_pinned ? "Pinned by admin" : "Featured challenge"}
                             </span>
                           </div>
@@ -827,13 +825,13 @@ export function CommunityChallenges() {
                               </div>
                               <h3 className="font-[Manrope] font-bold text-[#0F3D2E] text-lg">{challenge.title}</h3>
                               {challengeIsFeatured && !challenge.is_pinned && (
-                                <p className="text-xs text-gray-500 mt-1">Why featured: highest community activity this week.</p>
+                              <p className="text-xs text-gray-500 mt-1">Featured for the highest activity this week.</p>
                               )}
                             </div>
                             <div className="text-right flex-shrink-0">
                               <div className="text-sm font-bold text-[#2F8F6B] flex items-center gap-1">
                                 <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-                                +{challenge.points_reward} pts
+                                +{challenge.points_reward} points
                               </div>
                             </div>
                           </div>
@@ -923,7 +921,7 @@ export function CommunityChallenges() {
                 <Trophy className="w-5 h-5 text-amber-500" />
                 <div className="flex-1 min-w-0">
                   <h3 className="font-[Manrope] font-bold text-[#0F3D2E]">Global Leaderboard</h3>
-                  <p className="text-xs text-gray-400">
+                  <p className="text-xs text-gray-500">
                     {lastUpdatedAt ? `Updated ${lastUpdatedAt.toLocaleTimeString()}` : "Updated recently"} · Points earned by completing challenges
                   </p>
                 </div>
@@ -973,7 +971,7 @@ export function CommunityChallenges() {
                         </div>
                         <div className="text-right flex-shrink-0">
                           <p className="text-sm font-bold text-[#0F3D2E]">{entry.total_points.toLocaleString()}</p>
-                          <p className="text-xs text-gray-400">pts</p>
+                          <p className="text-xs text-gray-500">points</p>
                         </div>
                       </div>
                     );
@@ -1003,7 +1001,7 @@ export function CommunityChallenges() {
                   </div>
                   <div className="bg-white/10 rounded-xl p-3 text-center">
                     <div className="text-2xl font-[Manrope] font-bold text-[#6DD4A8]">{userStats.totalPoints.toLocaleString()}</div>
-                    <div className="text-[#A8D5BF] text-xs mt-0.5">Challenge pts</div>
+                    <div className="text-[#A8D5BF] text-xs mt-0.5">Points</div>
                   </div>
                   <div className="bg-white/10 rounded-xl p-3 text-center">
                     <div className="text-2xl font-[Manrope] font-bold text-white">#{userRank || "-"}</div>
@@ -1014,7 +1012,7 @@ export function CommunityChallenges() {
                   <div className="mt-4 flex items-center gap-2 bg-white/10 rounded-xl p-3">
                     <ArrowUp className="w-4 h-4 text-[#6DD4A8]" />
                     <p className="text-[#A8D5BF] text-xs">
-                      You're <span className="text-white font-semibold">{pointsToNext} points</span> away from rank #{userRank - 1}!
+                      You're <span className="text-white font-semibold">{pointsToNext} points</span> from rank #{userRank - 1}.
                     </p>
                   </div>
                 )}
@@ -1119,7 +1117,7 @@ export function CommunityChallenges() {
                 </div>
                 <div className="bg-[#F9FDFB] border border-gray-100 rounded-2xl p-3">
                   <p className="text-xs text-gray-400">Reward</p>
-                  <p className="text-sm font-bold text-[#2F8F6B] mt-0.5">+{selectedChallenge.points_reward} pts</p>
+                  <p className="text-sm font-bold text-[#2F8F6B] mt-0.5">+{selectedChallenge.points_reward} points</p>
                 </div>
               </div>
 
@@ -1136,7 +1134,7 @@ export function CommunityChallenges() {
                   </li>
                   <li className="flex gap-2">
                     <span className="text-[#2F8F6B] font-bold">3.</span>
-                    Earn points and show up on the community feed + leaderboard.
+                    Earn points and appear on the community feed and leaderboard.
                   </li>
                 </ul>
               </div>

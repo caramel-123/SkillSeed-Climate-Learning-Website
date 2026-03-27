@@ -78,6 +78,244 @@
   --sidebar-ring: oklch(0.439 0 0);
 }
 
+/* SkillSeed dark-mode surface + contrast normalization.
+   Many existing components use fixed light utility classes; these overrides
+   keep readability and visual cohesion without rewriting every screen. */
+html:not(.dark) .text-gray-400 {
+  color: #6b7280 !important;
+  font-weight: 500;
+}
+
+html:not(.dark) .text-gray-500 {
+  color: #4b5563 !important;
+  font-weight: 500;
+}
+
+html:not(.dark) .text-gray-600 {
+  color: #374151 !important;
+  font-weight: 500;
+}
+
+html:not(.dark) [style*="color: #9CA3AF"],
+html:not(.dark) [style*="color:#9CA3AF"] {
+  color: #4b5563 !important;
+  font-weight: 500;
+}
+
+html:not(.dark) [style*="color: #6B7280"],
+html:not(.dark) [style*="color:#6B7280"] {
+  color: #374151 !important;
+  font-weight: 500;
+}
+
+.dark .bg-white {
+  background-color: #132b23 !important;
+}
+
+.dark .bg-gray-50 {
+  background-color: #10271f !important;
+}
+
+.dark .bg-gray-100 {
+  background-color: #17342b !important;
+}
+
+.dark .border-gray-100,
+.dark .border-gray-200,
+.dark .border-gray-300 {
+  border-color: #1e3b34 !important;
+}
+
+.dark .text-gray-900 {
+  color: #ffffff !important;
+}
+
+.dark .text-gray-700 {
+  color: #ffffff !important;
+}
+
+.dark .text-gray-600 {
+  color: #ffffff !important;
+}
+
+.dark .text-gray-500 {
+  color: #ffffff !important;
+}
+
+.dark .text-gray-400 {
+  color: #ffffff !important;
+}
+
+.dark .text-gray-300 {
+  color: #ffffff !important;
+}
+
+.dark .text-white\/90,
+.dark .text-white\/80,
+.dark .text-white\/70,
+.dark .text-white\/60 {
+  color: #ffffff !important;
+}
+
+.dark .text-\[\#A8D5BF\],
+.dark .text-\[\#94C8AF\],
+.dark .text-green-200,
+.dark .text-green-100 {
+  color: #ffffff !important;
+}
+
+.dark input,
+.dark textarea,
+.dark select {
+  background-color: #132b23;
+  color: #e8f5ef;
+  border-color: #1e3b34;
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: #94c8af;
+}
+
+/* Catch common hardcoded text utility colors used across tabs */
+.dark .text-\[\#0F3D2E\],
+.dark .text-\[\#1a3a2a\] {
+  color: #ffffff !important;
+}
+
+.dark .text-\[\#374151\],
+.dark .text-\[\#4B5563\],
+.dark .text-\[\#6B7280\],
+.dark .text-\[\#9CA3AF\] {
+  color: #ffffff !important;
+}
+
+/* Override inline color/background declarations used in components */
+.dark [style*="color: #0F3D2E"],
+.dark [style*="color:#0F3D2E"],
+.dark [style*="color: #1a3a2a"],
+.dark [style*="color:#1a3a2a"] {
+  color: #ffffff !important;
+}
+
+.dark [style*="color: #374151"],
+.dark [style*="color:#374151"],
+.dark [style*="color: #4B5563"],
+.dark [style*="color:#4B5563"],
+.dark [style*="color: #6B7280"],
+.dark [style*="color:#6B7280"],
+.dark [style*="color: #9CA3AF"],
+.dark [style*="color:#9CA3AF"] {
+  color: #ffffff !important;
+}
+
+.dark [style*="color: #A8D5BF"],
+.dark [style*="color:#A8D5BF"],
+.dark [style*="color: #94C8AF"],
+.dark [style*="color:#94C8AF"] {
+  color: #ffffff !important;
+}
+
+.dark [style*="color: #4B5563"],
+.dark [style*="color:#4B5563"] {
+  color: #ffffff !important;
+}
+
+.dark [style*="background: white"],
+.dark [style*="background:white"] {
+  background: #132b23 !important;
+}
+
+.dark [style*="border: 1px solid #E5E7EB"],
+.dark [style*="border:1px solid #E5E7EB"],
+.dark [style*="border: 1.5px solid #E5E7EB"],
+.dark [style*="border:1.5px solid #E5E7EB"] {
+  border-color: #1e3b34 !important;
+}
+
+/* Landing/page light surface fallbacks -> dark surfaces */
+.dark [style*="background: #F9FAFB"],
+.dark [style*="background:#F9FAFB"],
+.dark [style*="background: #F0F9F5"],
+.dark [style*="background:#F0F9F5"],
+.dark [style*="background: #F0FDF6"],
+.dark [style*="background:#F0FDF6"],
+.dark [style*="background: #F0F7FF"],
+.dark [style*="background:#F0F7FF"] {
+  background: #10271f !important;
+}
+
+/* Two light-green brand hues in dark mode */
+.dark .text-\[\#2F8F6B\] {
+  color: #6dd4a8 !important;
+}
+
+.dark .text-\[\#1EB89A\],
+.dark .text-green-300,
+.dark .text-green-400 {
+  color: #beebd7 !important;
+}
+
+.dark [style*="color: #2F8F6B"],
+.dark [style*="color:#2F8F6B"] {
+  color: #6dd4a8 !important;
+}
+
+.dark [style*="color: #1EB89A"],
+.dark [style*="color:#1EB89A"],
+.dark [style*="color: #059669"],
+.dark [style*="color:#059669"] {
+  color: #beebd7 !important;
+}
+
+/* Keep green chips readable in dark mode */
+.dark .bg-green-50 {
+  background-color: #17342b !important;
+}
+
+.dark .bg-green-100 {
+  background-color: #1d3f34 !important;
+}
+
+.dark .text-green-700 {
+  color: #6dd4a8 !important;
+}
+
+/* Calm premium theme transition */
+html,
+body,
+#root,
+nav,
+main,
+section,
+div,
+button,
+a,
+input,
+textarea,
+select {
+  transition-property: background-color, color, border-color, box-shadow, opacity, transform, filter;
+  transition-duration: 420ms;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html,
+  body,
+  #root,
+  nav,
+  main,
+  section,
+  div,
+  button,
+  a,
+  input,
+  textarea,
+  select {
+    transition: none !important;
+  }
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

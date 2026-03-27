@@ -376,9 +376,27 @@ export function MissionDashboard() {
   // Loading state
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#F9FDFB] flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-[#2F8F6B]" />
-        <span className="ml-3 text-gray-600 font-medium">Loading missions...</span>
+      <div className="min-h-screen bg-[#F9FDFB] dark:bg-[#0D1F18]">
+        <div className="bg-gradient-to-br from-[#0F3D2E] to-[#1A5C43] py-12">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="h-6 w-48 bg-white/20 rounded animate-pulse mb-3" />
+            <div className="h-10 w-72 bg-white/10 rounded animate-pulse" />
+            <div className="h-5 w-[520px] max-w-full bg-white/10 rounded animate-pulse mt-3" />
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-6">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="h-20 rounded-xl bg-white/10 border border-white/10 animate-pulse" />
+              ))}
+            </div>
+          </div>
+        </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="h-16 bg-white rounded-2xl border border-gray-100 shadow-[0_6px_20px_rgba(15,61,46,0.08)] animate-pulse" />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="h-64 bg-white rounded-2xl border border-gray-100 animate-pulse" />
+            ))}
+          </div>
+        </div>
       </div>
     );
   }
@@ -386,7 +404,7 @@ export function MissionDashboard() {
   // Error state
   if (error) {
     return (
-      <div className="min-h-screen bg-[#F9FDFB] flex items-center justify-center">
+      <div className="min-h-screen bg-[#F9FDFB] dark:bg-[#0D1F18] flex items-center justify-center">
         <div className="text-center">
           <AlertTriangle className="w-12 h-12 text-red-500 mx-auto mb-4" />
           <p className="text-red-600 font-medium">{error}</p>
@@ -402,28 +420,28 @@ export function MissionDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F9FDFB]">
+    <div className="min-h-screen bg-[#F9FDFB] dark:bg-[#0D1F18]">
       {/* Header */}
       <div className="bg-[#0F3D2E] py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-[#6DD4A8] font-semibold text-sm uppercase tracking-wider mb-1">Mission Board</p>
-          <h1 className="text-white font-[Manrope] font-bold text-3xl md:text-4xl">
+          <h1 className="text-[#BEEBD7] dark:text-[#B7C96A] font-[Manrope] font-bold text-3xl md:text-4xl">
             Find Your Mission
           </h1>
-          <p className="text-[#A8D5BF] mt-2">
+          <p className="text-white mt-2">
             Based on your profile, <span className="text-white font-semibold">{sorted.length} projects match you right now.</span>
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-5">
             <div className="rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 px-4 py-3 shadow-[0_8px_24px_rgba(0,0,0,0.12)]">
-              <p className="text-xs text-[#A8D5BF]">Open missions</p>
+              <p className="text-xs text-white">Open missions</p>
               <p className="text-2xl font-bold text-white">{sorted.length}</p>
             </div>
             <div className="rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 px-4 py-3 shadow-[0_8px_24px_rgba(0,0,0,0.12)]">
-              <p className="text-xs text-[#A8D5BF]">Urgent missions</p>
+              <p className="text-xs text-white">Urgent missions</p>
               <p className="text-2xl font-bold text-white">{urgent.length}</p>
             </div>
             <div className="rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 px-4 py-3 shadow-[0_8px_24px_rgba(0,0,0,0.12)]">
-              <p className="text-xs text-[#A8D5BF]">Pending applications</p>
+              <p className="text-xs text-white">Pending applications</p>
               <p className="text-2xl font-bold text-white">{pendingApplicationsTotal}</p>
             </div>
           </div>
@@ -431,7 +449,7 @@ export function MissionDashboard() {
       </div>
 
       {/* Sub-tab bar */}
-      <div className="bg-white border-b border-gray-200 sticky top-16 z-40">
+      <div className="bg-white dark:bg-[#132B23] border-b border-gray-200 dark:border-[#1E3B34]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between py-3">
             <div className="flex gap-2">
