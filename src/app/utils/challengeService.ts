@@ -1,4 +1,5 @@
 import { supabase } from './supabase';
+import { moderateSubmission } from './moderationService';
 import type {
   Challenge,
   FeaturedChallenge,
@@ -472,31 +473,73 @@ export async function uploadProofPhoto(
 
 import type { FeedItem, ChallengeSubmission } from '../types/database';
 
+export type { ModerationResult } from './moderationService';
+
 /**
- * Submit a challenge completion with photo proof
- * Uses the complete_challenge_rpc function to atomically update participant and create submission
+ * Submit a challenge completion with AI moderation.
+ *
+ * Flow:
+ * 1. Run AI moderation on the reflection + impact summary
+ * 2. Insert the submission with the moderation outcome
+ * 3. Only if approved: run the complete_challenge_rpc to award points and mark completed
+ *
+ * Returns the moderation result so the UI can inform the user.
  */
 export async function submitChallengeCompletion(
   challengeId: string,
   userId: string,
   photoUrl: string,
   reflection?: string,
-  impactSummary?: string
-): Promise<string> {
-  const { data, error } = await supabase.rpc('complete_challenge_rpc', {
-    p_challenge_id: challengeId,
-    p_user_id: userId,
-    p_photo_url: photoUrl,
-    p_reflection: reflection || null,
-    p_impact_summary: impactSummary || null,
+  impactSummary?: string,
+  challengeTitle?: string,
+  challengeCategory?: string | null,
+): Promise<{ submissionId: string; moderation: import('./moderationService').ModerationResult }> {
+  // Step 1: Run AI moderation
+  const moderation = await moderateSubmission({
+    challengeTitle: challengeTitle || 'Climate Action Challenge',
+    challengeCategory: challengeCategory || null,
+    reflection: reflection || '',
+    impactSummary: impactSummary || '',
   });
 
-  if (error) {
-    console.error('Error submitting challenge completion:', error);
-    throw error;
+  // Step 2: Insert submission with moderation outcome
+  const { data: submission, error: insertError } = await supabase
+    .from('challenge_submissions')
+    .insert({
+      challenge_id: challengeId,
+      user_id: userId,
+      photo_url: photoUrl,
+      reflection: reflection || null,
+      impact_summary: impactSummary || null,
+      moderation_status: moderation.status,
+      moderation_reason: moderation.reason,
+      moderation_score: moderation.score,
+    })
+    .select('id')
+    .single();
+
+  if (insertError || !submission) {
+    console.error('Error inserting submission:', insertError);
+    throw insertError || new Error('Submission insert failed');
   }
 
-  return data; // Returns the submission ID
+  // Step 3: Only award points and mark completed if approved
+  if (moderation.status === 'approved') {
+    const { error: rpcError } = await supabase.rpc('complete_challenge_rpc', {
+      p_challenge_id: challengeId,
+      p_user_id: userId,
+      p_photo_url: photoUrl,
+      p_reflection: reflection || null,
+      p_impact_summary: impactSummary || null,
+    });
+
+    if (rpcError) {
+      console.error('Error completing challenge via RPC:', rpcError);
+      // Don't throw — submission is saved, points can be reconciled later
+    }
+  }
+
+  return { submissionId: submission.id, moderation };
 }
 
 /**
