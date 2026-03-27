@@ -108,6 +108,47 @@ export function AuthPage() {
     email: "", password: "", remember: false,
   });
 
+  // Per-field validation errors for step 2
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+
+  // ── Validation ────────────────────────────────────────────────────────────────
+
+  const validateStep2 = (): boolean => {
+    const errs: Record<string, string> = {};
+
+    // Name — required, at least 2 chars
+    if (!form.name.trim()) {
+      errs.name = "Full name is required.";
+    } else if (form.name.trim().length < 2) {
+      errs.name = "Name must be at least 2 characters.";
+    }
+
+    // Email — required, valid format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!form.email.trim()) {
+      errs.email = "Email address is required.";
+    } else if (!emailRegex.test(form.email.trim())) {
+      errs.email = "Please enter a valid email address.";
+    }
+
+    // Password — required, min 8 chars, at least one number or symbol
+    if (!form.password) {
+      errs.password = "Password is required.";
+    } else if (form.password.length < 8) {
+      errs.password = "Password must be at least 8 characters.";
+    } else if (!/[0-9!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(form.password)) {
+      errs.password = "Password must include at least one number or special character.";
+    }
+
+    // Region — required
+    if (!form.region) {
+      errs.region = "Please select your region.";
+    }
+
+    setFieldErrors(errs);
+    return Object.keys(errs).length === 0;
+  };
+
   // ── Helpers ──────────────────────────────────────────────────────────────────
 
   const selectedRole = ROLES.find(r => r.id === role);
@@ -254,7 +295,7 @@ export function AuthPage() {
             {(["login", "signup"] as const).map(t => (
               <button
                 key={t}
-                onClick={() => { setTab(t); setStep(1); setRole(null); setError(null); }}
+                onClick={() => { setTab(t); setStep(1); setRole(null); setError(null); setFieldErrors({}); }}
                 className="flex-1 py-2.5 rounded-lg text-sm capitalize transition-all duration-200"
                 style={{
                   background: tab === t ? "white" : "transparent",
@@ -416,43 +457,63 @@ export function AuthPage() {
               <div className="space-y-3">
                 <Field label="Full Name">
                   <input type="text" placeholder="Your full name" value={form.name}
-                    onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+                    onChange={e => { setForm(f => ({ ...f, name: e.target.value })); setFieldErrors(p => ({ ...p, name: "" })); }}
                     onFocus={focusStyle} onBlur={blurStyle}
                     className="w-full px-4 py-3 rounded-xl text-sm outline-none"
-                    style={inputStyle} />
+                    style={{ ...inputStyle, borderColor: fieldErrors.name ? "#EF4444" : undefined }} />
+                  {fieldErrors.name && <p className="text-xs text-red-500 mt-1">{fieldErrors.name}</p>}
                 </Field>
                 <Field label="Email Address">
                   <input type="email" placeholder="you@example.com" value={form.email}
-                    onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+                    onChange={e => { setForm(f => ({ ...f, email: e.target.value })); setFieldErrors(p => ({ ...p, email: "" })); }}
                     onFocus={focusStyle} onBlur={blurStyle}
                     className="w-full px-4 py-3 rounded-xl text-sm outline-none"
-                    style={inputStyle} />
+                    style={{ ...inputStyle, borderColor: fieldErrors.email ? "#EF4444" : undefined }} />
+                  {fieldErrors.email && <p className="text-xs text-red-500 mt-1">{fieldErrors.email}</p>}
                 </Field>
                 <Field label="Password">
                   <div className="relative">
                     <input type={showPass ? "text" : "password"} placeholder="Min. 8 characters" value={form.password}
-                      onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
+                      onChange={e => { setForm(f => ({ ...f, password: e.target.value })); setFieldErrors(p => ({ ...p, password: "" })); }}
                       onFocus={focusStyle} onBlur={blurStyle}
                       className="w-full px-4 py-3 rounded-xl text-sm outline-none pr-10"
-                      style={inputStyle} />
+                      style={{ ...inputStyle, borderColor: fieldErrors.password ? "#EF4444" : undefined }} />
                     <button type="button" onClick={() => setShowPass(!showPass)} className="absolute right-3 top-1/2 -translate-y-1/2">
                       {showPass ? <EyeOff className="w-4 h-4" style={{ color: "#9CA3AF" }} /> : <Eye className="w-4 h-4" style={{ color: "#9CA3AF" }} />}
                     </button>
                   </div>
+                  {fieldErrors.password
+                    ? <p className="text-xs text-red-500 mt-1">{fieldErrors.password}</p>
+                    : form.password.length > 0 && (
+                      <div className="mt-1.5 flex gap-1">
+                        {[
+                          form.password.length >= 8,
+                          /[A-Z]/.test(form.password),
+                          /[0-9!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(form.password),
+                        ].map((met, i) => (
+                          <div key={i} className={`flex-1 h-1 rounded-full transition-colors ${met ? "bg-[#2F8F6B]" : "bg-gray-200"}`} />
+                        ))}
+                        <span className="text-[10px] text-gray-400 ml-1">
+                          {form.password.length < 8 ? "Too short" : /[0-9!@#$%^&*]/.test(form.password) ? "Strong" : "Add a number or symbol"}
+                        </span>
+                      </div>
+                    )
+                  }
                 </Field>
                 <Field label="Region">
-                  <select value={form.region} onChange={e => setForm(f => ({ ...f, region: e.target.value }))}
+                  <select value={form.region} onChange={e => { setForm(f => ({ ...f, region: e.target.value })); setFieldErrors(p => ({ ...p, region: "" })); }}
                     onFocus={focusStyle} onBlur={blurStyle}
                     className="w-full px-4 py-3 rounded-xl text-sm outline-none appearance-none"
-                    style={{ ...inputStyle, color: form.region ? "#374151" : "#9CA3AF" }}>
+                    style={{ ...inputStyle, color: form.region ? "#374151" : "#9CA3AF", borderColor: fieldErrors.region ? "#EF4444" : undefined }}>
                     <option value="">Select region</option>
                     <option>Luzon</option><option>Visayas</option><option>Mindanao</option><option>Other</option>
                   </select>
+                  {fieldErrors.region && <p className="text-xs text-red-500 mt-1">{fieldErrors.region}</p>}
                 </Field>
               </div>
 
               <button
-                onClick={() => setStep(3)}
+                onClick={() => { if (validateStep2()) setStep(3); }}
                 className="w-full py-3.5 rounded-xl text-white mt-5 transition-all"
                 style={{ background: "linear-gradient(135deg, #0F3D2E 0%, #2F8F6B 100%)", fontWeight: 700, fontFamily: "'Manrope', sans-serif", boxShadow: "0 4px 16px rgba(47,143,107,0.35)" }}
               >
