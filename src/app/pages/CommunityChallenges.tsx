@@ -23,6 +23,8 @@ import { useAuth } from "../hooks/useAuth";
 import { supabase } from "../utils/supabase";
 import {
   fetchActiveChallenges,
+  fetchExpiredChallenges,
+  archiveExpiredChallenges,
   fetchJoinedChallenges,
   fetchLeaderboard,
   fetchCommunityStats,
@@ -81,6 +83,7 @@ export function CommunityChallenges() {
   
   // Data state
   const [challenges, setChallenges] = useState<Challenge[]>([]);
+  const [expiredChallenges, setExpiredChallenges] = useState<Challenge[]>([]);
   const [joinedChallengeIds, setJoinedChallengeIds] = useState<Set<string>>(new Set());
   const [completedChallengeIds, setCompletedChallengeIds] = useState<Set<string>>(new Set());
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
@@ -106,7 +109,7 @@ export function CommunityChallenges() {
   const [loading, setLoading] = useState(true);
   const [leaderboardLoading, setLeaderboardLoading] = useState(false);
   const [joiningId, setJoiningId] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<"all" | "joined" | "featured" | "feed">("all");
+  const [activeTab, setActiveTab] = useState<"all" | "joined" | "featured" | "feed" | "ended">("all");
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [submissionModalOpen, setSubmissionModalOpen] = useState(false);
   const [selectedChallengeForSubmission, setSelectedChallengeForSubmission] = useState<Challenge | null>(null);
@@ -125,13 +128,17 @@ export function CommunityChallenges() {
   // Fetch all data
   const fetchData = useCallback(async () => {
     try {
-      // Fetch challenges, community stats, leaderboard, featured challenge, and feed in parallel
-      const [challengesData, statsData, leaderboardData, featuredData, feedData] = await Promise.all([
+      // Archive expired challenges first (non-blocking, fires and continues)
+      archiveExpiredChallenges();
+
+      // Fetch challenges, community stats, leaderboard, featured challenge, feed, and expired in parallel
+      const [challengesData, statsData, leaderboardData, featuredData, feedData, expiredData] = await Promise.all([
         fetchActiveChallenges(),
         fetchCommunityStats(),
         fetchLeaderboard(10),
         fetchFeaturedChallenge(),
         fetchCommunityFeed(20),
+        fetchExpiredChallenges(),
       ]);
 
       setChallenges(challengesData);
@@ -139,6 +146,7 @@ export function CommunityChallenges() {
       setLeaderboard(leaderboardData);
       setFeaturedChallenge(featuredData);
       setFeedItems(feedData);
+      setExpiredChallenges(expiredData);
 
       // If user is logged in, fetch their data
       if (user?.id) {
@@ -294,10 +302,10 @@ export function CommunityChallenges() {
     });
   };
 
-  // Filter and sort challenges - algorithmically computed featured challenge appears first
+  // Filter and sort challenges
   const filteredChallenges = challenges
     .filter((c) => {
-      if (activeTab === "feed") return false;
+      if (activeTab === "feed" || activeTab === "ended") return false;
       if (activeTab === "joined") return joinedChallengeIds.has(c.id);
       if (activeTab === "featured") return c.id === featuredChallenge?.id;
       return true;
@@ -430,7 +438,7 @@ export function CommunityChallenges() {
           <div className="lg:col-span-2">
             {/* Tab filter */}
             <div className="flex gap-1 bg-white rounded-xl border border-gray-100 shadow-sm p-1 mb-6 w-fit">
-              {(["all", "featured", "joined", "feed"] as const).map(tab => (
+              {(["all", "featured", "joined", "feed", "ended"] as const).map(tab => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
@@ -438,12 +446,83 @@ export function CommunityChallenges() {
                     activeTab === tab ? "bg-[#0F3D2E] text-white" : "text-gray-600 hover:bg-[#E6F4EE]"
                   }`}
                 >
-                  {tab === "all" ? "All Challenges" : tab === "featured" ? "🔥 Top Challenge" : tab === "feed" ? `📸 Feed (${feedItems.length})` : `Joined (${joinedChallengeIds.size})`}
+                  {tab === "all" ? "All Challenges"
+                    : tab === "featured" ? "🔥 Top Challenge"
+                    : tab === "feed" ? `📸 Feed (${feedItems.length})`
+                    : tab === "ended" ? `🏁 Ended (${expiredChallenges.length})`
+                    : `Joined (${joinedChallengeIds.size})`}
                 </button>
               ))}
             </div>
 
-            {activeTab === "feed" ? (
+            {activeTab === "ended" ? (
+              // Ended challenges — read-only view
+              expiredChallenges.length === 0 ? (
+                <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-12 text-center">
+                  <p className="text-gray-400 text-sm">No ended challenges yet.</p>
+                </div>
+              ) : (
+                <div className="space-y-5">
+                  {expiredChallenges.map((challenge) => {
+                    const categoryColor = CATEGORY_COLORS[challenge.category || ""] || "bg-gray-100 text-gray-700";
+                    const isJoined = joinedChallengeIds.has(challenge.id);
+                    return (
+                      <div
+                        key={challenge.id}
+                        className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden opacity-75"
+                      >
+                        <div className="bg-gray-100 px-4 py-1.5 flex items-center gap-2">
+                          <span className="text-gray-500 text-xs font-bold">🏁 ENDED</span>
+                          {challenge.deadline && (
+                            <span className="text-gray-400 text-xs ml-auto">
+                              Ended {new Date(challenge.deadline).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex flex-col sm:flex-row">
+                          <div className="relative sm:w-48 h-40 sm:h-auto flex-shrink-0">
+                            <img
+                              src={challenge.banner_url || "https://images.unsplash.com/photo-1759503407810-f0402fd9f237?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600"}
+                              alt={challenge.title}
+                              className="w-full h-full object-cover grayscale"
+                            />
+                          </div>
+                          <div className="p-5 flex-1">
+                            <div className="flex items-start justify-between gap-2 mb-2">
+                              <div>
+                                <div className="flex items-center gap-2 mb-1">
+                                  <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${categoryColor}`}>
+                                    {challenge.category || "General"}
+                                  </span>
+                                  <span className="text-xs text-gray-400">{challenge.difficulty}</span>
+                                </div>
+                                <h3 className="font-[Manrope] font-bold text-gray-500 text-lg">{challenge.title}</h3>
+                              </div>
+                              <div className="text-right flex-shrink-0">
+                                <div className="text-sm font-bold text-gray-400 flex items-center gap-1">
+                                  <Star className="w-4 h-4 fill-gray-300 text-gray-300" />
+                                  +{challenge.points_reward} pts
+                                </div>
+                              </div>
+                            </div>
+                            <p className="text-sm text-gray-400 leading-relaxed mb-3">{challenge.description}</p>
+                            <div className="flex items-center gap-4 text-xs text-gray-400">
+                              <span className="flex items-center gap-1">
+                                <Users className="w-3.5 h-3.5" />
+                                {challenge.participant_count.toLocaleString()} participants
+                              </span>
+                              {isJoined && (
+                                <span className="text-[#2F8F6B] font-medium">✓ You participated</span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )
+            ) : activeTab === "feed" ? (
               // Feed view - narrower centered column
               feedItems.length === 0 ? (
                 <div className="max-w-xl mx-auto">

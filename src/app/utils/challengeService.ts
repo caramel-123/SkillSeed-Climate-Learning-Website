@@ -21,6 +21,7 @@ export async function fetchActiveChallenges(): Promise<Challenge[]> {
     .from('challenges')
     .select('*')
     .eq('status', 'active')
+    .or('deadline.is.null,deadline.gt.' + new Date().toISOString())
     .order('created_at', { ascending: false });
 
   if (error) {
@@ -30,6 +31,38 @@ export async function fetchActiveChallenges(): Promise<Challenge[]> {
 
   return data || [];
 }
+
+/**
+ * Fetch expired challenges (past deadline) for the "Ended" tab.
+ */
+export async function fetchExpiredChallenges(): Promise<Challenge[]> {
+  const { data, error } = await supabase
+    .from('challenges')
+    .select('*')
+    .eq('status', 'expired')
+    .order('deadline', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching expired challenges:', error);
+    return [];
+  }
+
+  return data || [];
+}
+
+/**
+ * Trigger server-side archival of all past-deadline active challenges.
+ * Call this on page load so expired challenges are archived promptly
+ * without requiring a scheduled cron job.
+ */
+export async function archiveExpiredChallenges(): Promise<void> {
+  const { error } = await supabase.rpc('archive_expired_challenges');
+  if (error) {
+    // Non-fatal — challenges will still be filtered client-side
+    console.warn('archive_expired_challenges RPC error:', error.message);
+  }
+}
+
 
 /**
  * Fetch a single challenge by ID
@@ -331,16 +364,18 @@ export async function fetchCommunityStats(): Promise<{
     .from('challenge_participants')
     .select('user_id', { count: 'exact', head: true });
 
-  // Get active challenges count
+  // Get active challenges count — exclude expired (past deadline)
   const { count: activeChallenges } = await supabase
     .from('challenges')
     .select('*', { count: 'exact', head: true })
-    .eq('status', 'active');
+    .eq('status', 'active')
+    .or('deadline.is.null,deadline.gt.' + new Date().toISOString());
 
-  // Get total action count (sum of action_count from all challenges)
+  // Get total action count from non-expired challenges only
   const { data: challenges } = await supabase
     .from('challenges')
-    .select('action_count');
+    .select('action_count')
+    .in('status', ['active', 'completed']);
 
   const totalActions = (challenges || []).reduce(
     (sum, c) => sum + (c.action_count || 0),
