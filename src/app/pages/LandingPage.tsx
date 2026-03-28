@@ -179,7 +179,7 @@ export function LandingPage() {
     <div className="overflow-x-hidden">
 
       {/* ════════════════ HERO ════════════════ */}
-      <section className="relative pt-16 pb-0 overflow-hidden" style={{ background: "white" }}>
+      <section className="relative pt-16 pb-0 overflow-hidden dark:!bg-[#0c1815]" style={{ background: "white" }}>
         <div
           className="pointer-events-none absolute inset-0 opacity-0 dark:opacity-[0.22] dark:mix-blend-multiply dark:saturate-75"
           style={{ backgroundImage: `url(${IMG_COMMUNITY})`, backgroundSize: "cover", backgroundPosition: "center top" }}
@@ -246,7 +246,7 @@ export function LandingPage() {
         {/* Mission & Vision cards */}
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-0">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <div className="rounded-2xl p-8 text-left bg-[#F0FDF6] border border-[#BBF7D0] dark:border-emerald-400/30 ring-2 ring-[#2F8F6B]/25 dark:ring-emerald-400/25 shadow-sm dark:shadow-none" style={{ background: "#F0FDF6" }}>
+            <div className="rounded-2xl p-8 text-left bg-[#F0FDF6] border border-[#BBF7D0] dark:border-emerald-400/30 dark:!bg-[#10271f] ring-2 ring-[#2F8F6B]/25 dark:ring-emerald-400/25 shadow-sm dark:shadow-none" style={{ background: "#F0FDF6" }}>
               <div className="flex items-center gap-2.5 mb-4">
                 <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "#E6F4EE" }}>
                   <Heart className="w-5 h-5" style={{ color: "#2F8F6B" }} />
@@ -260,7 +260,7 @@ export function LandingPage() {
                 Starting in the Philippines, where the need is greatest, and growing into a global network. Rooted in community, driven by people, and open to every nation ready to act.
               </p>
             </div>
-            <div className="rounded-2xl p-8 text-left bg-[#F0F7FF] border border-[#BAE0FD] dark:border-sky-400/25" style={{ background: "#F0F7FF" }}>
+            <div className="rounded-2xl p-8 text-left bg-[#F0F7FF] border border-[#BAE0FD] dark:border-sky-400/25 dark:!bg-[#10271f]" style={{ background: "#F0F7FF" }}>
               <div className="flex items-center gap-2.5 mb-4">
                 <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "#DBEAFE" }}>
                   <Eye className="w-5 h-5" style={{ color: "#1E6B9A" }} />
@@ -281,7 +281,7 @@ export function LandingPage() {
       </section>
 
       {/* ════════════════ HOW IT WORKS ════════════════ */}
-      <section className="py-20" style={{ background: "#F0F9F5" }}>
+      <section className="py-20 dark:!bg-[#10271f]" style={{ background: "#F0F9F5" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-14">
             <span className="inline-block px-3 py-1 rounded-full text-xs mb-3"
@@ -335,7 +335,7 @@ export function LandingPage() {
       </section>
 
       {/* ════════════════ WHO IT'S FOR ════════════════ */}
-      <section className="py-20" style={{ background: "white" }}>
+      <section className="py-20 dark:!bg-[#10271f]" style={{ background: "white" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <span className="inline-block px-3 py-1 rounded-full text-xs mb-3"
@@ -355,7 +355,9 @@ export function LandingPage() {
               <div
                 key={id}
                 className={`rounded-2xl p-8 flex flex-col group transition-all duration-300 cursor-pointer ${
-                  emphasis ? "md:scale-[1.03] md:z-[1] md:shadow-xl md:shadow-black/15 dark:md:shadow-black/40 ring-2 ring-[#2F8F6B]/45 dark:ring-emerald-400/40" : ""
+                  emphasis
+                    ? "md:scale-[1.03] md:z-[1] md:shadow-xl md:shadow-black/15 dark:md:shadow-black/40 ring-2 ring-[#2F8F6B]/45 dark:ring-emerald-400/40"
+                    : "dark:!bg-[#132b23]"
                 }`}
                 style={{ background: bg, border: `1.5px solid ${border}` }}
                 onClick={() => handleRoleClick(id)}
@@ -414,7 +416,7 @@ export function LandingPage() {
       </section>
 
       {/* ════════════════ FEATURED QUESTS ════════════════ */}
-      <section className="py-20" style={{ background: "#F9FAFB" }}>
+      <section className="py-20 dark:!bg-[#10271f]" style={{ background: "#F9FAFB" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-end justify-between mb-10">
             <div>
@@ -491,7 +493,7 @@ export function LandingPage() {
       </section>
 
       {/* ════════════════ TESTIMONIALS ════════════════ */}
-      <section className="py-20" style={{ background: "white" }}>
+      <section className="py-20 dark:!bg-[#10271f]" style={{ background: "white" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <span className="inline-block px-3 py-1 rounded-full text-xs mb-3"
@@ -504,7 +506,7 @@ export function LandingPage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {testimonials.map((t) => (
-              <div key={t.name} className="p-7 rounded-2xl flex flex-col bg-[#F9FAFB] border border-[#F3F4F6] dark:border-emerald-400/25" style={{ background: "#F9FAFB" }}>
+              <div key={t.name} className="p-7 rounded-2xl flex flex-col bg-[#F9FAFB] border border-[#F3F4F6] dark:border-emerald-400/25 dark:!bg-[#132b23]" style={{ background: "#F9FAFB" }}>
                 <div className="flex gap-0.5 mb-4">
                   {Array.from({ length: t.stars }).map((_, i) => (
                     <Star key={i} className="w-4 h-4" style={{ fill: "#FBBF24", color: "#FBBF24" }} />
@@ -517,8 +519,8 @@ export function LandingPage() {
                     {t.avatar}
                   </div>
                   <div>
-                    <div className="text-sm" style={{ fontWeight: 700, color: "#0F3D2E" }}>{t.name}</div>
-                    <div className="text-xs" style={{ color: "#9CA3AF" }}>{t.role}</div>
+                    <div className="text-sm font-bold text-[#0F3D2E] dark:text-emerald-50">{t.name}</div>
+                    <div className="text-xs text-[#6B7280] dark:text-emerald-200/75">{t.role}</div>
                   </div>
                 </div>
               </div>
