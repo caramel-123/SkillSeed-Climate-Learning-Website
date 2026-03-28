@@ -123,7 +123,7 @@ html:not(.dark) [style*="color:#6B7280"] {
 .dark .border-gray-100,
 .dark .border-gray-200,
 .dark .border-gray-300 {
-  border-color: #1e3b34 !important;
+  border-color: rgba(129, 196, 167, 0.34) !important;
 }
 
 .dark .text-gray-900 {
@@ -230,7 +230,28 @@ html:not(.dark) [style*="color:#6B7280"] {
 .dark [style*="border:1px solid #E5E7EB"],
 .dark [style*="border: 1.5px solid #E5E7EB"],
 .dark [style*="border:1.5px solid #E5E7EB"] {
-  border-color: #1e3b34 !important;
+  border-color: rgba(129, 196, 167, 0.34) !important;
+}
+
+/* React serializes many hex borders/colors as rgb() — match those for dark mode */
+.dark [style*="rgb(229, 231, 235)"],
+.dark [style*="rgb(229,231,235)"] {
+  border-color: rgba(129, 196, 167, 0.34) !important;
+}
+
+.dark [style*="rgb(243, 244, 246)"],
+.dark [style*="rgb(243,244,246)"] {
+  border-color: rgba(129, 196, 167, 0.28) !important;
+}
+
+.dark [style*="rgb(15, 61, 46)"],
+.dark [style*="rgb(15,61,46)"] {
+  color: #e8f5ef !important;
+}
+
+.dark [style*="rgb(30, 58, 95)"],
+.dark [style*="rgb(30,58,95)"] {
+  color: #dbeafe !important;
 }
 
 /* Landing/page light surface fallbacks -> dark surfaces */

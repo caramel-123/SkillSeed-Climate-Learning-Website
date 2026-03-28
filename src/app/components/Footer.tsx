@@ -94,7 +94,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="pt-6 border-t border-white/20 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-[#A8D5BF] text-xs">
             © 2026 SkillSeed. Made with 🌱 for a greener planet.
           </p>

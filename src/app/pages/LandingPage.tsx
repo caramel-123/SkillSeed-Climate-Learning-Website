@@ -3,21 +3,15 @@ import { Link, useNavigate } from "react-router";
 import {
   Sprout,
   Users,
-  BarChart3,
   ArrowRight,
   Leaf,
   Zap,
-  Recycle,
-  Sun,
-  TreePine,
   Wrench,
   Building2,
   Star,
   Globe,
   CheckCircle2,
-  MapPin,
   Clock,
-  Play,
   TrendingUp,
   Heart,
   Eye,
@@ -45,7 +39,7 @@ function useCounter(target: number, duration = 2000, trigger = false) {
   return count;
 }
 
-function AnimatedStat({ value, suffix, label, desc }: { value: number; suffix: string; label: string; desc?: string }) {
+function AnimatedStat({ value, suffix, label, desc, recencyLabel = "Updated monthly" }: { value: number; suffix: string; label: string; desc?: string; recencyLabel?: string }) {
   const [triggered, setTriggered] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const count = useCounter(value, 2000, triggered);
@@ -61,6 +55,9 @@ function AnimatedStat({ value, suffix, label, desc }: { value: number; suffix: s
       </div>
       <div className="text-sm" style={{ color: "rgba(255,255,255,0.9)", fontWeight: 600 }}>{label}</div>
       {desc && <div className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.5)" }}>{desc}</div>}
+      {recencyLabel && (
+        <div className="text-[10px] mt-2 leading-tight" style={{ color: "rgba(255,255,255,0.4)" }}>{recencyLabel}</div>
+      )}
     </div>
   );
 }
@@ -143,11 +140,11 @@ export function LandingPage() {
       subtitle: "Beginner-friendly",
       desc: "Build green skills from scratch and participate in real climate missions — no experience needed.",
       cta: "Start Learning",
-      bg: "#F0FDF6",
-      border: "#BBF7D0",
-      iconBg: "#E6F4EE",
-      iconColor: "#2F8F6B",
-      textColor: "#0F3D2E",
+      bg: "#0F3D2E",
+      border: "#1e6b52",
+      iconBg: "rgba(255,255,255,0.15)",
+      iconColor: "white",
+      emphasis: true,
     },
     {
       id: "jobready",
@@ -161,6 +158,7 @@ export function LandingPage() {
       iconBg: "#DBEAFE",
       iconColor: "#1E6B9A",
       textColor: "#1E3A5F",
+      emphasis: false,
     },
     {
       id: "org",
@@ -168,12 +166,12 @@ export function LandingPage() {
       title: "I'm an Organization",
       subtitle: "Project coordinator",
       desc: "Post climate projects and get matched with skilled volunteers and professionals immediately.",
-      cta: "Post a Project",
-      bg: "#0F3D2E",
-      border: "#0F3D2E",
-      iconBg: "rgba(255,255,255,0.15)",
-      iconColor: "white",
-      textColor: "white",
+      cta: "Partner with us",
+      bg: "#F0FDF6",
+      border: "#BBF7D0",
+      iconBg: "#E6F4EE",
+      iconColor: "#2F8F6B",
+      emphasis: false,
     },
   ];
 
@@ -182,10 +180,17 @@ export function LandingPage() {
 
       {/* ════════════════ HERO ════════════════ */}
       <section className="relative pt-16 pb-0 overflow-hidden" style={{ background: "white" }}>
+        <div
+          className="pointer-events-none absolute inset-0 opacity-0 dark:opacity-[0.22] dark:mix-blend-multiply dark:saturate-75"
+          style={{ backgroundImage: `url(${IMG_COMMUNITY})`, backgroundSize: "cover", backgroundPosition: "center top" }}
+        />
         {/* subtle dot pattern */}
-        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "radial-gradient(#0F3D2E 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
+        <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.04]" style={{ backgroundImage: "radial-gradient(#0F3D2E 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
 
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p className="text-[10px] sm:text-xs uppercase tracking-[0.18em] text-[#2F8F6B]/85 dark:text-emerald-300/75 mb-3 font-semibold">
+            Mission-based climate learning
+          </p>
           <h1 className="mb-5 text-[#0F3D2E] dark:text-[#B7C96A]" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, fontSize: "clamp(2.4rem, 5.5vw, 4rem)", lineHeight: 1.1, letterSpacing: "-0.02em" }}>
             Where climate action<br />
             <span className="text-[#2F8F6B] dark:text-[#BEEBD7]">finds its people.</span>
@@ -205,10 +210,8 @@ export function LandingPage() {
               <Users className="w-4 h-4" /> Join a Project
             </button>
             <Link to="/hands-on"
-              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl transition-all duration-200"
-              style={{ background: "white", border: "2px solid #0F3D2E", color: "#0F3D2E", fontWeight: 700, fontFamily: "'Manrope', sans-serif" }}
-              onMouseEnter={e => (e.currentTarget.style.background = "#F0FDF6")}
-              onMouseLeave={e => (e.currentTarget.style.background = "white")}> 
+              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl transition-all duration-200 bg-white dark:!bg-transparent border-2 border-[#0F3D2E] dark:border-emerald-400/55 text-[#0F3D2E] dark:text-emerald-50 hover:bg-[#F0FDF6] dark:hover:!bg-white/10"
+              style={{ fontWeight: 700, fontFamily: "'Manrope', sans-serif" }}>
               <Sprout className="w-4 h-4" /> Learn New Skills
             </Link>
           </div>
@@ -235,33 +238,36 @@ export function LandingPage() {
               </div>
             ))}
           </div>
+          <p className="text-center text-xs mt-4 mb-0 max-w-md mx-auto text-[#9CA3AF] dark:text-emerald-200/65">
+            Community figures updated monthly, same basis as stats below.
+          </p>
         </div>
 
         {/* Mission & Vision cards */}
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-0">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <div className="rounded-2xl p-8 text-left" style={{ background: "#F0FDF6", border: "1px solid #BBF7D0" }}>
+            <div className="rounded-2xl p-8 text-left bg-[#F0FDF6] border border-[#BBF7D0] dark:border-emerald-400/30 ring-2 ring-[#2F8F6B]/25 dark:ring-emerald-400/25 shadow-sm dark:shadow-none" style={{ background: "#F0FDF6" }}>
               <div className="flex items-center gap-2.5 mb-4">
                 <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "#E6F4EE" }}>
                   <Heart className="w-5 h-5" style={{ color: "#2F8F6B" }} />
                 </div>
                 <span className="text-xs font-bold uppercase tracking-wider" style={{ color: "#2F8F6B", letterSpacing: "0.1em" }}>Our Mission</span>
               </div>
-              <h3 className="mb-3" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, color: "#0F3D2E", fontSize: "1.15rem", lineHeight: 1.4 }}>
+              <h3 className="mb-3 text-[#0F3D2E] dark:text-emerald-50" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, fontSize: "1.15rem", lineHeight: 1.4 }}>
                 Connect. Build capacity. Deploy the people the climate crisis needs.
               </h3>
               <p style={{ color: "#4B5563", lineHeight: 1.9, fontSize: "0.9rem" }}>
                 Starting in the Philippines, where the need is greatest, and growing into a global network. Rooted in community, driven by people, and open to every nation ready to act.
               </p>
             </div>
-            <div className="rounded-2xl p-8 text-left" style={{ background: "#F0F7FF", border: "1px solid #BAE0FD" }}>
+            <div className="rounded-2xl p-8 text-left bg-[#F0F7FF] border border-[#BAE0FD] dark:border-sky-400/25" style={{ background: "#F0F7FF" }}>
               <div className="flex items-center gap-2.5 mb-4">
                 <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "#DBEAFE" }}>
                   <Eye className="w-5 h-5" style={{ color: "#1E6B9A" }} />
                 </div>
                 <span className="text-xs font-bold uppercase tracking-wider" style={{ color: "#1E6B9A", letterSpacing: "0.1em" }}>Our Vision</span>
               </div>
-              <h3 className="mb-3" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, color: "#1E3A5F", fontSize: "1.15rem", lineHeight: 1.4 }}>
+              <h3 className="mb-3 text-[#1E3A5F] dark:text-sky-100" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, fontSize: "1.15rem", lineHeight: 1.4 }}>
                 A world where no climate crisis goes unanswered.
               </h3>
               <p style={{ color: "#4B5563", lineHeight: 1.9, fontSize: "0.9rem" }}>
@@ -282,7 +288,7 @@ export function LandingPage() {
               style={{ background: "#E6F4EE", color: "#2F8F6B", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" }}>
               How It Works
             </span>
-            <h2 className="mb-3" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, color: "#0F3D2E", fontSize: "clamp(1.8rem, 3vw, 2.5rem)" }}>
+            <h2 className="mb-3 text-[#0F3D2E] dark:text-emerald-50" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, fontSize: "clamp(1.8rem, 3vw, 2.5rem)" }}>
               Simple. Mission-Driven. Impactful.
             </h2>
             <p style={{ color: "#6B7280", maxWidth: "480px", margin: "0 auto" }}>
@@ -299,14 +305,14 @@ export function LandingPage() {
               { step: "02", icon: Users, title: "Match & Connect", desc: "Get matched with the right people. Learners find mentors. Organizations find skilled volunteers instantly.", color: "#1EB89A", bg: "#D1FAE5" },
               { step: "03", icon: TrendingUp, title: "Learn & Make Impact", desc: "Complete missions, earn verified points, and see your real environmental impact measured and celebrated.", color: "#059669", bg: "#A7F3D0" },
             ].map(({ step, icon: Icon, title, desc, color, bg }) => (
-              <div key={step} className="relative bg-white rounded-2xl p-8 text-center"
-                style={{ border: "1px solid #E5E7EB", boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}>
+              <div key={step} className="relative bg-white rounded-2xl p-8 text-center border border-gray-200 dark:border-emerald-400/35"
+                style={{ boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}>
                 <div className="relative inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-5" style={{ background: bg }}>
                   <Icon className="w-7 h-7" style={{ color }} />
-                  <span className="absolute -top-2 -right-2 w-6 h-6 rounded-full text-white flex items-center justify-center text-xs"
+                  <span className="absolute -top-2 -right-2 w-7 h-7 rounded-full text-white flex items-center justify-center text-sm ring-2 ring-white shadow-md"
                     style={{ background: color, fontWeight: 800 }}>{step.slice(1)}</span>
                 </div>
-                <h3 className="mb-3" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 700, color: "#0F3D2E" }}>{title}</h3>
+                <h3 className="mb-3 text-[#0F3D2E] dark:text-emerald-50" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 700 }}>{title}</h3>
                 <p className="text-sm" style={{ color: "#6B7280", lineHeight: 1.7 }}>{desc}</p>
               </div>
             ))}
@@ -322,6 +328,9 @@ export function LandingPage() {
             <AnimatedStat value={1240} suffix="+" label="Missions Completed" desc="verified impact" />
             <AnimatedStat value={87} suffix="" label="Countries Reached" desc="and growing" />
           </div>
+          <p className="text-center text-xs mt-10 max-w-md mx-auto px-4" style={{ color: "rgba(255,255,255,0.5)", lineHeight: 1.5 }}>
+            Figures updated monthly. Totals reflect activity across the platform.
+          </p>
         </div>
       </section>
 
@@ -333,7 +342,7 @@ export function LandingPage() {
               style={{ background: "#E6F4EE", color: "#2F8F6B", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" }}>
               For Everyone
             </span>
-            <h2 className="mb-3" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, color: "#0F3D2E", fontSize: "clamp(1.8rem, 3vw, 2.5rem)" }}>
+            <h2 className="mb-3 text-[#0F3D2E] dark:text-emerald-50" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, fontSize: "clamp(1.8rem, 3vw, 2.5rem)" }}>
               However you show up, you belong here
             </h2>
             <p style={{ color: "#6B7280", maxWidth: "480px", margin: "0 auto" }}>
@@ -341,9 +350,13 @@ export function LandingPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {roles.map(({ id, icon: Icon, title, subtitle, desc, cta, bg, border, iconBg, iconColor, textColor }) => (
-              <div key={id} className="rounded-2xl p-8 flex flex-col group transition-all duration-300 cursor-pointer"
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6 items-stretch">
+            {roles.map(({ id, icon: Icon, title, subtitle, desc, cta, bg, border, iconBg, iconColor, emphasis }) => (
+              <div
+                key={id}
+                className={`rounded-2xl p-8 flex flex-col group transition-all duration-300 cursor-pointer ${
+                  emphasis ? "md:scale-[1.03] md:z-[1] md:shadow-xl md:shadow-black/15 dark:md:shadow-black/40 ring-2 ring-[#2F8F6B]/45 dark:ring-emerald-400/40" : ""
+                }`}
                 style={{ background: bg, border: `1.5px solid ${border}` }}
                 onClick={() => handleRoleClick(id)}
                 onMouseEnter={e => (e.currentTarget.style.transform = "translateY(-3px)")}
@@ -351,19 +364,47 @@ export function LandingPage() {
                 <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-5" style={{ background: iconBg }}>
                   <Icon className="w-6 h-6" style={{ color: iconColor }} />
                 </div>
-                <span className="text-xs mb-2 px-2 py-0.5 rounded-full w-fit"
-                  style={{ background: id === "org" ? "rgba(255,255,255,0.15)" : "#E6F4EE", color: id === "org" ? "rgba(255,255,255,0.8)" : "#2F8F6B", fontWeight: 600 }}>
+                {emphasis && (
+                  <span
+                    className="text-[10px] uppercase tracking-wider mb-2 px-2.5 py-1 rounded-full w-fit bg-white/15 text-white"
+                    style={{ fontWeight: 700 }}>
+                    New? Start here
+                  </span>
+                )}
+                <span
+                  className="text-xs mb-2 px-2 py-0.5 rounded-full w-fit"
+                  style={{
+                    background: emphasis ? "rgba(255,255,255,0.15)" : "#E6F4EE",
+                    color: emphasis ? "rgba(255,255,255,0.9)" : "#2F8F6B",
+                    fontWeight: 600,
+                  }}>
                   {subtitle}
                 </span>
-                <h3 className="mb-2" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, color: textColor, fontSize: "1.2rem" }}>
+                <h3
+                  className={`mb-2 ${
+                    emphasis
+                      ? "text-white"
+                      : id === "jobready"
+                        ? "text-[#1E3A5F] dark:text-sky-100"
+                        : "text-[#0F3D2E] dark:text-emerald-50"
+                  }`}
+                  style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, fontSize: "1.2rem" }}>
                   {title}
                 </h3>
-                <p className="text-sm mb-6 flex-1" style={{ color: id === "org" ? "rgba(255,255,255,0.72)" : "#6B7280", lineHeight: 1.7 }}>
+                <p
+                  className="text-sm mb-6 flex-1"
+                  style={{ color: emphasis ? "rgba(255,255,255,0.78)" : "#6B7280", lineHeight: 1.7 }}>
                   {desc}
                 </p>
                 <span
-                  className="inline-flex items-center gap-2 text-sm"
-                  style={{ color: id === "org" ? "white" : "#0F3D2E", fontWeight: 700, fontFamily: "'Manrope', sans-serif" }}>
+                  className={`inline-flex items-center gap-2 text-sm ${
+                    emphasis
+                      ? "text-white"
+                      : id === "jobready"
+                        ? "text-[#1E3A5F] dark:text-sky-100"
+                        : "text-[#0F3D2E] dark:text-emerald-100"
+                  }`}
+                  style={{ fontWeight: 700, fontFamily: "'Manrope', sans-serif" }}>
                   {cta} <ArrowRight className="w-4 h-4" />
                 </span>
               </div>
@@ -381,12 +422,13 @@ export function LandingPage() {
                 style={{ background: "#E6F4EE", color: "#2F8F6B", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" }}>
                 Quests
               </span>
-              <h2 style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, color: "#0F3D2E", fontSize: "clamp(1.6rem, 3vw, 2.2rem)" }}>
+              <h2 className="text-[#0F3D2E] dark:text-emerald-50" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, fontSize: "clamp(1.6rem, 3vw, 2.2rem)" }}>
                 Start Your Climate Journey
               </h2>
             </div>
-            <Link to="/hands-on" className="hidden sm:inline-flex items-center gap-1.5 text-sm"
-              style={{ color: "#2F8F6B", fontWeight: 600 }}>
+            <Link
+              to="/hands-on"
+              className="hidden sm:inline-flex items-center gap-1.5 text-sm font-semibold rounded-lg px-3 py-2 border-2 border-[#2F8F6B]/30 text-[#2F8F6B] hover:bg-[#E6F4EE] dark:border-emerald-400/40 dark:text-emerald-300 dark:hover:bg-white/5 transition-colors">
               View all quests <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
@@ -400,26 +442,27 @@ export function LandingPage() {
               {displayQuests.map((quest) => {
                 const color = getQuestColor(quest);
                 return (
-                  <Link key={quest.id} to={`/quests/${quest.id}`} className="group rounded-2xl overflow-hidden block transition-all duration-300"
-                    style={{ background: "white", border: "1px solid #E5E7EB", boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }}
+                  <Link key={quest.id} to={`/quests/${quest.id}`} className="group rounded-2xl overflow-hidden block transition-all duration-300 border border-gray-200 dark:border-emerald-400/35 bg-white"
+                    style={{ boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }}
                     onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 8px 28px rgba(15,61,46,0.12)"; e.currentTarget.style.transform = "translateY(-3px)"; }}
                     onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 1px 4px rgba(0,0,0,0.04)"; e.currentTarget.style.transform = "none"; }}>
                     <div className="relative h-44 overflow-hidden flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${color}15, ${color}35)` }}>
-                      <span className="text-6xl transition-transform duration-500 group-hover:scale-110">{quest.badge_icon || "🌿"}</span>
-                      <span className="absolute top-3 left-3 px-2.5 py-1 rounded-full text-xs"
+                      <div className="pointer-events-none absolute inset-0 bg-transparent dark:bg-[#061510]/45 dark:mix-blend-multiply" aria-hidden />
+                      <span className="relative z-[1] text-6xl transition-transform duration-500 group-hover:scale-110">{quest.badge_icon || "🌿"}</span>
+                      <span className="absolute top-3 left-3 z-[2] px-2.5 py-1 rounded-full text-xs"
                         style={{ background: "rgba(255,255,255,0.92)", color: color, fontWeight: 700 }}>
                         {quest.category || quest.tier}
                       </span>
-                      <span className="absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs"
+                      <span className="absolute top-3 right-3 z-[2] px-2.5 py-1 rounded-full text-xs"
                         style={{ background: "rgba(0,0,0,0.45)", color: "white", fontWeight: 600 }}>
                         {quest.tier === "beginner" ? "Beginner" : "Advanced"}
                       </span>
                     </div>
                     <div className="p-4">
-                      <p className="text-xs mb-1" style={{ color: "#9CA3AF" }}>{quest.tier === "beginner" ? "🌱 Badge Quest" : "🏆 Certificate Quest"}</p>
-                      <h3 className="mb-3" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 700, color: "#0F3D2E", fontSize: "0.95rem" }}>{quest.title}</h3>
+                      <p className="text-xs mb-1 text-[#9CA3AF] dark:text-emerald-200/75">{quest.tier === "beginner" ? "🌱 Badge Quest" : "🏆 Certificate Quest"}</p>
+                      <h3 className="mb-3 text-[#0F3D2E] dark:text-emerald-50" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 700, fontSize: "0.95rem" }}>{quest.title}</h3>
                       <div className="flex items-center justify-between pt-3" style={{ borderTop: "1px solid #F3F4F6" }}>
-                        <span className="text-xs flex items-center gap-1" style={{ color: "#9CA3AF" }}>
+                        <span className="text-xs flex items-center gap-1 text-[#9CA3AF] dark:text-emerald-200/70">
                           <Clock className="w-3 h-3" /> ~{quest.estimated_days} days
                         </span>
                         <span className="text-xs flex items-center gap-1" style={{ color: "#FBBF24", fontWeight: 700 }}>
@@ -438,7 +481,9 @@ export function LandingPage() {
           )}
 
           <div className="text-center mt-8 sm:hidden">
-            <Link to="/hands-on" className="inline-flex items-center gap-1.5 text-sm" style={{ color: "#2F8F6B", fontWeight: 600 }}>
+            <Link
+              to="/hands-on"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold rounded-lg px-3 py-2 border-2 border-[#2F8F6B]/30 text-[#2F8F6B] hover:bg-[#E6F4EE] dark:border-emerald-400/40 dark:text-emerald-300 dark:hover:bg-white/5 transition-colors">
               View all quests <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
@@ -453,13 +498,13 @@ export function LandingPage() {
               style={{ background: "#E6F4EE", color: "#2F8F6B", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" }}>
               Community Stories
             </span>
-            <h2 style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, color: "#0F3D2E", fontSize: "clamp(1.8rem, 3vw, 2.2rem)" }}>
+            <h2 className="text-[#0F3D2E] dark:text-emerald-50" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, fontSize: "clamp(1.8rem, 3vw, 2.2rem)" }}>
               What Our Members Say
             </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {testimonials.map((t) => (
-              <div key={t.name} className="p-7 rounded-2xl flex flex-col" style={{ background: "#F9FAFB", border: "1px solid #F3F4F6" }}>
+              <div key={t.name} className="p-7 rounded-2xl flex flex-col bg-[#F9FAFB] border border-[#F3F4F6] dark:border-emerald-400/25" style={{ background: "#F9FAFB" }}>
                 <div className="flex gap-0.5 mb-4">
                   {Array.from({ length: t.stars }).map((_, i) => (
                     <Star key={i} className="w-4 h-4" style={{ fill: "#FBBF24", color: "#FBBF24" }} />
@@ -484,7 +529,10 @@ export function LandingPage() {
 
       {/* ════════════════ FINAL CTA ════════════════ */}
       <section className="py-20 relative overflow-hidden" style={{ background: "#0F3D2E" }}>
-        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: `url(${IMG_COMMUNITY})`, backgroundSize: "cover", backgroundPosition: "center" }} />
+        <div
+          className="absolute inset-0 opacity-10 dark:opacity-[0.28] dark:mix-blend-multiply dark:saturate-75 dark:brightness-90"
+          style={{ backgroundImage: `url(${IMG_COMMUNITY})`, backgroundSize: "cover", backgroundPosition: "center" }}
+        />
         <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(15,61,46,0.95) 0%, rgba(47,143,107,0.85) 100%)" }} />
         <div className="relative z-10 max-w-3xl mx-auto px-4 text-center">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-6"
@@ -492,6 +540,9 @@ export function LandingPage() {
             <Leaf className="w-3.5 h-3.5 text-green-300" />
             <span className="text-sm text-white" style={{ fontWeight: 600 }}>Start free · No experience needed</span>
           </div>
+          <p className="text-[10px] sm:text-xs uppercase tracking-[0.18em] text-white/55 mb-3 font-semibold">
+            Mission-based climate learning
+          </p>
           <h2 className="text-white mb-4" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, fontSize: "clamp(1.8rem, 4vw, 2.8rem)", lineHeight: 1.15 }}>
             Every skill planted grows a better future.
           </h2>
@@ -500,17 +551,13 @@ export function LandingPage() {
           </p>
           <div className="flex flex-wrap gap-3 justify-center">
             <Link to="/auth"
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-xl text-white transition-all"
-              style={{ background: "#2F8F6B", fontWeight: 700, fontFamily: "'Manrope', sans-serif", boxShadow: "0 4px 20px rgba(0,0,0,0.3)" }}
-              onMouseEnter={e => (e.currentTarget.style.background = "#1EB89A")}
-              onMouseLeave={e => (e.currentTarget.style.background = "#2F8F6B")}>
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm text-white transition-all border-2 border-white/55 bg-transparent hover:bg-white/10"
+              style={{ fontWeight: 700, fontFamily: "'Manrope', sans-serif" }}>
               <Sprout className="w-4 h-4" /> Join for Free
             </Link>
             <Link to="/hands-on"
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-xl transition-all"
-              style={{ background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.3)", color: "white", fontWeight: 600 }}
-              onMouseEnter={e => (e.currentTarget.style.background = "rgba(255,255,255,0.2)")}
-              onMouseLeave={e => (e.currentTarget.style.background = "rgba(255,255,255,0.12)")}>
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm text-white/90 transition-all border border-white/30 bg-white/5 hover:bg-white/12"
+              style={{ fontWeight: 600 }}>
               Browse Quests <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
