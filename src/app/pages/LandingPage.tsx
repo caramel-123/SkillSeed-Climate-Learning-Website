@@ -179,7 +179,7 @@ export function LandingPage() {
     <div className="overflow-x-hidden">
 
       {/* ════════════════ HERO ════════════════ */}
-      <section className="relative pt-16 pb-0 overflow-hidden dark:!bg-[#0c1815]" style={{ background: "white" }}>
+      <section className="relative pt-16 pb-16 md:pb-20 lg:pb-24 overflow-hidden dark:!bg-[#0c1815]" style={{ background: "white" }}>
         <div
           className="pointer-events-none absolute inset-0 opacity-0 dark:opacity-[0.22] dark:mix-blend-multiply dark:saturate-75"
           style={{ backgroundImage: `url(${IMG_COMMUNITY})`, backgroundSize: "cover", backgroundPosition: "center top" }}
@@ -241,7 +241,7 @@ export function LandingPage() {
         </div>
 
         {/* Mission & Vision cards */}
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-0">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div className="rounded-2xl p-8 text-left bg-[#F0FDF6] border border-[#BBF7D0] dark:border-emerald-400/30 dark:!bg-[#10271f] ring-2 ring-[#2F8F6B]/25 dark:ring-emerald-400/25 shadow-sm dark:shadow-none" style={{ background: "#F0FDF6" }}>
               <div className="flex items-center gap-2.5 mb-4">
@@ -276,7 +276,7 @@ export function LandingPage() {
       </section>
 
       {/* ════════════════ HOW IT WORKS ════════════════ */}
-      <section className="py-20 dark:!bg-[#10271f]" style={{ background: "#F0F9F5" }}>
+      <section className="pt-20 pb-20 md:pt-24 md:pb-24 dark:!bg-[#10271f]" style={{ background: "#F0F9F5" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-14">
             <span className="inline-block px-3 py-1 rounded-full text-xs mb-3"
