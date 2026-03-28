@@ -291,10 +291,7 @@ export function LandingPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
-            {/* connector line */}
-            <div className="hidden md:block absolute top-12 left-1/3 right-1/3 h-0.5" style={{ background: "linear-gradient(90deg, #2F8F6B, #1EB89A, #2F8F6B)" }} />
-
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               { step: "01", icon: Sprout, title: "Browse or Post", desc: "Explore short climate missions that match your interests, or post a project needing skilled volunteers.", color: "#2F8F6B", bg: "#E6F4EE" },
               { step: "02", icon: Users, title: "Match & Connect", desc: "Get matched with the right people. Learners find mentors. Organizations find skilled volunteers instantly.", color: "#1EB89A", bg: "#D1FAE5" },
