@@ -107,7 +107,13 @@ export function Navbar() {
           <div className="hidden md:flex items-center gap-2">
             {mounted && (
               <button
-                onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+                onClick={() => {
+                  document.documentElement.classList.add('theme-transitioning');
+                  setTheme(resolvedTheme === "dark" ? "light" : "dark");
+                  setTimeout(() => {
+                    document.documentElement.classList.remove('theme-transitioning');
+                  }, 400);
+                }}
                 className="min-h-[40px] min-w-[40px] p-2 rounded-lg border border-border dark:border-[#1E3B34] bg-white dark:bg-[#132B23] text-[#0F3D2E] dark:text-[#BEEBD7] hover:bg-muted dark:hover:bg-[#17342B] transition-colors"
                 title={resolvedTheme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
                 aria-label={resolvedTheme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
@@ -251,7 +257,13 @@ export function Navbar() {
           <div className="md:hidden flex items-center gap-1">
             {mounted && (
               <button
-                onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+                onClick={() => {
+                  document.documentElement.classList.add('theme-transitioning');
+                  setTheme(resolvedTheme === "dark" ? "light" : "dark");
+                  setTimeout(() => {
+                    document.documentElement.classList.remove('theme-transitioning');
+                  }, 400);
+                }}
                 className="p-2 rounded-lg border transition-colors"
                 style={{
                   borderColor: mounted && theme === "dark" ? "#1E3B34" : "#E5E7EB",

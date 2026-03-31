@@ -376,37 +376,80 @@ html:not(.dark) [style*="color:#6B7280"] {
   color: #6dd4a8 !important;
 }
 
-/* Calm premium theme transition */
+/* Smooth theme transition with fade overlay */
+html {
+  transition: background-color 500ms ease-out;
+}
+
+html::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  pointer-events: none;
+  background-color: #0D1F18;
+  opacity: 0;
+  transition: opacity 350ms ease-out;
+}
+
+html.theme-transitioning::before {
+  opacity: 0.15;
+}
+
 html,
 body,
 #root,
 nav,
 main,
 section,
+article,
+header,
+footer,
+aside,
 div,
+span,
+p,
+h1, h2, h3, h4, h5, h6,
 button,
 a,
 input,
 textarea,
-select {
-  transition-property: background-color, color, border-color, box-shadow, opacity, transform, filter;
-  transition-duration: 420ms;
-  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+select,
+label,
+img,
+svg {
+  transition-property: background-color, color, border-color, box-shadow, fill, stroke;
+  transition-duration: 400ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html::before {
+    display: none;
+  }
+  
   html,
   body,
   #root,
   nav,
   main,
   section,
+  article,
+  header,
+  footer,
+  aside,
   div,
+  span,
+  p,
+  h1, h2, h3, h4, h5, h6,
   button,
   a,
   input,
   textarea,
-  select {
+  select,
+  label,
+  img,
+  svg {
     transition: none !important;
   }
 }
