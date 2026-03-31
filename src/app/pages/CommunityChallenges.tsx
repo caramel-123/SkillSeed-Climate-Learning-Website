@@ -640,27 +640,29 @@ export function CommunityChallenges() {
   if (loading) {
     return (
       <div className="min-h-screen bg-white dark:bg-[#0D1F18]">
-        {/* Header skeleton */}
-        <div className="bg-[#0F3D2E] py-10">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="h-8 w-64 bg-white/20 rounded animate-pulse mb-2" />
+        <div className="bg-gradient-to-br from-[#0F3D2E] to-[#1A5C43] py-12">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="h-8 w-72 bg-white/20 rounded animate-pulse mb-3" />
             <div className="h-5 w-96 bg-white/10 rounded animate-pulse" />
-          </div>
-        </div>
-        {/* Content skeleton */}
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2 space-y-4">
-              {[...Array(3)].map((_, i) => (
-                <ChallengeCardSkeleton key={i} />
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8">
+              {[...Array(4)].map((_, i) => (
+                <div
+                  key={i}
+                  className="h-24 bg-white/10 rounded-xl border border-white/10 animate-pulse"
+                />
               ))}
             </div>
-            <div className="space-y-4">
-              <div className="bg-white dark:bg-[#132B23] rounded-xl border border-slate-200 dark:border-[#1E3B34] p-5">
-                <div className="h-5 w-32 bg-slate-100 dark:bg-[#1E3B34] rounded mb-4 animate-pulse" />
-                <LeaderboardSkeleton />
-              </div>
-            </div>
+          </div>
+        </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="h-16 bg-white dark:bg-[#132b23] rounded-2xl border border-gray-100 dark:border-white/10 shadow-[0_6px_20px_rgba(15,61,46,0.08)] animate-pulse" />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+            {[...Array(6)].map((_, i) => (
+              <div
+                key={i}
+                className="h-64 bg-white dark:bg-[#132b23] rounded-2xl border border-gray-100 dark:border-white/10 animate-pulse"
+              />
+            ))}
           </div>
         </div>
       </div>
