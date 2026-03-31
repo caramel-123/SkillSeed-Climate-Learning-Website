@@ -62,7 +62,7 @@ export function Navbar() {
       className="sticky top-0 z-50 bg-white/95 dark:bg-[#0D1F18]/95 backdrop-blur-sm border-b border-border dark:border-[#1E3B34] shadow-sm"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-16 relative">
 
           {/* ── Logo ── */}
           <Link to="/" className="flex items-center gap-2 shrink-0">
@@ -78,7 +78,7 @@ export function Navbar() {
           </Link>
 
           {/* ── Center Nav (desktop) ── */}
-          <div className="hidden md:flex items-center gap-1">
+          <div className="hidden md:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
             {navLinks.map((link) => (
               <div key={link.label} className="relative">
                 {link.comingSoon ? (
