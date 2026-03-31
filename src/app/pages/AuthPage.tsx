@@ -4,6 +4,8 @@ import {
   Eye, EyeOff, Sprout, Wrench, Building2, Leaf, ArrowLeft, Loader2,
 } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
+import { isSupabaseConfigured } from "../utils/supabase";
+import { ConfigError } from "../components/ConfigError";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -64,7 +66,7 @@ const ROLES = [
 export function AuthPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { signUp, signIn, signInWithGoogle } = useAuth();
+  const { signUp, signIn, signInWithGoogle, resetPassword } = useAuth();
 
   // UI state
   const [tab, setTab] = useState<"signup" | "login">("signup");
@@ -88,6 +90,12 @@ export function AuthPage() {
   // Backend state (from original)
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Forgot password modal
+  const [forgotOpen, setForgotOpen] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotStatus, setForgotStatus] = useState<"idle" | "sending" | "sent">("idle");
+  const [forgotError, setForgotError] = useState<string | null>(null);
 
   const [form, setForm] = useState({
     name: "", email: "", password: "", region: "",
@@ -163,7 +171,30 @@ export function AuthPage() {
     // On success Supabase handles the redirect
   };
 
+  const openForgot = () => {
+    setForgotError(null);
+    setForgotStatus("idle");
+    setForgotEmail(loginData.email || "");
+    setForgotOpen(true);
+  };
+
+  const handleForgot = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!forgotEmail) return;
+    setForgotError(null);
+    setForgotStatus("sending");
+    const { error } = await resetPassword(forgotEmail);
+    if (error) {
+      setForgotError(error.message);
+      setForgotStatus("idle");
+      return;
+    }
+    setForgotStatus("sent");
+  };
+
   // ─── Render ──────────────────────────────────────────────────────────────────
+
+  if (!isSupabaseConfigured) return <ConfigError />;
 
   return (
     <div className="min-h-screen flex bg-[#F9FAFB] dark:bg-[#0D1F18]">
@@ -650,7 +681,14 @@ export function AuthPage() {
                     className="rounded" />
                   Remember me
                 </label>
-                <Link to="/" className="text-xs" style={{ color: "#2F8F6B", fontWeight: 600 }}>Forgot password?</Link>
+                <button
+                  type="button"
+                  onClick={openForgot}
+                  className="text-xs"
+                  style={{ color: "#2F8F6B", fontWeight: 600 }}
+                >
+                  Forgot password?
+                </button>
               </div>
 
               <button
@@ -692,6 +730,79 @@ export function AuthPage() {
 
         </div>
       </div>
+
+      {/* Forgot password modal */}
+      {forgotOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center px-4"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Reset password"
+        >
+          <div
+            className="absolute inset-0 bg-black/30"
+            onClick={() => (forgotStatus === "sending" ? null : setForgotOpen(false))}
+          />
+          <div className="relative w-full max-w-md rounded-2xl bg-white dark:bg-[#132B23] border border-gray-200 dark:border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.25)] p-6">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h3 className="text-base font-bold text-[#0F3D2E] dark:text-emerald-50">
+                  Reset your password
+                </h3>
+                <p className="mt-1 text-sm text-[#4b5563] dark:text-emerald-100/70">
+                  We’ll email you a reset link.
+                </p>
+              </div>
+              <button
+                type="button"
+                className="text-sm font-semibold text-[#2F8F6B] hover:underline"
+                onClick={() => (forgotStatus === "sending" ? null : setForgotOpen(false))}
+              >
+                Close
+              </button>
+            </div>
+
+            {forgotStatus === "sent" ? (
+              <div className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 dark:bg-emerald-950/30 dark:border-emerald-400/30 p-4 text-sm text-emerald-800 dark:text-emerald-200">
+                Reset link sent. Check your inbox.
+              </div>
+            ) : (
+              <form onSubmit={handleForgot} className="mt-5 space-y-3">
+                <Field label="Email Address">
+                  <input
+                    type="email"
+                    placeholder="you@example.com"
+                    value={forgotEmail}
+                    onChange={(e) => setForgotEmail(e.target.value)}
+                    onFocus={focusStyle}
+                    onBlur={blurStyle}
+                    className="w-full px-4 py-3 rounded-xl text-sm outline-none"
+                    style={inputStyle}
+                    required
+                    autoFocus
+                  />
+                </Field>
+
+                {forgotError && (
+                  <div className="p-3 rounded-xl text-sm" style={{ background: "#FEF2F2", border: "1px solid #FECACA", color: "#DC2626" }}>
+                    {forgotError}
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={forgotStatus === "sending"}
+                  className="w-full py-3.5 rounded-xl text-white flex items-center justify-center gap-2 disabled:opacity-50"
+                  style={{ background: "linear-gradient(135deg, #0F3D2E 0%, #2F8F6B 100%)", fontWeight: 700, fontFamily: "'Manrope', sans-serif", boxShadow: "0 4px 16px rgba(47,143,107,0.35)" }}
+                >
+                  {forgotStatus === "sending" ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+                  Send reset link
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
