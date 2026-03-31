@@ -11,7 +11,6 @@ import {
   Building2,
   Star,
   Globe,
-  CheckCircle2,
   Clock,
   TrendingUp,
   Heart,
@@ -21,8 +20,6 @@ import {
 import { useAuth } from "../hooks/useAuth";
 import { fetchAllQuests } from "../utils/questService";
 import type { Quest } from "../types/database";
-
-const IMG_COMMUNITY = "https://images.unsplash.com/photo-1768306662463-4e3f6c858889?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjbGltYXRlJTIwYWN0aW9uJTIwdm9sdW50ZWVyJTIwY29tbXVuaXR5JTIwb3V0ZG9vcnxlbnwxfHx8fDE3NzI4NTQ4ODJ8MA&ixlib=rb-4.1.0&q=80&w=1080";
 
 const LANDING_VIEWPORT = { once: true as const, margin: "-48px 0px", amount: 0.2 as const };
 
@@ -114,15 +111,6 @@ function AnimatedStat({ value, suffix, label, desc, recencyLabel = "Updated mont
       )}
     </div>
   );
-}
-
-// Tier-based color mapping for quest cards
-function getQuestColor(quest: Quest): string {
-  if (quest.category?.toLowerCase().includes("energy")) return "#F59E0B";
-  if (quest.category?.toLowerCase().includes("waste") || quest.category?.toLowerCase().includes("soil")) return "#2F8F6B";
-  if (quest.category?.toLowerCase().includes("nature") || quest.category?.toLowerCase().includes("tree") || quest.category?.toLowerCase().includes("forest")) return "#059669";
-  if (quest.tier === "advanced") return "#3B82F6";
-  return "#2F8F6B";
 }
 
 /** Visual variety when API returns the same badge for every quest */
@@ -302,132 +290,121 @@ export function LandingPage() {
     <div className="overflow-x-hidden">
 
       {/* ════════════════ HERO ════════════════ */}
-      <section className="relative pt-20 pb-16 md:pb-20 lg:pb-24 overflow-hidden bg-background dark:bg-[#0D1F18]">
+      <section className="relative pt-20 pb-16 md:pb-20 lg:pb-24 overflow-hidden bg-white dark:bg-[#0D1F18]">
         {/* subtle dot pattern */}
-        <div className="absolute inset-0 opacity-[0.025] dark:opacity-[0.04]" style={{ backgroundImage: "radial-gradient(#0F3D2E 1px, transparent 1px)", backgroundSize: "28px 28px" }} aria-hidden="true" />
+        <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: "radial-gradient(#0F3D2E 1px, transparent 1px)", backgroundSize: "32px 32px" }} aria-hidden="true" />
         <HeroAmbience reduced={reduceMotion} />
         <FloatingSeeds reduced={reduceMotion} />
 
         <motion.div
-          className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
+          className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
           initial="hidden"
           animate="show"
           variants={staggerWrap}>
-          <motion.p variants={heroItem} className="text-xs uppercase tracking-[0.16em] text-[#2F8F6B] dark:text-[#6DD4A8] mb-4 font-bold">
-            Mission-based climate learning
+          <motion.p variants={heroItem} className="text-xs uppercase tracking-widest text-slate-500 dark:text-[#6DD4A8] mb-5 font-semibold">
+            Climate skills platform
           </motion.p>
           <motion.h1
             variants={heroItem}
-            className="mb-6 text-[#0F3D2E] dark:text-[#BEEBD7] text-balance"
-            style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, fontSize: "clamp(2.25rem, 5vw, 3.5rem)", lineHeight: 1.12, letterSpacing: "-0.025em" }}>
+            className="mb-5 text-slate-900 dark:text-[#BEEBD7] text-balance"
+            style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, fontSize: "clamp(2.25rem, 5vw, 3.25rem)", lineHeight: 1.1, letterSpacing: "-0.02em" }}>
             Where climate action<br className="hidden sm:block" />
             <span className="text-[#2F8F6B] dark:text-[#6DD4A8]">finds its people.</span>
           </motion.h1>
 
           <motion.p
             variants={heroItem}
-            className="mb-10 mx-auto text-base sm:text-lg text-muted-foreground dark:text-[#94C8AF] text-pretty"
-            style={{ lineHeight: 1.7, maxWidth: "540px" }}>
-            SkillSeed connects learners, skilled volunteers, and organizations to short, real-world climate missions. Learn by doing. Track your impact.
+            className="mb-10 mx-auto text-base sm:text-lg text-slate-600 dark:text-[#94C8AF] text-pretty"
+            style={{ lineHeight: 1.7, maxWidth: "520px" }}>
+            Connect with short, real-world climate missions. Learn by doing. Build verified skills. Make measurable impact.
           </motion.p>
 
-          <motion.div variants={heroItem} className="flex flex-col sm:flex-row gap-3 justify-center mb-12">
+          <motion.div variants={heroItem} className="flex flex-col sm:flex-row gap-3 justify-center mb-10">
             <motion.button
               type="button"
               onClick={handleJoinProject}
-              whileHover={reduceMotion ? undefined : { y: -2 }}
+              whileHover={reduceMotion ? undefined : { y: -1 }}
               whileTap={reduceMotion ? undefined : { scale: 0.98 }}
-              className="inline-flex items-center justify-center gap-2.5 min-h-[52px] px-8 rounded-xl text-white transition-all duration-200 cursor-pointer shadow-lg shadow-[#2F8F6B]/30 hover:shadow-xl hover:shadow-[#2F8F6B]/40 active:scale-[0.98]"
-              style={{ background: "linear-gradient(135deg, #0F3D2E 0%, #2F8F6B 100%)", fontWeight: 700, fontFamily: "'Manrope', sans-serif" }}>
+              className="inline-flex items-center justify-center gap-2 min-h-[48px] px-6 rounded-lg text-white font-semibold transition-all duration-200 cursor-pointer bg-[#0F3D2E] hover:bg-[#1a5241] active:scale-[0.98]"
+              style={{ fontFamily: "'Manrope', sans-serif" }}>
               <Users className="w-4 h-4" /> Join a Project
             </motion.button>
-            <motion.div whileHover={reduceMotion ? undefined : { y: -2 }} className="inline-flex justify-center">
+            <motion.div whileHover={reduceMotion ? undefined : { y: -1 }} className="inline-flex justify-center">
               <Link to="/hands-on"
-                className="inline-flex items-center justify-center gap-2.5 min-h-[52px] px-8 rounded-xl transition-all duration-200 bg-white dark:bg-transparent border-2 border-[#0F3D2E] dark:border-[#6DD4A8]/60 text-[#0F3D2E] dark:text-[#BEEBD7] hover:bg-[#E6F4EE] dark:hover:bg-white/10 active:scale-[0.98]"
-                style={{ fontWeight: 700, fontFamily: "'Manrope', sans-serif" }}>
-                <Sprout className="w-4 h-4" /> Learn New Skills
+                className="inline-flex items-center justify-center gap-2 min-h-[48px] px-6 rounded-lg transition-all duration-200 bg-white border border-slate-200 text-slate-700 hover:border-slate-300 hover:bg-slate-50 dark:bg-transparent dark:border-[#6DD4A8]/60 dark:text-[#BEEBD7] dark:hover:bg-white/10 font-semibold active:scale-[0.98]"
+                style={{ fontFamily: "'Manrope', sans-serif" }}>
+                <Sprout className="w-4 h-4" /> Browse Quests
               </Link>
             </motion.div>
           </motion.div>
 
-          {/* Social proof */}
-          <motion.div variants={heroItem} className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
-            <div className="flex items-center gap-2.5">
-              <div className="flex -space-x-2">
-                {["MS", "JR", "LC", "AB", "DK"].map((i, idx) => (
-                  <motion.div
+          {/* Social proof - compact trust indicators */}
+          <motion.div variants={heroItem} className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-slate-500">
+            <div className="flex items-center gap-2">
+              <div className="flex -space-x-1.5">
+                {["MS", "JR", "LC", "AB"].map((i, idx) => (
+                  <div
                     key={idx}
-                    className="w-8 h-8 rounded-full border-2 border-white dark:border-[#0D1F18] flex items-center justify-center text-xs text-white"
-                    style={{ background: ["#2F8F6B", "#059669", "#1EB89A", "#0F3D2E", "#34D399"][idx], fontWeight: 700 }}
-                    initial={reduceMotion ? false : { opacity: 0, scale: 0.5 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={
-                      reduceMotion
-                        ? { duration: 0 }
-                        : { type: "spring", stiffness: 420, damping: 22, delay: 0.45 + idx * 0.06 }
-                    }>
+                    className="w-7 h-7 rounded-full border-2 border-white flex items-center justify-center text-[10px] text-white font-semibold"
+                    style={{ background: ["#2F8F6B", "#059669", "#0F3D2E", "#34D399"][idx] }}>
                     {i}
-                  </motion.div>
+                  </div>
                 ))}
               </div>
-              <span className="text-sm text-muted-foreground"><strong className="text-[#0F3D2E] dark:text-[#BEEBD7]">12,840+</strong> members</span>
+              <span><strong className="text-slate-700">12k+</strong> members</span>
             </div>
-            {[
-              { icon: Globe, label: "87 countries" },
-              { icon: CheckCircle2, label: "Verified missions" },
-              { icon: Leaf, label: "Free to join" },
-            ].map(({ icon: Icon, label }) => (
-              <div key={label} className="flex items-center gap-1.5">
-                <Icon className="w-4 h-4 text-[#2F8F6B] dark:text-[#6DD4A8]" />
-                <span className="text-sm text-muted-foreground font-medium">{label}</span>
-              </div>
-            ))}
+            <span className="hidden sm:inline text-slate-300">|</span>
+            <span className="flex items-center gap-1.5">
+              <Globe className="w-3.5 h-3.5" /> 87 countries
+            </span>
+            <span className="hidden sm:inline text-slate-300">|</span>
+            <span>Free to join</span>
           </motion.div>
         </motion.div>
 
         {/* Mission & Vision cards */}
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 md:mt-20">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 md:mt-20">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <motion.div
-              className="rounded-2xl p-7 sm:p-8 text-left bg-[#E6F4EE] dark:bg-[#132B23] border border-[#2F8F6B]/20 dark:border-[#6DD4A8]/20"
+              className="rounded-xl p-6 sm:p-7 text-left bg-slate-50 dark:bg-[#132B23] border border-slate-100 dark:border-[#6DD4A8]/20"
               variants={scrollFade}
               initial="hidden"
               whileInView="show"
               viewport={LANDING_VIEWPORT}
               transition={{ delay: reduceMotion ? 0 : 0.05 }}
-              whileHover={reduceMotion ? undefined : { y: -4, transition: { duration: 0.22 } }}>
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-[#2F8F6B]/15 dark:bg-[#6DD4A8]/15">
-                  <Heart className="w-5 h-5 text-[#2F8F6B] dark:text-[#6DD4A8]" />
+              whileHover={reduceMotion ? undefined : { y: -3, transition: { duration: 0.2 } }}>
+              <div className="flex items-center gap-2.5 mb-4">
+                <div className="w-9 h-9 rounded-lg flex items-center justify-center bg-[#0F3D2E]">
+                  <Heart className="w-4 h-4 text-white" />
                 </div>
-                <span className="text-xs font-bold uppercase tracking-wider text-[#2F8F6B] dark:text-[#6DD4A8]">Our Mission</span>
+                <span className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-[#6DD4A8]">Mission</span>
               </div>
-              <h3 className="mb-3 text-[#0F3D2E] dark:text-[#BEEBD7] text-balance" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, fontSize: "1.125rem", lineHeight: 1.4 }}>
-                Connect. Build capacity. Deploy the people the climate crisis needs.
+              <h3 className="mb-2.5 text-slate-900 dark:text-[#BEEBD7]" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 700, fontSize: "1.05rem", lineHeight: 1.4 }}>
+                Build capacity. Deploy people. Solve climate challenges.
               </h3>
-              <p className="text-[#4B5563] dark:text-[#94C8AF] text-sm leading-relaxed">
-                Starting in the Philippines, where the need is greatest, and growing into a global network. Rooted in community, driven by people.
+              <p className="text-slate-600 dark:text-[#94C8AF] text-sm leading-relaxed">
+                Starting in the Philippines and growing globally. Rooted in community, driven by people.
               </p>
             </motion.div>
             <motion.div
-              className="rounded-2xl p-7 sm:p-8 text-left bg-[#E6F4EE] dark:bg-[#132B23] border border-[#2F8F6B]/20 dark:border-[#6DD4A8]/20"
+              className="rounded-xl p-6 sm:p-7 text-left bg-slate-50 dark:bg-[#132B23] border border-slate-100 dark:border-[#6DD4A8]/20"
               variants={scrollFade}
               initial="hidden"
               whileInView="show"
               viewport={LANDING_VIEWPORT}
               transition={{ delay: reduceMotion ? 0 : 0.12 }}
-              whileHover={reduceMotion ? undefined : { y: -4, transition: { duration: 0.22 } }}>
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-[#2F8F6B]/15 dark:bg-[#6DD4A8]/15">
-                  <Eye className="w-5 h-5 text-[#2F8F6B] dark:text-[#6DD4A8]" />
+              whileHover={reduceMotion ? undefined : { y: -3, transition: { duration: 0.2 } }}>
+              <div className="flex items-center gap-2.5 mb-4">
+                <div className="w-9 h-9 rounded-lg flex items-center justify-center bg-[#0F3D2E]">
+                  <Eye className="w-4 h-4 text-white" />
                 </div>
-                <span className="text-xs font-bold uppercase tracking-wider text-[#2F8F6B] dark:text-[#6DD4A8]">Our Vision</span>
+                <span className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-[#6DD4A8]">Vision</span>
               </div>
-              <h3 className="mb-3 text-[#0F3D2E] dark:text-[#BEEBD7] text-balance" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, fontSize: "1.125rem", lineHeight: 1.4 }}>
+              <h3 className="mb-2.5 text-slate-900 dark:text-[#BEEBD7]" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 700, fontSize: "1.05rem", lineHeight: 1.4 }}>
                 A world where no climate crisis goes unanswered.
               </h3>
-              <p className="text-[#4B5563] dark:text-[#94C8AF] text-sm leading-relaxed">
-                Because the people and skills to respond already exist in every community. Every climate issue has a human-driven solution.
+              <p className="text-slate-600 dark:text-[#94C8AF] text-sm leading-relaxed">
+                The people and skills to respond already exist in every community.
               </p>
             </motion.div>
           </div>
@@ -435,49 +412,46 @@ export function LandingPage() {
       </section>
 
       {/* ════════════════ HOW IT WORKS ════════════════ */}
-      <section className="py-20 md:py-28 bg-[#F9FAFB] dark:bg-[#0D1F18]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-20 md:py-24 bg-white dark:bg-[#0D1F18]">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
-            className="text-center mb-14"
+            className="text-center mb-12"
             variants={scrollFade}
             initial="hidden"
             whileInView="show"
             viewport={LANDING_VIEWPORT}>
-            <span className="inline-block px-3 py-1.5 rounded-full text-xs mb-4 bg-[#E6F4EE] dark:bg-[#1E3B34] text-[#2F8F6B] dark:text-[#6DD4A8] font-bold tracking-wider uppercase">
-              How It Works
-            </span>
-            <h2 className="mb-4 text-[#0F3D2E] dark:text-[#BEEBD7] text-balance" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, fontSize: "clamp(1.75rem, 3vw, 2.25rem)" }}>
-              Simple. Mission-Driven. Impactful.
+            <h2 className="mb-3 text-slate-900 dark:text-[#BEEBD7]" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, fontSize: "clamp(1.5rem, 3vw, 2rem)" }}>
+              How it works
             </h2>
-            <p className="max-w-md mx-auto text-muted-foreground dark:text-[#94C8AF] leading-relaxed">
-              From skill building to real-world action. Climate participation made accessible.
+            <p className="max-w-md mx-auto text-slate-600 dark:text-[#94C8AF]">
+              From skill building to real-world action in three steps.
             </p>
           </motion.div>
 
           <motion.div
-            className="grid grid-cols-1 md:grid-cols-3 gap-6"
+            className="grid grid-cols-1 md:grid-cols-3 gap-5"
             variants={staggerInView}
             initial="hidden"
             whileInView="show"
             viewport={LANDING_VIEWPORT}>
             {[
-              { step: "1", icon: Sprout, title: "Browse or Post", desc: "Explore short climate missions that match your interests, or post a project needing volunteers." },
+              { step: "1", icon: Sprout, title: "Browse or Post", desc: "Explore climate missions that match your interests, or post a project needing volunteers." },
               { step: "2", icon: Users, title: "Match & Connect", desc: "Get matched with the right people. Learners find mentors. Organizations find skilled volunteers." },
-              { step: "3", icon: TrendingUp, title: "Learn & Make Impact", desc: "Complete missions, earn verified points, and see your real environmental impact celebrated." },
+              { step: "3", icon: TrendingUp, title: "Make Impact", desc: "Complete missions, earn verified credentials, and track your environmental impact." },
             ].map(({ step, icon: Icon, title, desc }) => (
               <motion.div
                 key={step}
                 variants={staggerCard}
-                whileHover={reduceMotion ? undefined : { y: -4 }}
-                className="relative bg-white dark:bg-[#132B23] rounded-2xl p-7 text-center border border-border dark:border-[#6DD4A8]/15 shadow-sm">
-                <div className="relative inline-flex items-center justify-center w-14 h-14 rounded-xl mb-5 bg-[#E6F4EE] dark:bg-[#1E3B34]">
-                  <Icon className="w-6 h-6 text-[#2F8F6B] dark:text-[#6DD4A8]" />
-                  <span className="absolute -top-1.5 -right-1.5 w-6 h-6 rounded-full text-white flex items-center justify-center text-xs font-bold bg-[#0F3D2E] dark:bg-[#6DD4A8] dark:text-[#0A2E20] ring-2 ring-white dark:ring-[#132B23]">
+                whileHover={reduceMotion ? undefined : { y: -3 }}
+                className="relative bg-slate-50 dark:bg-[#132B23] rounded-xl p-6 text-center border border-slate-100 dark:border-[#6DD4A8]/15">
+                <div className="relative inline-flex items-center justify-center w-12 h-12 rounded-lg mb-4 bg-[#0F3D2E]">
+                  <Icon className="w-5 h-5 text-white" />
+                  <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full text-[#0F3D2E] bg-white flex items-center justify-center text-[10px] font-bold ring-2 ring-slate-50 dark:ring-[#132B23]">
                     {step}
                   </span>
                 </div>
-                <h3 className="mb-2 text-[#0F3D2E] dark:text-[#BEEBD7]" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 700 }}>{title}</h3>
-                <p className="text-sm text-muted-foreground dark:text-[#94C8AF] leading-relaxed">{desc}</p>
+                <h3 className="mb-2 text-slate-900 dark:text-[#BEEBD7]" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 700 }}>{title}</h3>
+                <p className="text-sm text-slate-600 dark:text-[#94C8AF] leading-relaxed">{desc}</p>
               </motion.div>
             ))}
           </motion.div>
@@ -510,91 +484,58 @@ export function LandingPage() {
       </section>
 
       {/* ════════════════ WHO IT'S FOR ════════════════ */}
-      <section className="py-20 md:py-28 bg-background dark:bg-[#0D1F18]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-20 md:py-24 bg-slate-50 dark:bg-[#0D1F18]">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
-            className="text-center mb-14"
+            className="text-center mb-12"
             variants={scrollFade}
             initial="hidden"
             whileInView="show"
             viewport={LANDING_VIEWPORT}>
-            <span className="inline-block px-3 py-1.5 rounded-full text-xs mb-4 bg-[#E6F4EE] dark:bg-[#1E3B34] text-[#2F8F6B] dark:text-[#6DD4A8] font-bold tracking-wider uppercase">
-              For Everyone
-            </span>
-            <h2 className="mb-4 text-[#0F3D2E] dark:text-[#BEEBD7] text-balance" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, fontSize: "clamp(1.75rem, 3vw, 2.25rem)" }}>
-              However you show up, you belong here
+            <h2 className="mb-3 text-slate-900 dark:text-[#BEEBD7]" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, fontSize: "clamp(1.5rem, 3vw, 2rem)" }}>
+              Built for everyone
             </h2>
-            <p className="max-w-md mx-auto text-muted-foreground dark:text-[#94C8AF] leading-relaxed">
-              SkillSeed is built for every kind of climate participant.
+            <p className="max-w-md mx-auto text-slate-600 dark:text-[#94C8AF]">
+              Whether you're learning, volunteering, or leading projects.
             </p>
           </motion.div>
 
           <motion.div
-            className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6 items-stretch"
+            className="grid grid-cols-1 md:grid-cols-3 gap-4"
             variants={staggerInView}
             initial="hidden"
             whileInView="show"
             viewport={LANDING_VIEWPORT}>
-            {roles.map(({ id, icon: Icon, title, subtitle, desc, cta, bg, border, iconBg, iconColor, emphasis }) => (
+            {roles.map(({ id, icon: Icon, title, subtitle, desc, cta, emphasis }) => (
               <motion.div
                 key={id}
                 variants={staggerCard}
-                whileHover={reduceMotion ? undefined : { y: -5 }}
+                whileHover={reduceMotion ? undefined : { y: -3 }}
                 whileTap={reduceMotion ? undefined : { scale: 0.99 }}
-                className={`rounded-2xl p-8 pb-10 flex flex-col group transition-shadow duration-300 cursor-pointer ${
+                className={`rounded-xl p-6 flex flex-col cursor-pointer transition-all duration-200 ${
                   emphasis
-                    ? "md:scale-[1.03] md:z-[1] md:shadow-xl md:shadow-black/15 dark:md:shadow-black/40 ring-2 ring-[#2F8F6B]/45 dark:ring-emerald-400/40"
-                    : "dark:!bg-[#152a24] dark:!border-emerald-400/22"
+                    ? "bg-[#0F3D2E] text-white"
+                    : "bg-white border border-slate-200 hover:border-slate-300 dark:bg-[#152a24] dark:border-emerald-400/22"
                 }`}
-                style={{ background: bg, border: `1.5px solid ${border}` }}
                 onClick={() => handleRoleClick(id)}>
-                <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-5" style={{ background: iconBg }}>
-                  <Icon className="w-6 h-6" style={{ color: iconColor }} />
+                <div className={`w-10 h-10 rounded-lg flex items-center justify-center mb-4 ${emphasis ? "bg-white/15" : "bg-slate-100 dark:bg-white/10"}`}>
+                  <Icon className={`w-5 h-5 ${emphasis ? "text-white" : "text-slate-700 dark:text-emerald-200"}`} />
                 </div>
-                {emphasis && (
-                  <span
-                    className="text-[10px] uppercase tracking-wider mb-2 px-2.5 py-1 rounded-full w-fit bg-white/15 text-white"
-                    style={{ fontWeight: 700 }}>
-                    New? Start here
-                  </span>
-                )}
-                <span
-                  className={`text-xs mb-2 px-2 py-0.5 rounded-full w-fit font-semibold ${
-                    emphasis ? "" : "dark:!bg-white/12 dark:!text-emerald-200"
-                  }`}
-                  style={{
-                    background: emphasis ? "rgba(255,255,255,0.15)" : "#E6F4EE",
-                    color: emphasis ? "rgba(255,255,255,0.9)" : "#2F8F6B",
-                    fontWeight: 600,
-                  }}>
+                <span className={`text-xs mb-2 font-medium ${emphasis ? "text-white/70" : "text-slate-500 dark:text-emerald-200/70"}`}>
                   {subtitle}
                 </span>
                 <h3
-                  className={`mb-2 ${
-                    emphasis
-                      ? "text-white"
-                      : id === "jobready"
-                        ? "text-[#1E3A5F] dark:text-sky-100"
-                        : "text-[#0F3D2E] dark:text-emerald-50"
-                  }`}
-                  style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, fontSize: "1.2rem" }}>
+                  className={`mb-2 ${emphasis ? "text-white" : "text-slate-900 dark:text-emerald-50"}`}
+                  style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 700, fontSize: "1.05rem" }}>
                   {title}
                 </h3>
                 <p
-                  className={`text-sm mb-6 flex-1 ${emphasis ? "text-white/85" : "text-[#4b5563] dark:!text-emerald-200/85"}`}
-                  style={{ lineHeight: 1.7 }}>
+                  className={`text-sm mb-5 flex-1 leading-relaxed ${emphasis ? "text-white/80" : "text-slate-600 dark:text-emerald-200/85"}`}>
                   {desc}
                 </p>
                 <span
-                  className={`mt-auto pt-2 inline-flex items-center gap-2 text-sm ${
-                    emphasis
-                      ? "text-white"
-                      : id === "jobready"
-                        ? "text-[#1E3A5F] dark:text-sky-100"
-                        : "text-[#0F3D2E] dark:text-emerald-100"
-                  }`}
-                  style={{ fontWeight: 700, fontFamily: "'Manrope', sans-serif" }}>
-                  {cta} <ArrowRight className="w-4 h-4" />
+                  className={`mt-auto inline-flex items-center gap-1.5 text-sm font-semibold ${emphasis ? "text-white" : "text-[#0F3D2E] dark:text-emerald-100"}`}>
+                  {cta} <ArrowRight className="w-3.5 h-3.5" />
                 </span>
               </motion.div>
             ))}
@@ -603,8 +544,8 @@ export function LandingPage() {
       </section>
 
       {/* ════════════════ FEATURED QUESTS ════════════════ */}
-      <section className="pt-14 pb-20 md:pt-16 dark:!bg-[#10271f]" style={{ background: "#F9FAFB" }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-20 md:py-24 bg-white dark:bg-[#10271f]">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10"
             variants={scrollFade}
@@ -612,61 +553,48 @@ export function LandingPage() {
             whileInView="show"
             viewport={LANDING_VIEWPORT}>
             <div>
-              <span className="inline-block px-3 py-1 rounded-full text-xs mb-3"
-                style={{ background: "#E6F4EE", color: "#2F8F6B", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" }}>
-                Quests
-              </span>
-              <h2 className="text-[#0F3D2E] dark:text-emerald-50" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, fontSize: "clamp(1.6rem, 3vw, 2.2rem)" }}>
-                Start Your Climate Journey
+              <h2 className="text-slate-900 dark:text-emerald-50" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, fontSize: "clamp(1.5rem, 3vw, 2rem)" }}>
+                Featured quests
               </h2>
+              <p className="text-slate-600 dark:text-emerald-200/75 text-sm mt-1">Hands-on climate missions you can start today.</p>
             </div>
             <Link
               to="/hands-on"
-              className="hidden sm:inline-flex items-center gap-1.5 text-sm font-semibold rounded-lg px-3 py-2 border-2 border-[#2F8F6B]/30 text-[#2F8F6B] hover:bg-[#E6F4EE] dark:border-emerald-400/40 dark:text-emerald-300 dark:hover:bg-white/5 transition-colors">
-              View all quests <ArrowRight className="w-4 h-4" />
+              className="hidden sm:inline-flex items-center gap-1.5 text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-emerald-300 dark:hover:text-emerald-100 transition-colors">
+              View all <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </motion.div>
 
           {questsLoading ? (
-            <div className="flex justify-center py-16">
-              <Loader2 className="w-8 h-8 animate-spin" style={{ color: "#2F8F6B" }} />
+            <div className="flex justify-center py-12">
+              <Loader2 className="w-6 h-6 animate-spin text-slate-400" />
             </div>
           ) : displayQuests.length > 0 ? (
             <motion.div
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
               variants={staggerInView}
               initial="hidden"
               whileInView="show"
               viewport={LANDING_VIEWPORT}>
               {displayQuests.map((quest) => {
-                const color = getQuestColor(quest);
                 return (
-                  <motion.div key={quest.id} variants={staggerCard} className="h-full min-h-0" whileHover={reduceMotion ? undefined : { y: -5 }}>
-                  <Link to={`/quests/${quest.id}`} className="group flex flex-col h-full rounded-2xl overflow-hidden transition-all duration-300 border border-gray-200 dark:border-emerald-400/35 bg-white"
-                    style={{ boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }}
-                    onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 8px 28px rgba(15,61,46,0.12)"; }}
-                    onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 1px 4px rgba(0,0,0,0.04)"; }}>
-                    <div className="relative h-44 shrink-0 overflow-hidden flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${color}15, ${color}35)` }}>
-                      <div className="pointer-events-none absolute inset-0 bg-transparent dark:bg-[#061510]/45 dark:mix-blend-multiply" aria-hidden />
-                      <span className="relative z-[1] text-6xl transition-transform duration-500 group-hover:scale-110 inline-block">{getQuestDisplayIcon(quest)}</span>
-                      <span className="absolute top-3 left-3 z-[2] px-2.5 py-1 rounded-full text-xs"
-                        style={{ background: "rgba(255,255,255,0.92)", color: color, fontWeight: 700 }}>
+                  <motion.div key={quest.id} variants={staggerCard} className="h-full" whileHover={reduceMotion ? undefined : { y: -3 }}>
+                  <Link to={`/quests/${quest.id}`} className="group flex flex-col h-full rounded-xl overflow-hidden border border-slate-200 bg-white hover:border-slate-300 hover:shadow-sm transition-all dark:border-emerald-400/25 dark:bg-[#132B23]">
+                    <div className="relative h-36 shrink-0 overflow-hidden flex items-center justify-center bg-slate-100 dark:bg-[#0D1F18]">
+                      <span className="text-5xl transition-transform duration-300 group-hover:scale-110">{getQuestDisplayIcon(quest)}</span>
+                      <span className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded text-[10px] font-semibold bg-white text-slate-700 dark:bg-[#0F3D2E] dark:text-emerald-200">
                         {quest.category || quest.tier}
                       </span>
-                      <span className="absolute top-3 right-3 z-[2] px-2.5 py-1 rounded-full text-xs"
-                        style={{ background: "rgba(0,0,0,0.45)", color: "white", fontWeight: 600 }}>
-                        {quest.tier === "beginner" ? "Beginner" : "Advanced"}
-                      </span>
                     </div>
-                    <div className="px-5 pt-4 pb-6 flex flex-col flex-1 min-h-0">
-                      <p className="text-xs mb-1 text-[#9CA3AF] dark:text-emerald-200/75">{quest.tier === "beginner" ? "🌱 Badge Quest" : "🏆 Certificate Quest"}</p>
-                      <h3 className="mb-4 text-[#0F3D2E] dark:text-emerald-50" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 700, fontSize: "0.95rem" }}>{quest.title}</h3>
-                      <div className="flex items-center justify-between pt-4 mt-auto border-t border-[#F3F4F6] dark:border-white/10">
-                        <span className="text-xs flex items-center gap-1 text-[#9CA3AF] dark:text-emerald-200/70">
-                          <Clock className="w-3 h-3" /> ~{quest.estimated_days} days
+                    <div className="px-4 pt-3.5 pb-4 flex flex-col flex-1">
+                      <span className="text-[10px] uppercase tracking-wide text-slate-400 mb-1 font-medium">{quest.tier === "beginner" ? "Badge Quest" : "Certificate Quest"}</span>
+                      <h3 className="mb-3 text-slate-900 dark:text-emerald-50 text-sm font-semibold leading-snug">{quest.title}</h3>
+                      <div className="flex items-center justify-between pt-3 mt-auto border-t border-slate-100 dark:border-white/10 text-xs text-slate-500 dark:text-emerald-200/70">
+                        <span className="flex items-center gap-1">
+                          <Clock className="w-3 h-3" /> {quest.estimated_days}d
                         </span>
-                        <span className="text-xs flex items-center gap-1" style={{ color: "#FBBF24", fontWeight: 700 }}>
-                          <Zap className="w-3 h-3 fill-current" /> {quest.points_reward} pts
+                        <span className="flex items-center gap-1 font-semibold text-amber-600 dark:text-amber-400">
+                          <Zap className="w-3 h-3" /> {quest.points_reward} pts
                         </span>
                       </div>
                     </div>
@@ -676,40 +604,36 @@ export function LandingPage() {
               })}
             </motion.div>
           ) : (
-            <div className="text-center py-12 bg-white rounded-2xl border border-gray-100">
-              <p className="text-sm" style={{ color: "#9CA3AF" }}>Quests coming soon — check back shortly!</p>
+            <div className="text-center py-10 bg-slate-50 rounded-xl border border-slate-100">
+              <p className="text-sm text-slate-500">Quests coming soon.</p>
             </div>
           )}
 
-          <div className="text-center mt-8 sm:hidden">
+          <div className="text-center mt-6 sm:hidden">
             <Link
               to="/hands-on"
-              className="inline-flex items-center gap-1.5 text-sm font-semibold rounded-lg px-3 py-2 border-2 border-[#2F8F6B]/30 text-[#2F8F6B] hover:bg-[#E6F4EE] dark:border-emerald-400/40 dark:text-emerald-300 dark:hover:bg-white/5 transition-colors">
-              View all quests <ArrowRight className="w-4 h-4" />
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">
+              View all quests <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
         </div>
       </section>
 
       {/* ════════════════ TESTIMONIALS ════════════════ */}
-      <section className="pt-20 pb-24 md:pb-28 dark:!bg-[#10271f]" style={{ background: "white" }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-20 md:py-24 bg-slate-50 dark:bg-[#10271f]">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
-            className="text-center mb-12 md:mb-14"
+            className="text-center mb-10"
             variants={scrollFade}
             initial="hidden"
             whileInView="show"
             viewport={LANDING_VIEWPORT}>
-            <span className="inline-block px-3 py-1 rounded-full text-xs mb-3"
-              style={{ background: "#E6F4EE", color: "#2F8F6B", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" }}>
-              Community Stories
-            </span>
-            <h2 className="text-[#0F3D2E] dark:text-emerald-50" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, fontSize: "clamp(1.8rem, 3vw, 2.2rem)" }}>
-              What Our Members Say
+            <h2 className="text-slate-900 dark:text-emerald-50" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, fontSize: "clamp(1.5rem, 3vw, 2rem)" }}>
+              What members say
             </h2>
           </motion.div>
           <motion.div
-            className="grid grid-cols-1 md:grid-cols-3 gap-6"
+            className="grid grid-cols-1 md:grid-cols-3 gap-4"
             variants={staggerInView}
             initial="hidden"
             whileInView="show"
@@ -718,23 +642,21 @@ export function LandingPage() {
               <motion.div
                 key={t.name}
                 variants={staggerCard}
-                whileHover={reduceMotion ? undefined : { y: -4, boxShadow: "0 14px 36px rgba(15,61,46,0.1)" }}
-                className="p-7 rounded-2xl flex flex-col bg-[#F9FAFB] border border-[#F3F4F6] dark:border-emerald-400/25 dark:!bg-[#132b23]"
-                style={{ background: "#F9FAFB" }}>
-                <div className="flex gap-0.5 mb-4">
+                whileHover={reduceMotion ? undefined : { y: -3 }}
+                className="p-5 rounded-xl flex flex-col bg-white border border-slate-100 dark:border-emerald-400/20 dark:bg-[#132b23]">
+                <div className="flex gap-0.5 mb-3">
                   {Array.from({ length: t.stars }).map((_, i) => (
-                    <Star key={i} className="w-4 h-4" style={{ fill: "#FBBF24", color: "#FBBF24" }} />
+                    <Star key={i} className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
                   ))}
                 </div>
-                <p className="text-sm mb-6 flex-1 text-[#374151] dark:!text-emerald-100/90" style={{ lineHeight: 1.8 }}>"{t.text}"</p>
-                <div className="flex items-center gap-3 pt-5" style={{ borderTop: "1px solid #E5E7EB" }}>
-                  <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm text-white"
-                    style={{ background: "linear-gradient(135deg, #0F3D2E, #2F8F6B)", fontWeight: 700 }}>
+                <p className="text-sm mb-5 flex-1 text-slate-600 dark:text-emerald-100/90 leading-relaxed">"{t.text}"</p>
+                <div className="flex items-center gap-3 pt-4 border-t border-slate-100 dark:border-white/10">
+                  <div className="w-9 h-9 rounded-full flex items-center justify-center text-xs text-white font-semibold bg-[#0F3D2E]">
                     {t.avatar}
                   </div>
                   <div>
-                    <div className="text-sm font-bold text-[#0F3D2E] dark:text-emerald-50">{t.name}</div>
-                    <div className="text-xs text-[#6B7280] dark:text-emerald-200/75">{t.role}</div>
+                    <div className="text-sm font-semibold text-slate-900 dark:text-emerald-50">{t.name}</div>
+                    <div className="text-xs text-slate-500 dark:text-emerald-200/70">{t.role}</div>
                   </div>
                 </div>
               </motion.div>
@@ -744,63 +666,31 @@ export function LandingPage() {
       </section>
 
       {/* ════════════════ FINAL CTA ════════════════ */}
-      <section className="py-24 md:py-28 relative overflow-hidden" style={{ background: "#0F3D2E" }}>
-        <div
-          className="absolute inset-0 opacity-10 dark:opacity-[0.28] dark:mix-blend-multiply dark:saturate-75 dark:brightness-90"
-          style={{ backgroundImage: `url(${IMG_COMMUNITY})`, backgroundSize: "cover", backgroundPosition: "center" }}
-        />
-        <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(15,61,46,0.95) 0%, rgba(47,143,107,0.85) 100%)" }} />
-        {!reduceMotion && (
-          <>
-            <motion.div
-              aria-hidden
-              className="pointer-events-none absolute -top-16 -right-10 w-72 h-72 rounded-full blur-3xl opacity-35"
-              style={{ background: "radial-gradient(circle, rgba(167,243,208,0.55) 0%, transparent 68%)" }}
-              animate={{ x: [0, -18, 0], y: [0, 22, 0] }}
-              transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
-            />
-            <motion.div
-              aria-hidden
-              className="pointer-events-none absolute bottom-0 -left-12 w-64 h-64 rounded-full blur-3xl opacity-25"
-              style={{ background: "radial-gradient(circle, rgba(52,211,153,0.4) 0%, transparent 70%)" }}
-              animate={{ x: [0, 20, 0], y: [0, -12, 0] }}
-              transition={{ duration: 11, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-            />
-          </>
-        )}
+      <section className="py-20 md:py-24 bg-[#0F3D2E] relative overflow-hidden">
         <motion.div
-          className="relative z-10 max-w-3xl mx-auto px-4 text-center"
+          className="relative z-10 max-w-2xl mx-auto px-4 text-center"
           variants={staggerWrap}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, amount: 0.35 }}>
-          <motion.div variants={heroItem} className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-6"
-            style={{ background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.2)" }}>
-            <Leaf className="w-3.5 h-3.5 text-green-300" />
-            <span className="text-sm text-white" style={{ fontWeight: 600 }}>Start free · No experience needed</span>
-          </motion.div>
-          <motion.p variants={heroItem} className="text-[10px] sm:text-xs uppercase tracking-[0.18em] text-white/55 mb-3 font-semibold">
-            Mission-based climate learning
-          </motion.p>
-          <motion.h2 variants={heroItem} className="text-white mb-4" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, fontSize: "clamp(1.8rem, 4vw, 2.8rem)", lineHeight: 1.15 }}>
-            Every skill planted grows a better future.
+          <motion.h2 variants={heroItem} className="text-white mb-4" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, fontSize: "clamp(1.5rem, 4vw, 2.25rem)", lineHeight: 1.2 }}>
+            Ready to make an impact?
           </motion.h2>
-          <motion.p variants={heroItem} className="mb-8" style={{ color: "rgba(255,255,255,0.72)", lineHeight: 1.7, fontSize: "1.1rem" }}>
-            Start your first climate mission today — it only takes 10 minutes to get going.
+          <motion.p variants={heroItem} className="mb-8 text-white/70 text-base sm:text-lg">
+            Join thousands building real climate skills. Start your first mission today.
           </motion.p>
           <motion.div variants={heroItem} className="flex flex-wrap gap-3 justify-center">
-            <motion.div whileHover={reduceMotion ? undefined : { scale: 1.04, y: -2 }} whileTap={reduceMotion ? undefined : { scale: 0.98 }} className="inline-flex">
+            <motion.div whileHover={reduceMotion ? undefined : { y: -1 }} whileTap={reduceMotion ? undefined : { scale: 0.98 }} className="inline-flex">
               <Link to="/auth"
-                className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl text-sm font-bold transition-colors bg-white text-[#0F3D2E] hover:bg-emerald-50 shadow-lg shadow-black/20"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-semibold bg-white text-[#0F3D2E] hover:bg-slate-100 transition-colors"
                 style={{ fontFamily: "'Manrope', sans-serif" }}>
-                <Sprout className="w-4 h-4" /> Join for Free
+                <Sprout className="w-4 h-4" /> Get started free
               </Link>
             </motion.div>
-            <motion.div whileHover={reduceMotion ? undefined : { y: -2 }} className="inline-flex">
+            <motion.div whileHover={reduceMotion ? undefined : { y: -1 }} className="inline-flex">
               <Link to="/hands-on"
-                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl text-sm text-white transition-colors border-2 border-white/45 bg-transparent hover:bg-white/10"
-                style={{ fontWeight: 600 }}>
-                Browse Quests <ArrowRight className="w-4 h-4" />
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-lg text-sm text-white/90 font-medium border border-white/30 hover:bg-white/10 transition-colors">
+                Browse quests <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </motion.div>
           </motion.div>
