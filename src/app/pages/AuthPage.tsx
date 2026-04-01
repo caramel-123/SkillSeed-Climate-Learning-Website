@@ -101,12 +101,6 @@ export function AuthPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Forgot password modal
-  const [forgotOpen, setForgotOpen] = useState(false);
-  const [forgotEmail, setForgotEmail] = useState("");
-  const [forgotStatus, setForgotStatus] = useState<"idle" | "sending" | "sent">("idle");
-  const [forgotError, setForgotError] = useState<string | null>(null);
-
   const [form, setForm] = useState({
     name: "", email: "", password: "", region: "",
     orgName: "", orgType: "", bio: "",
@@ -199,8 +193,6 @@ export function AuthPage() {
   };
 
   // ─── Render ──────────────────────────────────────────────────────────────────
-
-  if (!isSupabaseConfigured) return <ConfigError />;
 
   return (
     <div className="min-h-screen flex bg-[#F9FAFB] dark:bg-[#0D1F18]">
