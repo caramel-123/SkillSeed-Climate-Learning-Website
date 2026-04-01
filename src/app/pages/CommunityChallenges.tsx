@@ -639,30 +639,47 @@ export function CommunityChallenges() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-white dark:bg-[#0D1F18]">
-        <div className="bg-gradient-to-br from-[#0F3D2E] to-[#1A5C43] py-12">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="h-8 w-72 bg-white/20 rounded animate-pulse mb-3" />
-            <div className="h-5 w-96 bg-white/10 rounded animate-pulse" />
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8">
-              {[...Array(4)].map((_, i) => (
-                <div
-                  key={i}
-                  className="h-24 bg-white/10 rounded-xl border border-white/10 animate-pulse"
-                />
-              ))}
-            </div>
+      <div className="min-h-screen bg-slate-50 dark:bg-[#0D1F18]">
+        {/* Header skeleton */}
+        <header className="bg-white dark:bg-[#132B23] border-b border-slate-200 dark:border-[#1E3B34]">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div className="h-3 w-28 bg-slate-100 dark:bg-[#1E3B34] rounded animate-pulse mb-2" />
+            <div className="h-8 w-72 bg-slate-100 dark:bg-[#1E3B34] rounded animate-pulse mb-2" />
+            <div className="h-4 w-96 bg-slate-100 dark:bg-[#1E3B34] rounded animate-pulse" />
           </div>
-        </div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="h-16 bg-white dark:bg-[#132b23] rounded-2xl border border-gray-100 dark:border-white/10 shadow-[0_6px_20px_rgba(15,61,46,0.08)] animate-pulse" />
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-            {[...Array(6)].map((_, i) => (
+        </header>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-5">
+          {/* KPI strip skeleton */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {[...Array(4)].map((_, i) => (
               <div
                 key={i}
-                className="h-64 bg-white dark:bg-[#132b23] rounded-2xl border border-gray-100 dark:border-white/10 animate-pulse"
-              />
+                className="bg-white dark:bg-[#132B23] rounded-xl border border-slate-200 dark:border-[#1E3B34] p-4 animate-pulse"
+              >
+                <div className="h-3 w-16 bg-slate-100 dark:bg-[#1E3B34] rounded mb-2" />
+                <div className="h-7 w-12 bg-slate-100 dark:bg-[#1E3B34] rounded" />
+              </div>
             ))}
+          </div>
+          {/* Content grid skeleton */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2 space-y-5">
+              {/* Tabs skeleton */}
+              <div className="h-12 w-64 bg-white dark:bg-[#132B23] rounded-lg border border-slate-200 dark:border-[#1E3B34] animate-pulse" />
+              {/* Cards skeleton */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {[...Array(4)].map((_, i) => (
+                  <ChallengeCardSkeleton key={i} />
+                ))}
+              </div>
+            </div>
+            {/* Sidebar skeleton */}
+            <div className="space-y-5">
+              <div className="bg-white dark:bg-[#132B23] rounded-xl border border-slate-200 dark:border-[#1E3B34] p-5 animate-pulse">
+                <div className="h-5 w-28 bg-slate-100 dark:bg-[#1E3B34] rounded mb-4" />
+                <LeaderboardSkeleton />
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -751,28 +768,33 @@ export function CommunityChallenges() {
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-5">
         {/* ─────────────────────────────────────────────────────────────────────
-            KPI Strip (matches Missions pattern)
+            KPI Strip (honest beta pattern)
         ───────────────────────────────────────────────────────────────────── */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {[
-            { icon: Users, label: "Active Members", value: communityStats.totalChallengers },
-            { icon: Target, label: "Running Now", value: communityStats.activeChallenges },
-            { icon: Leaf, label: "Actions Logged", value: communityStats.totalActions },
-            { icon: Trophy, label: "Challenges", value: filteredChallenges.length },
-          ].map(({ icon: Icon, label, value }) => (
+            { icon: Users, label: "Members", value: communityStats.totalChallengers, isBeta: true },
+            { icon: Target, label: "Active", value: communityStats.activeChallenges, isBeta: true },
+            { icon: Leaf, label: "Actions", value: communityStats.totalActions, isBeta: true },
+            { icon: Trophy, label: "Challenges Listed", value: filteredChallenges.length, isBeta: false },
+          ].map(({ icon: Icon, label, value, isBeta }) => (
             <div
               key={label}
               className="bg-white dark:bg-[#132B23] rounded-xl border border-slate-200 dark:border-[#1E3B34] p-4"
             >
-              <p className="text-xs text-slate-500 dark:text-[#94C8AF] font-medium mb-1 flex items-center gap-1">
+              <p className="text-xs text-slate-500 dark:text-[#94C8AF] font-medium mb-1 flex items-center gap-1.5">
                 <Icon className="w-3 h-3" />
                 {label}
+                {isBeta && (
+                  <span className="px-1 py-0.5 text-[9px] font-semibold rounded bg-[#E8F5EF] dark:bg-[#1E3B34] text-[#2F8F6B] dark:text-[#6DD4A8]">
+                    Beta
+                  </span>
+                )}
               </p>
               <p className="text-2xl font-bold text-slate-900 dark:text-white">
-                {value > 0 ? value.toLocaleString() : "0"}
+                {isBeta && value === 0 ? "—" : value.toLocaleString()}
               </p>
-              {value === 0 && (
-                <p className="text-[10px] text-[#2F8F6B] dark:text-[#6DD4A8] mt-0.5">Be the first</p>
+              {isBeta && value === 0 && (
+                <p className="text-[10px] text-slate-400 dark:text-[#6B8F7F] mt-0.5">Live after launch</p>
               )}
             </div>
           ))}

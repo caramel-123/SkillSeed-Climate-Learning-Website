@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
-import { Menu, X, Sprout, ChevronDown, User, LogOut, Moon, Sun, Monitor, Leaf, Globe } from "lucide-react";
+import { Menu, X, Sprout, ChevronDown, User, LogOut, Moon, Sun } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
 import { useTheme } from "next-themes";
 import { ThemeToggle } from "./ThemeToggle";
@@ -114,40 +114,33 @@ export function Navbar() {
                 <div className="relative" ref={dropdownRef}>
                   <button
                     onClick={() => setDropdownOpen(!dropdownOpen)}
-                    className="flex items-center gap-2 pl-1 pr-2 py-1 rounded-xl transition-all"
-                    style={{ border: "1.5px solid #E5E7EB" }}
-                    onMouseEnter={e => (e.currentTarget.style.borderColor = "#2F8F6B")}
-                    onMouseLeave={e => (!dropdownOpen && (e.currentTarget.style.borderColor = "#E5E7EB"))}
+                    className={`flex items-center gap-2 pl-1.5 pr-2.5 py-1.5 rounded-xl transition-all min-h-[44px] border-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F8F6B] ${
+                      dropdownOpen 
+                        ? "border-[#2F8F6B] bg-[#E8F5EF] dark:bg-[#1E3B34]" 
+                        : "border-slate-200 dark:border-[#1E3B34] hover:border-[#2F8F6B]/50 dark:hover:border-[#6DD4A8]/50"
+                    }`}
                   >
-                    <div className="w-7 h-7 rounded-lg flex items-center justify-center text-white text-sm"
-                      style={{ background: "linear-gradient(135deg, #0F3D2E, #2F8F6B)", fontWeight: 700 }}>
+                    <div className="w-7 h-7 rounded-lg flex items-center justify-center text-white text-sm bg-gradient-to-br from-[#0F3D2E] to-[#2F8F6B] font-bold">
                       {getAvatarInitials()}
                     </div>
-                    <span
-                      className="text-sm"
-                      style={{ fontWeight: 500, color: mounted && theme === "dark" ? "#BEEBD7" : "#374151" }}
-                    >
+                    <span className="text-sm font-medium text-slate-700 dark:text-[#BEEBD7]">
                       {getUserName().split(" ")[0]}
                     </span>
-                    <ChevronDown className="w-3.5 h-3.5" style={{ color: "#9CA3AF", transform: dropdownOpen ? "rotate(180deg)" : "none", transition: "transform 0.2s" }} />
+                    <ChevronDown className={`w-3.5 h-3.5 text-slate-400 dark:text-[#94C8AF] transition-transform ${dropdownOpen ? "rotate-180" : ""}`} />
                   </button>
 
                   {/* Dropdown menu */}
                   {dropdownOpen && (
-                    <div
-                      className="absolute right-0 mt-2 w-56 rounded-2xl overflow-hidden"
-                      style={{ background: mounted && theme === "dark" ? "#132B23" : "white", border: mounted && theme === "dark" ? "1px solid #1E3B34" : "1px solid #E5E7EB", boxShadow: "0 8px 24px rgba(0,0,0,0.12)", zIndex: 100 }}
-                    >
+                    <div className="absolute right-0 mt-2 w-56 rounded-xl overflow-hidden bg-white dark:bg-[#132B23] border border-slate-200 dark:border-[#1E3B34] shadow-lg z-[100]">
                       {/* User info */}
-                      <div className="px-4 py-3.5" style={{ borderBottom: "1px solid #F3F4F6" }}>
+                      <div className="px-4 py-3.5 border-b border-slate-100 dark:border-[#1E3B34]">
                         <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white"
-                            style={{ background: "linear-gradient(135deg, #0F3D2E, #2F8F6B)", fontWeight: 700 }}>
+                          <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white bg-gradient-to-br from-[#0F3D2E] to-[#2F8F6B] font-bold">
                             {getAvatarInitials()}
                           </div>
                           <div className="min-w-0">
-                            <p className="text-sm truncate" style={{ fontWeight: 700, color: "#0F3D2E" }}>{getUserName()}</p>
-                            <p className="text-xs truncate" style={{ color: mounted && theme === "dark" ? "#A8D5BF" : "#9CA3AF" }}>{user.email}</p>
+                            <p className="text-sm font-bold text-slate-900 dark:text-[#BEEBD7] truncate">{getUserName()}</p>
+                            <p className="text-xs text-slate-500 dark:text-[#94C8AF] truncate">{user.email}</p>
                           </div>
                         </div>
                       </div>
@@ -161,55 +154,19 @@ export function Navbar() {
                             key={label}
                             to={href}
                             onClick={() => setDropdownOpen(false)}
-                            className="flex items-center gap-3 px-4 py-2.5 text-sm transition-colors"
-                            style={{ color: mounted && theme === "dark" ? "#E8F5EF" : "#374151" }}
-                            onMouseEnter={e => (e.currentTarget.style.background = mounted && theme === "dark" ? "#17342B" : "#F9FAFB")}
-                            onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
+                            className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 dark:text-[#BEEBD7] hover:bg-slate-50 dark:hover:bg-[#1E3B34] transition-colors"
                           >
-                            <Icon className="w-4 h-4" style={{ color: mounted && theme === "dark" ? "#A8D5BF" : "#9CA3AF" }} />
+                            <Icon className="w-4 h-4 text-slate-400 dark:text-[#94C8AF]" />
                             {label}
                           </Link>
                         ))}
                       </div>
 
-                      {/* Theme selector */}
-                      <div style={{ borderTop: mounted && theme === "dark" ? "1px solid #1E3B34" : "1px solid #F3F4F6" }} className="py-2 px-3">
-                        <p className="text-xs font-semibold mb-2" style={{ color: mounted && theme === "dark" ? "#A8D5BF" : "#6B7280" }}>
-                          Theme
-                        </p>
-                        <div className="grid grid-cols-3 gap-2">
-                          {[
-                            { id: "light", label: "Light", icon: Leaf },
-                            { id: "dark", label: "Dark", icon: Globe },
-                            { id: "system", label: "System", icon: Monitor },
-                          ].map(({ id, label, icon: Icon }) => {
-                            const active = (theme ?? "system") === id;
-                            return (
-                              <button
-                                key={id}
-                                onClick={() => setTheme(id)}
-                                className="px-2 py-2 rounded-lg text-xs font-medium transition-colors inline-flex flex-col items-center gap-1"
-                                style={{
-                                  background: active ? "#E6F4EE" : "transparent",
-                                  color: active ? "#0F3D2E" : mounted && theme === "dark" ? "#E8F5EF" : "#374151",
-                                  border: active ? "1px solid #BFE5D4" : mounted && theme === "dark" ? "1px solid #1E3B34" : "1px solid #E5E7EB",
-                                }}
-                              >
-                                <Icon className="w-3.5 h-3.5" />
-                                {label}
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </div>
-
-                      <div style={{ borderTop: "1px solid #F3F4F6" }} className="py-1.5">
+                      {/* Logout */}
+                      <div className="border-t border-slate-100 dark:border-[#1E3B34] py-1.5">
                         <button
                           onClick={handleLogout}
-                          className="w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors text-left"
-                          style={{ color: "#EF4444" }}
-                          onMouseEnter={e => (e.currentTarget.style.background = "#FFF5F5")}
-                          onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
+                          className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors text-left"
                         >
                           <LogOut className="w-4 h-4" />
                           Log Out
@@ -281,24 +238,22 @@ export function Navbar() {
 
           <div className="pt-3 flex flex-col gap-2 border-t border-gray-100 dark:border-[#1E3B34] mt-2">
             <div className="flex items-center justify-between px-1 pb-1">
-              <span className="text-xs text-gray-500 dark:text-[#94C8AF]">Theme</span>
+              <span className="text-xs text-slate-500 dark:text-[#94C8AF]">Theme</span>
               <div className="flex items-center gap-1">
                 {[
-                  { id: "light", icon: Leaf, label: "Light" },
-                  { id: "dark", icon: Globe, label: "Dark" },
-                  { id: "system", icon: Monitor, label: "System" },
+                  { id: "light", icon: Sun, label: "Light" },
+                  { id: "dark", icon: Moon, label: "Dark" },
                 ].map(({ id, icon: Icon }) => {
-                  const active = (theme ?? "system") === id;
+                  const active = resolvedTheme === id;
                   return (
                     <button
                       key={id}
                       onClick={() => setTheme(id)}
-                      className="p-2 rounded-lg border transition-colors"
-                      style={{
-                        borderColor: active ? "#2F8F6B" : "#E5E7EB",
-                        background: active ? "#E6F4EE" : "white",
-                        color: active ? "#0F3D2E" : "#6B7280",
-                      }}
+                      className={`p-2.5 rounded-lg border transition-colors min-h-[44px] min-w-[44px] ${
+                        active 
+                          ? "border-[#2F8F6B] bg-[#E8F5EF] dark:bg-[#1E3B34] text-[#0F3D2E] dark:text-[#6DD4A8]" 
+                          : "border-slate-200 dark:border-[#1E3B34] bg-white dark:bg-transparent text-slate-500 dark:text-[#94C8AF]"
+                      }`}
                     >
                       <Icon className="w-4 h-4" />
                     </button>

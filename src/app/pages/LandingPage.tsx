@@ -708,14 +708,14 @@ export function LandingPage() {
           <motion.div variants={heroItem} className="flex flex-wrap gap-3 justify-center">
             <motion.div whileHover={reduceMotion ? undefined : { y: -1 }} whileTap={reduceMotion ? undefined : { scale: 0.98 }} className="inline-flex">
               <Link to="/auth"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-semibold bg-white text-[#0F3D2E] hover:bg-slate-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#0F3D2E]"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-semibold bg-white text-[#0F3D2E] hover:bg-[#E8F5EF] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#0F3D2E] min-h-[48px]"
                 style={{ fontFamily: "'Manrope', sans-serif" }}>
                 <Sprout className="w-4 h-4" /> Get started
               </Link>
             </motion.div>
             <motion.div whileHover={reduceMotion ? undefined : { y: -1 }} className="inline-flex">
               <Link to="/hands-on"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-lg text-sm text-white/90 font-medium border border-white/30 hover:bg-white/10 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50">
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-lg text-sm text-white font-medium border-2 border-white/40 hover:bg-white/15 hover:border-white/60 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60 min-h-[48px]">
                 Browse quests <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </motion.div>

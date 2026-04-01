@@ -87,9 +87,9 @@ export function Footer() {
             </ul>
             <div className="mt-5 flex items-center gap-2 text-[#94C8AF] text-sm">
               <Mail className="w-4 h-4" />
-              <a href="mailto:hello@skillseed.earth" className="hover:text-white transition-colors">
-                hello@skillseed.earth
-              </a>
+              <Link to="/contact" className="hover:text-white transition-colors">
+                Contact Us
+              </Link>
             </div>
           </div>
         </div>
