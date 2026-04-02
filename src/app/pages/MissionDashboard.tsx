@@ -96,6 +96,9 @@ type MissionCard = Project & {
   match_score?: number;
 };
 
+// Hide placeholder/demo missions (beta hygiene)
+const HIDDEN_MISSION_TITLES = new Set(["composting", "lestletlsss", "testtetssss"]);
+
 // ============================================================================
 // Skeleton Components
 // ============================================================================
@@ -204,16 +207,29 @@ export function MissionDashboard() {
     async function fetchData() {
       try {
         setLoading(true);
-        const [missionsData, userProjects] = await Promise.all([
-          user ? getMatchingProjects() : getProjects(),
+        // Logged-in users should still see the full mission catalog.
+        // Matching is a "ranking signal", not a hard filter.
+        const [matchingMissions, allMissions, userProjects] = await Promise.all([
+          user ? getMatchingProjects() : Promise.resolve([]),
+          getProjects(),
           getMyProjects(),
         ]);
 
-        setMissions(missionsData);
+        const missionsData: MissionCard[] =
+          user && Array.isArray(matchingMissions) && matchingMissions.length > 0
+            ? (matchingMissions as MissionCard[])
+            : (allMissions as MissionCard[]);
+
+        const cleanedMissions = (missionsData ?? []).filter((m) => {
+          const title = String(m.title ?? "").trim().toLowerCase();
+          return title && !HIDDEN_MISSION_TITLES.has(title);
+        });
+
+        setMissions(cleanedMissions);
         setMyProjects(userProjects);
 
         const allProjectIds = Array.from(
-          new Set([...(missionsData ?? []).map((p) => p.id), ...(userProjects ?? []).map((p) => p.id)])
+          new Set([...(cleanedMissions ?? []).map((p) => p.id), ...(userProjects ?? []).map((p) => p.id)])
         );
 
         if (allProjectIds.length > 0) {
@@ -235,7 +251,7 @@ export function MissionDashboard() {
           }
         }
 
-        const posterUserIds = Array.from(new Set(missionsData.map((p) => String(p.poster_id))));
+        const posterUserIds = Array.from(new Set(cleanedMissions.map((p) => String(p.poster_id))));
         if (posterUserIds.length > 0) {
           const { data: posters } = await supabase
             .from("profiles")
@@ -257,7 +273,7 @@ export function MissionDashboard() {
 
         if (user) {
           const projectIdsForStatus = Array.from(
-            new Set([...(missionsData ?? []).map((p) => p.id), ...(userProjects ?? []).map((p) => p.id)])
+            new Set([...(cleanedMissions ?? []).map((p) => p.id), ...(userProjects ?? []).map((p) => p.id)])
           );
 
           const { data: myConnections } = await supabase
@@ -311,6 +327,24 @@ export function MissionDashboard() {
   // Validation: Filter out test/placeholder missions
   function isValidMission(m: Project): boolean {
     const title = m.title?.trim() ?? "";
+    const lower = title.toLowerCase();
+
+    // Explicit blocklist for known placeholders (fast + deterministic)
+    if (HIDDEN_MISSION_TITLES.has(lower)) return false;
+
+    // Common placeholder words
+    if (
+      lower.includes("test") ||
+      lower.includes("lorem") ||
+      lower.includes("dummy") ||
+      lower.includes("sample") ||
+      lower.includes("placeholder")
+    ) {
+      return false;
+    }
+
+    // Placeholder location/organization
+    if ((m.location ?? "").trim().toLowerCase() === "test") return false;
     // Too short
     if (title.length < 6) return false;
     // Repeated characters (e.g. "ssssss", "aaaa")

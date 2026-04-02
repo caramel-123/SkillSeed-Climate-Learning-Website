@@ -81,30 +81,50 @@ export function useAuth() {
     return { error };
   };
 
-  const signInWithGoogle = async (): Promise<{ error: AuthError | null }> => {
+  const signInWithGoogle = async (): Promise<{
+    error: AuthError | null;
+    /** Pop-up window when opened; parent should listen for `skillseed-oauth-success` postMessage */
+    oauthPopup: Window | null;
+  }> => {
     // Google blocks OAuth screens inside iframes/webviews ("This content is blocked").
-    // Use `skipBrowserRedirect` so we can open the provider URL in a real tab.
+    // Use `skipBrowserRedirect` so we can open the provider URL in a real window.
+    // `prompt=select_account` forces Google's account picker (no silent reuse of last account).
     const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
+      provider: "google",
       options: {
         redirectTo: `${window.location.origin}/auth/callback?next=/dashboard`,
         skipBrowserRedirect: true,
+        queryParams: {
+          prompt: "select_account",
+        },
       },
     });
 
-    if (!error && data?.url) {
-      if (window.self !== window.top) {
-        // Embedded preview: open provider flow in a new tab.
-        const w = window.open(data.url, "_blank", "noopener,noreferrer");
-        // If popups are blocked, fall back to same-frame navigation (may be blocked by Google).
-        if (!w) window.location.href = data.url;
-      } else {
-        // Normal browser: redirect in the current tab.
-        window.location.href = data.url;
-      }
+    if (error || !data?.url) {
+      return { error, oauthPopup: null };
     }
 
-    return { error };
+    const url = data.url;
+
+    if (window.self !== window.top) {
+      const w = window.open(url, "_blank", "noopener,noreferrer");
+      if (!w) window.location.href = url;
+      return { error: null, oauthPopup: w };
+    }
+
+    // Top-level: tall centered pop-up so Google's sign-in UI reads as a vertical dialog.
+    const width = 500;
+    const height = 720;
+    const left = Math.max(0, (window.screen.width - width) / 2);
+    const top = Math.max(0, (window.screen.height - height) / 2);
+    const features = `width=${width},height=${height},left=${left},top=${top},scrollbars=yes,resizable=yes`;
+    const popup = window.open(url, "skillseed-google-oauth", features);
+    if (!popup) {
+      window.location.href = url;
+      return { error: null, oauthPopup: null };
+    }
+    popup.focus();
+    return { error: null, oauthPopup: popup };
   };
 
   const signOut = async (): Promise<{ error: AuthError | null }> => {

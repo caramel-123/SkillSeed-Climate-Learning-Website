@@ -41,8 +41,21 @@ export function AuthCallback() {
 
         if (session) {
           setState("success");
-          // Short delay to show success state, then redirect
           setTimeout(() => {
+            // OAuth opened in a pop-up: notify opener and close (avoid trapping dashboard in tiny window).
+            if (window.opener && !window.opener.closed) {
+              try {
+                window.opener.postMessage(
+                  { type: "skillseed-oauth-success", next },
+                  window.location.origin
+                );
+              } catch {
+                navigate(next, { replace: true });
+                return;
+              }
+              window.close();
+              return;
+            }
             navigate(next, { replace: true });
           }, 500);
         } else {
@@ -55,6 +68,19 @@ export function AuthCallback() {
           if (retrySession) {
             setState("success");
             setTimeout(() => {
+              if (window.opener && !window.opener.closed) {
+                try {
+                  window.opener.postMessage(
+                    { type: "skillseed-oauth-success", next },
+                    window.location.origin
+                  );
+                } catch {
+                  navigate(next, { replace: true });
+                  return;
+                }
+                window.close();
+                return;
+              }
               navigate(next, { replace: true });
             }, 500);
           } else {

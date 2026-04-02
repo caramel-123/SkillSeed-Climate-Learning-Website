@@ -110,6 +110,18 @@ function isValidChallengeTitle(title: string | null): boolean {
   return true;
 }
 
+function isValidChallengeDescription(description: string | null): boolean {
+  if (!description) return false;
+  const trimmed = description.trim();
+  if (trimmed.length < 20) return false;
+  // Must contain at least 8 letters
+  const letterCount = (trimmed.match(/[a-zA-Z]/g) || []).length;
+  if (letterCount < 8) return false;
+  // Filter obvious placeholder spam like "sadasdassd"
+  if (/(.)\1{4,}/.test(trimmed)) return false;
+  return true;
+}
+
 // ══════════════════════════════════════════════════════════════════════════════
 // SKELETON LOADER
 // ══════════════════════════════════════════════════════════════════════════════
@@ -166,8 +178,8 @@ interface LeaderboardCardProps {
 function LeaderboardCard({ leaderboard, leaderboardLoading, userProfileId, user }: LeaderboardCardProps) {
   const [scoringExpanded, setScoringExpanded] = useState(false);
 
-  // Only show real Supabase data
-  const hasRealData = leaderboard.length > 0;
+  // Beta honesty: never show leaderboard people pre-launch (even if seed rows exist).
+  const hasRealData = false;
 
   return (
     <div className="bg-white dark:bg-[#132B23] rounded-xl border border-slate-200 dark:border-[#1E3B34] p-5">
@@ -243,61 +255,7 @@ function LeaderboardCard({ leaderboard, leaderboardLoading, userProfileId, user 
             </Link>
           )}
         </div>
-      ) : (
-        /* Real leaderboard data from Supabase */
-        <div className="space-y-2.5">
-          {leaderboard.map((entry, index) => {
-            const rank = index + 1;
-            const isYou = entry.user_id === userProfileId;
-            return (
-              <div
-                key={entry.user_id}
-                className={`flex items-center gap-3 p-2 rounded-lg transition-colors ${
-                  isYou
-                    ? "bg-[#E6F4EE] dark:bg-[#1E3B34] border border-[#2F8F6B]/20"
-                    : "hover:bg-slate-50 dark:hover:bg-[#1E3B34]/50"
-                }`}
-              >
-                <div
-                  className={`w-6 text-center text-sm font-bold flex-shrink-0 ${
-                    rank === 1 ? "text-amber-500" : rank === 2 ? "text-slate-400" : rank === 3 ? "text-amber-700" : "text-slate-400"
-                  }`}
-                >
-                  {rank}
-                </div>
-                {entry.avatar_url ? (
-                  <img
-                    src={entry.avatar_url}
-                    alt={entry.name || "User"}
-                    className="w-8 h-8 rounded-full object-cover flex-shrink-0"
-                  />
-                ) : (
-                  <div
-                    className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${
-                      isYou ? "bg-[#2F8F6B] text-white" : "bg-slate-100 dark:bg-[#0D1F18] text-slate-600 dark:text-[#BEEBD7]"
-                    }`}
-                  >
-                    {getInitials(entry.name)}
-                  </div>
-                )}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-1">
-                    <p className="text-sm font-medium text-slate-900 dark:text-white truncate">{entry.name}</p>
-                    {isYou && <span className="text-xs text-[#2F8F6B]">(You)</span>}
-                  </div>
-                  <p className="text-xs text-slate-400 dark:text-[#6B8F7F]">
-                    {entry.missions_completed || 0} completed
-                  </p>
-                </div>
-                <div className="text-right flex-shrink-0">
-                  <p className="text-sm font-bold text-slate-900 dark:text-white">{entry.total_points.toLocaleString()}</p>
-                  <p className="text-[10px] text-slate-400 dark:text-[#6B8F7F]">pts</p>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      )}
+      ) : null}
     </div>
   );
 }
@@ -549,6 +507,8 @@ export function CommunityChallenges() {
       .filter((c) => getDaysRemaining(c.deadline) > 0)
       // Filter out invalid/placeholder titles
       .filter((c) => isValidChallengeTitle(c.title))
+      // Filter out placeholder/garbage descriptions (e.g. test data)
+      .filter((c) => isValidChallengeDescription(c.description ?? null))
       // Tab filter
       .filter((c) => {
         if (activeTab === "feed") return false;
@@ -1026,13 +986,16 @@ export function CommunityChallenges() {
                             {challenge.description}
                           </p>
 
-                          {/* Meta row - Honest participant count */}
+                          {/* Meta row - Beta-honest (no participation counts pre-launch) */}
                           <div className="flex items-center gap-4 text-xs text-slate-500 dark:text-[#6B8F7F] mb-4">
                             <span className="inline-flex items-center gap-1">
                               <Users className="w-3.5 h-3.5" />
-                              {(challenge.participant_count || 0) > 0 
-                                ? `${challenge.participant_count} joined`
-                                : "Be the first"}
+                              <span className="inline-flex items-center gap-1.5">
+                                <span className="font-semibold">—</span>
+                                <span className="px-1 py-0.5 text-[9px] font-semibold rounded bg-[#E8F5EF] dark:bg-[#1E3B34] text-[#2F8F6B] dark:text-[#6DD4A8]">
+                                  Beta
+                                </span>
+                              </span>
                             </span>
                             <span className="inline-flex items-center gap-1">
                               <Clock className="w-3.5 h-3.5" />
