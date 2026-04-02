@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Link } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import {
   Search,
   MapPin,
@@ -91,6 +91,16 @@ function getCategoryGradient(focusArea: string[] | undefined): string {
 const CATEGORIES = ["All", "Renewable Energy", "Education", "Disaster Response", "Urban Planning", "Conservation", "Waste Reduction"];
 const REGIONS = ["All Regions", "Philippines", "Global", "Southeast Asia", "Remote"];
 
+type WorkTabKey = "volunteers" | "professionals" | "my_projects";
+
+function workTabFromSearchParams(sp: URLSearchParams): WorkTabKey {
+  const t = sp.get("tab");
+  if (t === "my") return "my_projects";
+  if (t === "professionals") return "professionals";
+  if (t === "volunteers") return "volunteers";
+  return "volunteers";
+}
+
 type MissionCard = Project & {
   matched_skills?: string[];
   match_score?: number;
@@ -157,7 +167,12 @@ function KPIStripSkeleton() {
 
 export function MissionDashboard() {
   const { user } = useAuth();
-  const [workTab, setWorkTab] = useState<"volunteers" | "professionals" | "my_projects">("volunteers");
+  const [searchParams] = useSearchParams();
+  const [workTab, setWorkTab] = useState<WorkTabKey>(() => workTabFromSearchParams(searchParams));
+
+  useEffect(() => {
+    setWorkTab(workTabFromSearchParams(searchParams));
+  }, [searchParams]);
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedRegion, setSelectedRegion] = useState("All Regions");
@@ -782,9 +797,15 @@ export function MissionDashboard() {
                           <span className="px-2 py-0.5 rounded bg-slate-100 dark:bg-[#1E3B34] text-slate-600 dark:text-[#94C8AF] text-[10px] font-medium">
                             {mission.focus_area?.[0] || "Project"}
                           </span>
+                          <span className="px-2 py-0.5 rounded bg-[#E6F4EE] dark:bg-[#1E3B34] text-[#0F3D2E] dark:text-[#6DD4A8] text-[10px] font-semibold">
+                            Demo
+                          </span>
                           <span className="text-[10px] text-slate-400 dark:text-[#6B8F7F]">by</span>
                           <span className="flex items-center gap-1 text-[10px] text-slate-500 dark:text-[#6B8F7F] truncate">
                             {posterInfo?.name || "Community"}
+                            <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-slate-100 dark:bg-[#0D1F18] text-slate-500 dark:text-[#94C8AF] border border-slate-200 dark:border-[#1E3B34]">
+                              Demo user
+                            </span>
                             {posterInfo?.verified && (
                               <CheckCircle2 className="w-2.5 h-2.5 text-[#2F8F6B] dark:text-[#6DD4A8]" />
                             )}

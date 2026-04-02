@@ -103,9 +103,10 @@ const FOCUS_FILTERS = ["All Focus Areas", "Reforestation", "Marine", "Urban", "A
 // Helpers
 // ============================================================================
 
-const formatAmount = (min: number | null, max: number | null, currency: string) => {
+const formatAmount = (min: number | null, max: number | null) => {
   if (!min && !max) return null;
-  const symbol = currency === "PHP" ? "₱" : currency === "EUR" ? "€" : "$";
+  // YC/beta honesty: display in PHP only for now (single-currency UX).
+  const symbol = "₱";
   if (!min) return `Up to ${symbol}${max!.toLocaleString()}`;
   if (!max) return `From ${symbol}${min.toLocaleString()}`;
   return `${symbol}${min.toLocaleString()} – ${symbol}${max.toLocaleString()}`;
@@ -225,11 +226,11 @@ function FundingCard({
               <span className="text-slate-300 dark:text-[#1E3B34]">-</span>
             </>
           )}
-          {formatAmount(opportunity.amount_min, opportunity.amount_max, opportunity.currency) && (
+          {formatAmount(opportunity.amount_min, opportunity.amount_max) && (
             <>
               <DollarSign className="w-3 h-3 flex-shrink-0 text-[#2F8F6B] dark:text-[#6DD4A8]" />
               <span className="text-[#2F8F6B] dark:text-[#6DD4A8] font-medium">
-                {formatAmount(opportunity.amount_min, opportunity.amount_max, opportunity.currency)}
+                {formatAmount(opportunity.amount_min, opportunity.amount_max)}
               </span>
               <span className="text-slate-300 dark:text-[#1E3B34]">-</span>
             </>
@@ -865,7 +866,7 @@ export function FundingResources() {
                 <div className="bg-slate-50 dark:bg-[#0D1F18] rounded-lg p-3 text-center">
                   <p className="text-xs text-slate-400 dark:text-[#6B8F7F]">Amount</p>
                   <p className="text-sm font-bold text-[#2F8F6B] dark:text-[#6DD4A8] mt-0.5">
-                    {formatAmount(selectedOpportunity.amount_min, selectedOpportunity.amount_max, selectedOpportunity.currency) ?? "N/A"}
+                    {formatAmount(selectedOpportunity.amount_min, selectedOpportunity.amount_max) ?? "N/A"}
                   </p>
                 </div>
                 <div className="bg-slate-50 dark:bg-[#0D1F18] rounded-lg p-3 text-center">

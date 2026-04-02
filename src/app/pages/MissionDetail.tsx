@@ -445,6 +445,9 @@ export function MissionDetail() {
               <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${mission.color}`}>
                 {mission.category}
               </span>
+              <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-[#E6F4EE] dark:bg-[#1E3B34] text-[#0F3D2E] dark:text-[#6DD4A8]">
+                Demo
+              </span>
               {mission.urgent && (
                 <span className="flex items-center gap-1 bg-red-500 text-white text-xs font-bold px-2.5 py-1 rounded-full">
                   <AlertTriangle className="w-3 h-3" />
@@ -474,7 +477,12 @@ export function MissionDetail() {
                   <Building2 className="w-5 h-5 text-[#2F8F6B] dark:text-[#6DD4A8]" />
                 </div>
                 <div>
-                  <p className="font-semibold text-slate-900 dark:text-white">{mission.org}</p>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <p className="font-semibold text-slate-900 dark:text-white">{mission.org}</p>
+                    <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-[#0D1F18] text-slate-500 dark:text-[#94C8AF] border border-slate-200 dark:border-[#1E3B34]">
+                      Demo user
+                    </span>
+                  </div>
                   <p className="text-xs text-slate-500 dark:text-[#94C8AF]">{mission.orgType}</p>
                 </div>
               </div>

@@ -83,16 +83,16 @@ export function useAuth() {
 
   const signInWithGoogle = async (): Promise<{
     error: AuthError | null;
-    /** Pop-up window when opened; parent should listen for `skillseed-oauth-success` postMessage */
+    /** Pop-up when used from a normal tab; null if pop-up was blocked (full-page fallback) or iframe opened _blank. */
     oauthPopup: Window | null;
   }> => {
-    // Google blocks OAuth screens inside iframes/webviews ("This content is blocked").
-    // Use `skipBrowserRedirect` so we can open the provider URL in a real window.
-    // `prompt=select_account` forces Google's account picker (no silent reuse of last account).
+    const redirectTo = `${window.location.origin}/auth/callback?next=${encodeURIComponent("/dashboard")}`;
+
+    // Google blocks OAuth inside iframes; skipBrowserRedirect lets us open the provider in a real window.
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/auth/callback?next=/dashboard`,
+        redirectTo,
         skipBrowserRedirect: true,
         queryParams: {
           prompt: "select_account",
@@ -106,13 +106,14 @@ export function useAuth() {
 
     const url = data.url;
 
+    // Embedded (iframe / webview): open provider in a new tab.
     if (window.self !== window.top) {
       const w = window.open(url, "_blank", "noopener,noreferrer");
-      if (!w) window.location.href = url;
+      if (!w) window.location.assign(url);
       return { error: null, oauthPopup: w };
     }
 
-    // Top-level: tall centered pop-up so Google's sign-in UI reads as a vertical dialog.
+    // Top-level: centered pop-up so the auth page stays visible; callback postsMessage to this window.
     const width = 500;
     const height = 720;
     const left = Math.max(0, (window.screen.width - width) / 2);
@@ -120,7 +121,8 @@ export function useAuth() {
     const features = `width=${width},height=${height},left=${left},top=${top},scrollbars=yes,resizable=yes`;
     const popup = window.open(url, "skillseed-google-oauth", features);
     if (!popup) {
-      window.location.href = url;
+      // Pop-up blocked — same-tab redirect so sign-in still works.
+      window.location.assign(url);
       return { error: null, oauthPopup: null };
     }
     popup.focus();

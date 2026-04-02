@@ -141,21 +141,24 @@ export function SubmissionModal({
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-lg bg-white dark:bg-[#132B23] border-slate-200 dark:border-[#1E3B34] text-slate-900 dark:text-white">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-xl text-[#0F3D2E] dark:text-white">
-            <CheckCircle className="h-5 w-5 text-[#2F8F6B] dark:text-[#6DD4A8]" />
-            Complete Challenge
-          </DialogTitle>
-          <DialogDescription className="text-slate-600 dark:text-[#94C8AF]">
-            Submit proof of completing "{challenge.title}" to earn{" "}
-            <span className="text-[#2F8F6B] font-semibold">
-              {challenge.points_reward} points
-            </span>
-          </DialogDescription>
-        </DialogHeader>
+      <DialogContent className="flex max-h-[min(90vh,calc(100dvh-2rem))] min-h-0 max-w-lg flex-col gap-0 overflow-hidden p-0 bg-white dark:bg-[#132B23] border-slate-200 dark:border-[#1E3B34] text-slate-900 dark:text-white sm:max-w-lg">
+        <div className="flex-shrink-0 px-6 pt-6 pb-3 pr-14 border-b border-slate-100 dark:border-[#1E3B34]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-xl text-[#0F3D2E] dark:text-white">
+              <CheckCircle className="h-5 w-5 text-[#2F8F6B] dark:text-[#6DD4A8]" />
+              Complete Challenge
+            </DialogTitle>
+            <DialogDescription className="text-slate-600 dark:text-[#94C8AF]">
+              Submit proof of completing "{challenge.title}" to earn{" "}
+              <span className="text-[#2F8F6B] dark:text-[#6DD4A8] font-semibold">
+                {challenge.points_reward} points
+              </span>
+            </DialogDescription>
+          </DialogHeader>
+        </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+        <form onSubmit={handleSubmit} className="flex min-h-0 flex-1 flex-col">
+          <div className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain px-6 py-4 space-y-4">
           {/* Photo Upload Section */}
           <div className="space-y-2">
             <Label className="text-slate-700 dark:text-[#BEEBD7]">
@@ -281,19 +284,19 @@ export function SubmissionModal({
               {error}
             </div>
           )}
+          </div>
 
-          {/* Submit Button */}
-          <div className="flex justify-end gap-3 pt-2">
+          {/* Submit Button — pinned below scroll area */}
+          <div className="flex flex-shrink-0 justify-end gap-3 border-t border-slate-200 dark:border-[#1E3B34] bg-white dark:bg-[#132B23] px-6 py-4">
             <Button
               type="button"
               variant="outline"
               onClick={handleClose}
               disabled={loading}
-              className="border-gray-300 text-gray-700 hover:bg-gray-100"
+              className="border-gray-300 text-gray-700 hover:bg-gray-100 dark:border-[#1E3B34] dark:text-[#BEEBD7] dark:hover:bg-[#0D1F18]"
             >
               {moderationResult && moderationResult.status !== 'approved' ? 'Close' : 'Cancel'}
             </Button>
-            {/* Hide submit if already approved */}
             {(!moderationResult || moderationResult.status !== 'approved') && (
               <Button
                 type="submit"

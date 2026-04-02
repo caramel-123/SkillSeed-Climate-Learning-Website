@@ -307,7 +307,7 @@ export function LandingPage() {
               onClick={handleJoinProject}
               whileHover={reduceMotion ? undefined : { y: -1 }}
               whileTap={reduceMotion ? undefined : { scale: 0.98 }}
-              className="inline-flex items-center justify-center gap-2 min-h-[48px] px-6 rounded-lg text-white font-semibold transition-all duration-200 cursor-pointer bg-[#0F3D2E] hover:bg-[#1a5241] active:scale-[0.98]"
+              className="inline-flex items-center justify-center gap-2 min-h-[48px] px-6 rounded-lg text-white font-semibold transition-all duration-200 cursor-pointer bg-[#0F3D2E] hover:bg-[#1a5241] dark:bg-white dark:text-[#0F3D2E] dark:hover:bg-[#E8F5EF] active:scale-[0.98]"
               style={{ fontFamily: "'Manrope', sans-serif" }}>
               <Users className="w-4 h-4" /> Join a Project
             </motion.button>
@@ -710,14 +710,13 @@ export function LandingPage() {
           </motion.p>
           <motion.div variants={heroItem} className="flex flex-wrap gap-3 justify-center">
             <motion.div whileHover={reduceMotion ? undefined : { y: -1 }} whileTap={reduceMotion ? undefined : { scale: 0.98 }} className="inline-flex">
-              <Link to={user ? "/dashboard" : "/browse"}
-                onClick={() => {
-                  if (!user) enableDemoMode();
-                }}
+              <Link
+                to={user ? "/dashboard" : "/auth?tab=signup"}
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-semibold bg-white text-[#0F3D2E] hover:bg-[#E8F5EF] dark:bg-white dark:text-[#0F3D2E] dark:hover:bg-[#E8F5EF] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#0F3D2E] min-h-[48px]"
-                style={{ fontFamily: "'Manrope', sans-serif" }}>
-                <Sprout className="w-4 h-4" /> {user ? "Go to dashboard" : "Try demo"}
-            </Link>
+                style={{ fontFamily: "'Manrope', sans-serif" }}
+              >
+                <Sprout className="w-4 h-4" /> Get started
+              </Link>
             </motion.div>
             <motion.div whileHover={reduceMotion ? undefined : { y: -1 }} className="inline-flex">
             <Link to="/hands-on"

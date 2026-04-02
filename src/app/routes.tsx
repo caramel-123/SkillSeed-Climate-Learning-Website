@@ -40,6 +40,7 @@ export const router = createBrowserRouter([
       { index: true, Component: LandingPage },
       { path: "dashboard", Component: MissionDashboard },
       { path: "browse", Component: MissionDashboard },
+      { path: "missions", Component: MissionDashboard },
       { path: "missions/:id", Component: MissionDetail },
       { path: "progress", Component: ProgressTracker },
       { path: "tracker", Component: ProgressTracker },
