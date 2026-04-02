@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router";
 import {
   Eye, EyeOff, Sprout, Wrench, Building2, Leaf, ArrowLeft, Loader2, Mail, CheckCircle,
@@ -79,6 +79,7 @@ export function AuthPage() {
   const [forgotSuccess, setForgotSuccess] = useState(false);
   const [forgotLoading, setForgotLoading] = useState(false);
   const [forgotError, setForgotError] = useState<string | null>(null);
+  const oauthPopupPollRef = useRef<number | null>(null);
 
   // Read tab from URL on mount
   useEffect(() => {
@@ -87,6 +88,30 @@ export function AuthPage() {
       setTab(urlTab);
     }
   }, [searchParams]);
+
+  // Google OAuth pop-up completes in a child window; callback posts here so we can navigate the main tab.
+  useEffect(() => {
+    const onMessage = (event: MessageEvent) => {
+      if (event.origin !== window.location.origin) return;
+      if (event.data?.type === "skillseed-oauth-success") {
+        if (oauthPopupPollRef.current !== null) {
+          window.clearInterval(oauthPopupPollRef.current);
+          oauthPopupPollRef.current = null;
+        }
+        setLoading(false);
+        navigate(typeof event.data.next === "string" ? event.data.next : "/dashboard", { replace: true });
+      }
+    };
+    window.addEventListener("message", onMessage);
+    return () => {
+      window.removeEventListener("message", onMessage);
+      if (oauthPopupPollRef.current !== null) {
+        window.clearInterval(oauthPopupPollRef.current);
+        oauthPopupPollRef.current = null;
+      }
+    };
+  }, [navigate]);
+
   const [role, setRole] = useState<RoleType>(null);
   const [step, setStep] = useState(1);
   const [showPass, setShowPass] = useState(false);
@@ -230,12 +255,24 @@ export function AuthPage() {
   const handleGoogleAuth = async () => {
     setLoading(true);
     setError(null);
-    const { error } = await signInWithGoogle();
+    const { error, oauthPopup } = await signInWithGoogle();
     if (error) {
       setLoading(false);
       setError(error.message);
+      return;
     }
-    // On success Supabase handles the redirect
+    if (oauthPopup) {
+      if (oauthPopupPollRef.current !== null) window.clearInterval(oauthPopupPollRef.current);
+      oauthPopupPollRef.current = window.setInterval(() => {
+        if (oauthPopup.closed) {
+          if (oauthPopupPollRef.current !== null) {
+            window.clearInterval(oauthPopupPollRef.current);
+            oauthPopupPollRef.current = null;
+          }
+          setLoading(false);
+        }
+      }, 600);
+    }
   };
 
   const handleForgotPassword = async (e: React.FormEvent) => {

@@ -101,6 +101,15 @@ export function PostProject() {
     }
   }, [editProjectId, user, isEditMode, navigate]);
 
+  useEffect(() => {
+    if (!submitted) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [submitted]);
+
   const resetForm = () => {
     setStep(1);
     setProjectType("ongoing");
@@ -259,41 +268,46 @@ export function PostProject() {
   // Loading state while fetching project data in edit mode
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#F9FDFB] flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-[#2F8F6B]" />
-        <span className="ml-3 text-gray-600 font-medium">Loading project...</span>
+      <div className="min-h-screen bg-slate-50 dark:bg-[#0D1F18] flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-[#2F8F6B] dark:text-[#6DD4A8]" />
+        <span className="ml-3 text-slate-600 dark:text-[#94C8AF] font-medium">Loading project...</span>
       </div>
     );
   }
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-[#F9FDFB] flex items-center justify-center px-4">
-        <div className="bg-white rounded-3xl border border-gray-100 shadow-lg p-10 max-w-md w-full text-center">
-          <div className="w-20 h-20 bg-[#E6F4EE] rounded-full flex items-center justify-center mx-auto mb-6">
-            <CheckCircle className="w-10 h-10 text-[#2F8F6B]" />
-          </div>
-          <h2 className="font-[Manrope] font-bold text-[#0F3D2E] text-2xl mb-3">Project Posted!</h2>
-          <p className="text-gray-500 mb-2">
-            Your project is live. We're matching vetted profiles right now.
-          </p>
-          <div className="bg-[#E6F4EE] rounded-xl p-4 mb-6 text-left">
-            <p className="text-sm font-semibold text-[#0F3D2E] mb-1">
-              {projectType === "urgent" ? "🚨 URGENT" : "📌 ONGOING"} · {formData.title || "Your Project"}
-            </p>
-            <div className="flex flex-wrap gap-2 mt-2">
-              {selectedFocus.map(f => (
-                <span key={f} className="text-xs bg-white text-[#0F3D2E] px-2 py-0.5 rounded-full">{f}</span>
-              ))}
+      <div
+        className="fixed inset-0 z-[45] overflow-y-auto overscroll-y-contain bg-slate-50 dark:bg-[#0D1F18]"
+        aria-live="polite"
+      >
+        <div className="flex min-h-full flex-col items-center justify-center px-4 py-10">
+          <div className="bg-white dark:bg-[#132B23] rounded-xl border border-slate-200 dark:border-[#1E3B34] p-8 sm:p-10 max-w-md w-full text-center shadow-sm">
+            <div className="w-20 h-20 bg-[#E6F4EE] dark:bg-[#1E3B34] rounded-full flex items-center justify-center mx-auto mb-6">
+              <CheckCircle className="w-10 h-10 text-[#2F8F6B] dark:text-[#6DD4A8]" />
             </div>
-          </div>
-          <div className="space-y-3">
-            <Link to="/browse" className="w-full flex items-center justify-center gap-2 bg-[#0F3D2E] text-white py-3 rounded-xl font-semibold hover:bg-[#2F8F6B] transition-colors">
-              View Matches <ChevronRight className="w-4 h-4" />
-            </Link>
-            <button onClick={resetForm} className="w-full text-sm text-gray-400 hover:text-gray-600 py-2">
-              Post Another Project
-            </button>
+            <h2 className="font-[Manrope] font-bold text-slate-900 dark:text-white text-2xl mb-3">Project Posted!</h2>
+            <p className="text-slate-500 dark:text-[#94C8AF] mb-2">
+              Your project is live. We're matching vetted profiles right now.
+            </p>
+            <div className="bg-[#E6F4EE] dark:bg-[#0D1F18] rounded-xl p-4 mb-6 text-left border border-slate-200/60 dark:border-[#1E3B34]">
+              <p className="text-sm font-semibold text-[#0F3D2E] dark:text-[#BEEBD7] mb-1">
+                {projectType === "urgent" ? "Urgent" : "Ongoing"} · {formData.title || "Your Project"}
+              </p>
+              <div className="flex flex-wrap gap-2 mt-2">
+                {selectedFocus.map(f => (
+                  <span key={f} className="text-xs bg-white dark:bg-[#132B23] text-[#0F3D2E] dark:text-[#6DD4A8] px-2 py-0.5 rounded-full border border-slate-200 dark:border-[#1E3B34]">{f}</span>
+                ))}
+              </div>
+            </div>
+            <div className="space-y-3">
+              <Link to="/browse" className="w-full flex items-center justify-center gap-2 bg-[#0F3D2E] text-white min-h-[44px] py-2.5 rounded-lg text-sm font-semibold hover:bg-[#1a5241] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F8F6B]">
+                View Matches <ChevronRight className="w-4 h-4" />
+              </Link>
+              <button type="button" onClick={resetForm} className="w-full text-sm text-slate-400 dark:text-[#6B8F7F] hover:text-slate-600 dark:hover:text-[#94C8AF] py-2">
+                Post Another Project
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -301,64 +315,71 @@ export function PostProject() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F9FDFB]">
-      {/* Header */}
-      <div className="bg-[#0F3D2E] py-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <p className="text-[#6DD4A8] font-semibold text-sm uppercase tracking-wider mb-1">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#0D1F18]">
+      <header className="bg-white dark:bg-[#132B23] border-b border-slate-200 dark:border-[#1E3B34]">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <p className="text-xs font-semibold uppercase tracking-wide text-[#2F8F6B] dark:text-[#6DD4A8] mb-1">
             {isEditMode ? 'Edit Project' : 'Post a Project'}
           </p>
-          <h1 className="text-white font-[Manrope] font-bold text-3xl md:text-4xl">
+          <h1
+            className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white"
+            style={{ fontFamily: "'Manrope', sans-serif" }}
+          >
             {isEditMode ? 'Update your project details' : 'Find the right people for your climate mission'}
           </h1>
-          <p className="text-[#A8D5BF] mt-2">
-            {isEditMode 
+          <p className="text-sm text-slate-600 dark:text-[#94C8AF] mt-1">
+            {isEditMode
               ? 'Make changes to your project and save when ready.'
               : 'Connect your project with vetted volunteers and professionals.'}
           </p>
         </div>
-      </div>
+      </header>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
           {/* Form — 3 columns */}
           <div className="lg:col-span-3">
             {/* Step indicator */}
-            <div className="flex items-center gap-2 mb-8">
+            <div className="flex items-center gap-2 mb-5 flex-wrap">
               {stepLabels.map((label, i) => (
                 <div key={i} className="flex items-center gap-2">
                   <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${
-                    step > i + 1 ? 'bg-green-500 text-white' :
-                    step === i + 1 ? 'bg-[#1a3a2a] text-white' :
-                    'bg-gray-100 text-gray-400'
+                    step > i + 1 ? 'bg-[#2F8F6B] text-white' :
+                    step === i + 1 ? 'bg-[#0F3D2E] text-white dark:bg-[#2F8F6B]' :
+                    'bg-slate-100 dark:bg-[#1E3B34] text-slate-400 dark:text-[#6B8F7F]'
                   }`}>
                     {step > i + 1 ? '✓' : i + 1}
                   </div>
-                  <span className={`text-xs ${step === i + 1 ? 'text-gray-900 font-medium' : 'text-gray-400'}`}>
+                  <span className={`text-xs ${step === i + 1 ? 'text-slate-900 dark:text-white font-medium' : 'text-slate-400 dark:text-[#6B8F7F]'}`}>
                     {label}
                   </span>
-                  {i < 2 && <div className="w-8 h-px bg-gray-200 mx-1" />}
+                  {i < 2 && <div className="w-8 h-px bg-slate-200 dark:bg-[#1E3B34] mx-1" />}
                 </div>
               ))}
             </div>
 
-            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+            <div className="bg-white dark:bg-[#132B23] rounded-xl border border-slate-200 dark:border-[#1E3B34] p-4 sm:p-5">
               {/* STEP 1: Project Basics */}
               {step === 1 && (
-                <div className="space-y-5">
-                  <h2 className="font-[Manrope] font-bold text-[#0F3D2E] text-xl mb-4">Project Basics</h2>
+                <div className="space-y-4">
+                  <h2
+                    className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-1"
+                    style={{ fontFamily: "'Manrope', sans-serif" }}
+                  >
+                    Project Basics
+                  </h2>
 
                   {/* Project Type */}
                   <div>
-                    <label className="text-sm font-semibold text-[#0F3D2E] block mb-2">Project Type</label>
+                    <label className="text-sm font-semibold text-[#0F3D2E] dark:text-[#BEEBD7] block mb-2">Project Type</label>
                     <div className="flex gap-2">
                       <button
                         type="button"
                         onClick={() => setProjectType("ongoing")}
-                        className={`flex-1 px-4 py-3 rounded-xl text-sm font-semibold transition-colors flex items-center justify-center gap-2 ${
+                        className={`flex-1 min-h-[44px] px-4 py-2.5 rounded-lg text-sm font-semibold transition-colors flex items-center justify-center gap-2 ${
                           projectType === "ongoing"
-                            ? "bg-[#0F3D2E] text-white"
-                            : "border border-gray-200 text-gray-600 hover:border-[#2F8F6B]"
+                            ? "bg-[#0F3D2E] text-white dark:bg-[#2F8F6B]"
+                            : "border border-slate-200 dark:border-[#1E3B34] text-slate-600 dark:text-[#94C8AF] hover:border-[#2F8F6B] dark:hover:border-[#2F8F6B]"
                         }`}
                       >
                         Ongoing Project
@@ -366,10 +387,10 @@ export function PostProject() {
                       <button
                         type="button"
                         onClick={() => setProjectType("urgent")}
-                        className={`flex-1 px-4 py-3 rounded-xl text-sm font-semibold transition-colors flex items-center justify-center gap-2 ${
+                        className={`flex-1 min-h-[44px] px-4 py-2.5 rounded-lg text-sm font-semibold transition-colors flex items-center justify-center gap-2 ${
                           projectType === "urgent"
                             ? "bg-red-500 text-white"
-                            : "border border-gray-200 text-gray-600 hover:border-red-300"
+                            : "border border-slate-200 dark:border-[#1E3B34] text-slate-600 dark:text-[#94C8AF] hover:border-red-300 dark:hover:border-red-400/60"
                         }`}
                       >
                         <AlertTriangle className="w-4 h-4" />
@@ -377,7 +398,7 @@ export function PostProject() {
                       </button>
                     </div>
                     {projectType === "urgent" && (
-                      <p className="text-red-600 text-xs mt-2">
+                      <p className="text-red-600 dark:text-red-400 text-xs mt-2">
                         Urgent projects get priority visibility and trigger immediate notifications
                       </p>
                     )}
@@ -385,27 +406,27 @@ export function PostProject() {
 
                   {/* Title */}
                   <div>
-                    <label className="text-sm font-semibold text-[#0F3D2E] block mb-1.5">Project Title *</label>
+                    <label className="text-sm font-semibold text-[#0F3D2E] dark:text-[#BEEBD7] block mb-1.5">Project Title *</label>
                     <input
                       name="title"
                       type="text"
                       value={formData.title}
                       onChange={handleChange}
                       placeholder="e.g. Coastal Reforestation Drive in Surigao"
-                      className={`w-full px-4 py-3 border rounded-xl text-sm focus:outline-none focus:ring-2 transition ${
+                      className={`w-full min-h-[44px] px-4 py-2.5 border rounded-lg text-sm focus:outline-none focus:ring-2 transition bg-white dark:bg-[#0D1F18] text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-[#6B8F7F] ${
                         errors.title
-                          ? 'border-red-300 focus:ring-red-200'
-                          : 'border-gray-200 focus:ring-[#2F8F6B]/30 focus:border-[#2F8F6B]'
+                          ? 'border-red-300 dark:border-red-500/50 focus:ring-red-200 dark:focus:ring-red-900/40'
+                          : 'border-slate-200 dark:border-[#1E3B34] focus:ring-[#2F8F6B]/30 focus:border-[#2F8F6B]'
                       }`}
                     />
                     {errors.title && (
-                      <p className="text-red-500 text-xs mt-1">{errors.title}</p>
+                      <p className="text-red-500 dark:text-red-400 text-xs mt-1">{errors.title}</p>
                     )}
                   </div>
 
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="text-sm font-semibold text-[#0F3D2E] mb-1.5 flex items-center gap-1">
+                      <label className="text-sm font-semibold text-[#0F3D2E] dark:text-[#BEEBD7] mb-1.5 flex items-center gap-1">
                         <MapPin className="w-3.5 h-3.5" /> Location *
                       </label>
                       <input
@@ -414,18 +435,18 @@ export function PostProject() {
                         value={formData.location}
                         onChange={handleChange}
                         placeholder="City, Province"
-                        className={`w-full px-4 py-3 border rounded-xl text-sm focus:outline-none focus:ring-2 transition ${
+                        className={`w-full min-h-[44px] px-4 py-2.5 border rounded-lg text-sm focus:outline-none focus:ring-2 transition bg-white dark:bg-[#0D1F18] text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-[#6B8F7F] ${
                           errors.location
-                            ? 'border-red-300 focus:ring-red-200'
-                            : 'border-gray-200 focus:ring-[#2F8F6B]/30 focus:border-[#2F8F6B]'
+                            ? 'border-red-300 dark:border-red-500/50 focus:ring-red-200 dark:focus:ring-red-900/40'
+                            : 'border-slate-200 dark:border-[#1E3B34] focus:ring-[#2F8F6B]/30 focus:border-[#2F8F6B]'
                         }`}
                       />
                       {errors.location && (
-                        <p className="text-red-500 text-xs mt-1">{errors.location}</p>
+                        <p className="text-red-500 dark:text-red-400 text-xs mt-1">{errors.location}</p>
                       )}
                     </div>
                     <div>
-                      <label className="text-sm font-semibold text-[#0F3D2E] mb-1.5 flex items-center gap-1">
+                      <label className="text-sm font-semibold text-[#0F3D2E] dark:text-[#BEEBD7] mb-1.5 flex items-center gap-1">
                         <Calendar className="w-3.5 h-3.5" /> Start Date *
                       </label>
                       <input
@@ -433,30 +454,30 @@ export function PostProject() {
                         type="date"
                         value={formData.startDate}
                         onChange={handleChange}
-                        className={`w-full px-4 py-3 border rounded-xl text-sm focus:outline-none focus:ring-2 bg-white transition ${
+                        className={`w-full min-h-[44px] px-4 py-2.5 border rounded-lg text-sm focus:outline-none focus:ring-2 bg-white dark:bg-[#0D1F18] text-slate-900 dark:text-white transition [color-scheme:light] dark:[color-scheme:dark] ${
                           errors.startDate
-                            ? 'border-red-300 focus:ring-red-200'
-                            : 'border-gray-200 focus:ring-[#2F8F6B]/30 focus:border-[#2F8F6B]'
+                            ? 'border-red-300 dark:border-red-500/50 focus:ring-red-200 dark:focus:ring-red-900/40'
+                            : 'border-slate-200 dark:border-[#1E3B34] focus:ring-[#2F8F6B]/30 focus:border-[#2F8F6B]'
                         }`}
                       />
                       {errors.startDate && (
-                        <p className="text-red-500 text-xs mt-1">{errors.startDate}</p>
+                        <p className="text-red-500 dark:text-red-400 text-xs mt-1">{errors.startDate}</p>
                       )}
                     </div>
                   </div>
 
                   <div>
-                    <label className="text-sm font-semibold text-[#0F3D2E] mb-1.5 flex items-center gap-1">
+                    <label className="text-sm font-semibold text-[#0F3D2E] dark:text-[#BEEBD7] mb-1.5 flex items-center gap-1">
                       <Clock className="w-3.5 h-3.5" /> Duration *
                     </label>
                     <select
                       name="duration"
                       value={formData.duration}
                       onChange={handleChange}
-                      className={`w-full px-4 py-3 border rounded-xl text-sm focus:outline-none focus:ring-2 bg-white transition ${
+                      className={`w-full min-h-[44px] px-4 py-2.5 border rounded-lg text-sm focus:outline-none focus:ring-2 bg-white dark:bg-[#0D1F18] text-slate-900 dark:text-white transition ${
                         errors.duration
-                          ? 'border-red-300 focus:ring-red-200'
-                          : 'border-gray-200 focus:ring-[#2F8F6B]/30'
+                          ? 'border-red-300 dark:border-red-500/50 focus:ring-red-200 dark:focus:ring-red-900/40'
+                          : 'border-slate-200 dark:border-[#1E3B34] focus:ring-[#2F8F6B]/30'
                       }`}
                     >
                       <option value="">Select duration...</option>
@@ -468,12 +489,12 @@ export function PostProject() {
                       <option>Ongoing</option>
                     </select>
                     {errors.duration && (
-                      <p className="text-red-500 text-xs mt-1">{errors.duration}</p>
+                      <p className="text-red-500 dark:text-red-400 text-xs mt-1">{errors.duration}</p>
                     )}
                   </div>
 
                   <div>
-                    <label className="text-sm font-semibold text-[#0F3D2E] block mb-2">Focus Areas *</label>
+                    <label className="text-sm font-semibold text-[#0F3D2E] dark:text-[#BEEBD7] block mb-2">Focus Areas *</label>
                     <div className="flex flex-wrap gap-2">
                       {focusAreas.map(area => (
                         <button
@@ -485,8 +506,8 @@ export function PostProject() {
                           }}
                           className={`text-xs font-medium px-3 py-1.5 rounded-full border transition-colors ${
                             selectedFocus.includes(area)
-                              ? "bg-[#0F3D2E] text-white border-[#0F3D2E]"
-                              : "border-gray-200 text-gray-600 hover:border-[#2F8F6B]"
+                              ? "bg-[#0F3D2E] text-white border-[#0F3D2E] dark:bg-[#2F8F6B] dark:border-[#2F8F6B]"
+                              : "border-slate-200 dark:border-[#1E3B34] text-slate-600 dark:text-[#94C8AF] hover:border-[#2F8F6B]"
                           }`}
                         >
                           {area}
@@ -494,7 +515,7 @@ export function PostProject() {
                       ))}
                     </div>
                     {errors.focusAreas && (
-                      <p className="text-red-500 text-xs mt-1">{errors.focusAreas}</p>
+                      <p className="text-red-500 dark:text-red-400 text-xs mt-1">{errors.focusAreas}</p>
                     )}
                   </div>
                 </div>
@@ -502,36 +523,41 @@ export function PostProject() {
 
               {/* STEP 2: Project Details */}
               {step === 2 && (
-                <div className="space-y-5">
-                  <h2 className="font-[Manrope] font-bold text-[#0F3D2E] text-xl mb-4">Project Details</h2>
+                <div className="space-y-4">
+                  <h2
+                    className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-1"
+                    style={{ fontFamily: "'Manrope', sans-serif" }}
+                  >
+                    Project Details
+                  </h2>
 
                   <div>
-                    <label className="text-sm font-semibold text-[#0F3D2E] block mb-1.5">Project Description *</label>
+                    <label className="text-sm font-semibold text-[#0F3D2E] dark:text-[#BEEBD7] block mb-1.5">Project Description *</label>
                     <textarea
                       name="description"
                       value={formData.description}
                       onChange={handleChange}
                       rows={6}
                       placeholder="Describe the project, its goals, what volunteers/professionals will do, and the expected impact (min 50 characters)..."
-                      className={`w-full px-4 py-3 border rounded-xl text-sm focus:outline-none focus:ring-2 resize-none transition ${
+                      className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:ring-2 resize-none transition bg-white dark:bg-[#0D1F18] text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-[#6B8F7F] ${
                         errors.description
-                          ? 'border-red-300 focus:ring-red-200'
-                          : 'border-gray-200 focus:ring-[#2F8F6B]/30 focus:border-[#2F8F6B]'
+                          ? 'border-red-300 dark:border-red-500/50 focus:ring-red-200 dark:focus:ring-red-900/40'
+                          : 'border-slate-200 dark:border-[#1E3B34] focus:ring-[#2F8F6B]/30 focus:border-[#2F8F6B]'
                       }`}
                     />
                     <div className="flex justify-between mt-1">
                       {errors.description 
-                        ? <p className="text-red-500 text-xs">{errors.description}</p>
+                        ? <p className="text-red-500 dark:text-red-400 text-xs">{errors.description}</p>
                         : <span />
                       }
-                      <p className="text-xs text-gray-400">
+                      <p className="text-xs text-slate-400 dark:text-[#6B8F7F]">
                         {formData.description.length} characters
                       </p>
                     </div>
                   </div>
 
                   <div>
-                    <label className="text-sm font-semibold text-[#0F3D2E] block mb-1.5">
+                    <label className="text-sm font-semibold text-[#0F3D2E] dark:text-[#BEEBD7] block mb-1.5">
                       <Image className="w-3.5 h-3.5 inline mr-1" />
                       Banner Image URL
                     </label>
@@ -541,9 +567,9 @@ export function PostProject() {
                       value={formData.bannerUrl}
                       onChange={handleChange}
                       placeholder="https://example.com/image.jpg"
-                      className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2F8F6B]/30 focus:border-[#2F8F6B]"
+                      className="w-full min-h-[44px] px-4 py-2.5 border border-slate-200 dark:border-[#1E3B34] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#2F8F6B]/30 focus:border-[#2F8F6B] bg-white dark:bg-[#0D1F18] text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-[#6B8F7F]"
                     />
-                    <p className="text-xs text-gray-400 mt-1">
+                    <p className="text-xs text-slate-400 dark:text-[#6B8F7F] mt-1">
                       Add a compelling image that represents your project
                     </p>
                   </div>
@@ -552,19 +578,22 @@ export function PostProject() {
 
               {/* STEP 3: People Needed */}
               {step === 3 && (
-                <div className="space-y-5">
-                  <h2 className="font-[Manrope] font-bold text-[#0F3D2E] text-xl mb-4 flex items-center gap-2">
-                    <Users className="w-5 h-5 text-[#2F8F6B]" /> People Needed
+                <div className="space-y-4">
+                  <h2
+                    className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-1 flex items-center gap-2"
+                    style={{ fontFamily: "'Manrope', sans-serif" }}
+                  >
+                    <Users className="w-5 h-5 text-[#2F8F6B] dark:text-[#6DD4A8]" /> People Needed
                   </h2>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {/* Volunteers card */}
-                    <div className={`border rounded-2xl p-4 transition ${
+                    <div className={`border rounded-xl p-4 transition ${
                       volunteerCount === 0
-                        ? 'bg-gray-50 border-gray-200 opacity-60'
-                        : 'bg-green-50 border-green-200'
+                        ? 'bg-slate-50 dark:bg-[#0D1F18]/80 border-slate-200 dark:border-[#1E3B34] opacity-60'
+                        : 'bg-green-50 dark:bg-emerald-950/40 border-green-200 dark:border-emerald-800/50'
                     }`}>
-                      <p className="text-sm font-semibold text-green-800 mb-3 flex items-center gap-2">
+                      <p className="text-sm font-semibold text-green-800 dark:text-emerald-200 mb-3 flex items-center gap-2">
                         <Heart className="w-4 h-4" /> Volunteers Needed
                       </p>
                       <div className="flex items-center justify-center gap-4 mb-4">
@@ -574,21 +603,21 @@ export function PostProject() {
                             setVolunteerCount(v => Math.max(0, v - 1));
                             if (volunteerCount - 1 === 0) setVolunteerSkills([]);
                           }}
-                          className="w-8 h-8 border border-green-300 rounded-lg flex items-center justify-center hover:bg-green-100 text-green-700"
+                          className="w-8 h-8 border border-green-300 dark:border-emerald-700 rounded-lg flex items-center justify-center hover:bg-green-100 dark:hover:bg-emerald-900/50 text-green-700 dark:text-emerald-300"
                         >
                           <Minus className="w-4 h-4" />
                         </button>
-                        <span className="text-3xl font-bold text-green-800 w-12 text-center">{volunteerCount}</span>
+                        <span className="text-3xl font-bold text-green-800 dark:text-emerald-200 w-12 text-center">{volunteerCount}</span>
                         <button 
                           type="button"
                           onClick={() => setVolunteerCount(v => v + 1)}
-                          className="w-8 h-8 border border-green-300 rounded-lg flex items-center justify-center hover:bg-green-100 text-green-700"
+                          className="w-8 h-8 border border-green-300 dark:border-emerald-700 rounded-lg flex items-center justify-center hover:bg-green-100 dark:hover:bg-emerald-900/50 text-green-700 dark:text-emerald-300"
                         >
                           <Plus className="w-4 h-4" />
                         </button>
                       </div>
                       <div className={volunteerCount === 0 ? 'pointer-events-none select-none' : ''}>
-                        <p className="text-xs text-gray-500 mb-2">Required skills</p>
+                        <p className="text-xs text-slate-500 dark:text-[#94C8AF] mb-2">Required skills</p>
                         <div className="flex flex-wrap gap-1.5">
                           {allSkills.map(skill => (
                             <button
@@ -598,10 +627,10 @@ export function PostProject() {
                               disabled={volunteerCount === 0}
                               className={`text-xs font-medium px-2.5 py-1 rounded-full border transition-colors ${
                                 volunteerCount === 0
-                                  ? 'border-gray-200 text-gray-400 cursor-not-allowed'
+                                  ? 'border-slate-200 dark:border-[#1E3B34] text-slate-400 dark:text-[#6B8F7F] cursor-not-allowed'
                                   : volunteerSkills.includes(skill)
-                                    ? "bg-green-600 text-white border-green-600"
-                                    : "border-green-300 text-green-700 hover:border-green-500"
+                                    ? "bg-green-600 text-white border-green-600 dark:bg-emerald-600 dark:border-emerald-600"
+                                    : "border-green-300 dark:border-emerald-700 text-green-700 dark:text-emerald-300 hover:border-green-500 dark:hover:border-emerald-500"
                               }`}
                             >
                               {skill}
@@ -610,22 +639,22 @@ export function PostProject() {
                         </div>
                       </div>
                       {volunteerCount === 0 && (
-                        <p className="text-xs text-gray-400 mt-2">
+                        <p className="text-xs text-slate-400 dark:text-[#6B8F7F] mt-2">
                           Increase volunteer count to select skills.
                         </p>
                       )}
                       {errors.volunteerSkills && volunteerCount > 0 && (
-                        <p className="text-red-500 text-xs mt-2">{errors.volunteerSkills}</p>
+                        <p className="text-red-500 dark:text-red-400 text-xs mt-2">{errors.volunteerSkills}</p>
                       )}
                     </div>
 
                     {/* Professionals card */}
-                    <div className={`border rounded-2xl p-4 transition ${
+                    <div className={`border rounded-xl p-4 transition ${
                       professionalCount === 0
-                        ? 'bg-gray-50 border-gray-200 opacity-60'
-                        : 'bg-blue-50 border-blue-200'
+                        ? 'bg-slate-50 dark:bg-[#0D1F18]/80 border-slate-200 dark:border-[#1E3B34] opacity-60'
+                        : 'bg-blue-50 dark:bg-sky-950/35 border-blue-200 dark:border-sky-800/50'
                     }`}>
-                      <p className="text-sm font-semibold text-blue-800 mb-3 flex items-center gap-2">
+                      <p className="text-sm font-semibold text-blue-800 dark:text-sky-200 mb-3 flex items-center gap-2">
                         <Briefcase className="w-4 h-4" /> Professionals Needed
                       </p>
                       <div className="flex items-center justify-center gap-4 mb-4">
@@ -639,21 +668,21 @@ export function PostProject() {
                               setCompensationMax('');
                             }
                           }}
-                          className="w-8 h-8 border border-blue-300 rounded-lg flex items-center justify-center hover:bg-blue-100 text-blue-700"
+                          className="w-8 h-8 border border-blue-300 dark:border-sky-700 rounded-lg flex items-center justify-center hover:bg-blue-100 dark:hover:bg-sky-900/50 text-blue-700 dark:text-sky-300"
                         >
                           <Minus className="w-4 h-4" />
                         </button>
-                        <span className="text-3xl font-bold text-blue-800 w-12 text-center">{professionalCount}</span>
+                        <span className="text-3xl font-bold text-blue-800 dark:text-sky-200 w-12 text-center">{professionalCount}</span>
                         <button 
                           type="button"
                           onClick={() => setProfessionalCount(p => p + 1)}
-                          className="w-8 h-8 border border-blue-300 rounded-lg flex items-center justify-center hover:bg-blue-100 text-blue-700"
+                          className="w-8 h-8 border border-blue-300 dark:border-sky-700 rounded-lg flex items-center justify-center hover:bg-blue-100 dark:hover:bg-sky-900/50 text-blue-700 dark:text-sky-300"
                         >
                           <Plus className="w-4 h-4" />
                         </button>
                       </div>
                       <div className={professionalCount === 0 ? 'pointer-events-none select-none' : ''}>
-                        <p className="text-xs text-gray-500 mb-2">Required skills</p>
+                        <p className="text-xs text-slate-500 dark:text-[#94C8AF] mb-2">Required skills</p>
                         <div className="flex flex-wrap gap-1.5">
                           {allSkills.map(skill => (
                             <button
@@ -663,10 +692,10 @@ export function PostProject() {
                               disabled={professionalCount === 0}
                               className={`text-xs font-medium px-2.5 py-1 rounded-full border transition-colors ${
                                 professionalCount === 0
-                                  ? 'border-gray-200 text-gray-400 cursor-not-allowed'
+                                  ? 'border-slate-200 dark:border-[#1E3B34] text-slate-400 dark:text-[#6B8F7F] cursor-not-allowed'
                                   : professionalSkills.includes(skill)
-                                    ? "bg-blue-600 text-white border-blue-600"
-                                    : "border-blue-300 text-blue-700 hover:border-blue-500"
+                                    ? "bg-blue-600 text-white border-blue-600 dark:bg-sky-600 dark:border-sky-600"
+                                    : "border-blue-300 dark:border-sky-700 text-blue-700 dark:text-sky-300 hover:border-blue-500 dark:hover:border-sky-500"
                               }`}
                             >
                               {skill}
@@ -675,22 +704,22 @@ export function PostProject() {
                         </div>
                       </div>
                       {professionalCount === 0 && (
-                        <p className="text-xs text-gray-400 mt-2">
+                        <p className="text-xs text-slate-400 dark:text-[#6B8F7F] mt-2">
                           Increase professional count to select skills.
                         </p>
                       )}
                       {errors.professionalSkills && professionalCount > 0 && (
-                        <p className="text-red-500 text-xs mt-2">{errors.professionalSkills}</p>
+                        <p className="text-red-500 dark:text-red-400 text-xs mt-2">{errors.professionalSkills}</p>
                       )}
 
                       {/* Compensation Range - only shown when professionals > 0 */}
                       {professionalCount > 0 && (
                         <div className="mt-4">
-                          <p className="text-xs text-gray-500 mb-2">
-                            Compensation Range <span className="text-gray-300">(optional)</span>
+                          <p className="text-xs text-slate-500 dark:text-[#94C8AF] mb-2">
+                            Compensation Range <span className="text-slate-300 dark:text-[#6B8F7F]">(optional)</span>
                           </p>
                           <div className="flex items-center gap-2">
-                            <span className="text-sm text-blue-700 font-medium">₱</span>
+                            <span className="text-sm text-blue-700 dark:text-sky-300 font-medium">₱</span>
                             <input
                               type="number"
                               placeholder="Min"
@@ -699,13 +728,13 @@ export function PostProject() {
                                 setCompensationMin(e.target.value);
                                 setErrors(prev => ({ ...prev, compensation: undefined }));
                               }}
-                              className={`w-full border rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 ${
+                              className={`w-full min-h-[44px] border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 bg-white dark:bg-[#0D1F18] text-slate-900 dark:text-white ${
                                 errors.compensation
-                                  ? 'border-red-300 focus:ring-red-200'
-                                  : 'border-blue-200 focus:ring-blue-300'
+                                  ? 'border-red-300 dark:border-red-500/50 focus:ring-red-200 dark:focus:ring-red-900/40'
+                                  : 'border-blue-200 dark:border-sky-800 focus:ring-blue-300 dark:focus:ring-sky-800/50'
                               }`}
                             />
-                            <span className="text-gray-400 text-sm">—</span>
+                            <span className="text-slate-400 dark:text-[#6B8F7F] text-sm">—</span>
                             <input
                               type="number"
                               placeholder="Max"
@@ -714,18 +743,18 @@ export function PostProject() {
                                 setCompensationMax(e.target.value);
                                 setErrors(prev => ({ ...prev, compensation: undefined }));
                               }}
-                              className={`w-full border rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 ${
+                              className={`w-full min-h-[44px] border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 bg-white dark:bg-[#0D1F18] text-slate-900 dark:text-white ${
                                 errors.compensation
-                                  ? 'border-red-300 focus:ring-red-200'
-                                  : 'border-blue-200 focus:ring-blue-300'
+                                  ? 'border-red-300 dark:border-red-500/50 focus:ring-red-200 dark:focus:ring-red-900/40'
+                                  : 'border-blue-200 dark:border-sky-800 focus:ring-blue-300 dark:focus:ring-sky-800/50'
                               }`}
                             />
                           </div>
                           {errors.compensation ? (
-                            <p className="text-red-500 text-xs mt-2">{errors.compensation}</p>
+                            <p className="text-red-500 dark:text-red-400 text-xs mt-2">{errors.compensation}</p>
                           ) : (
-                            <p className="text-xs text-gray-400 mt-2">
-                              💡 Compensation is arranged directly between you and the professional.
+                            <p className="text-xs text-slate-400 dark:text-[#6B8F7F] mt-2">
+                              Compensation is arranged directly between you and the professional.
                             </p>
                           )}
                         </div>
@@ -735,14 +764,14 @@ export function PostProject() {
 
                   {/* People needed error */}
                   {errors.people && (
-                    <div className="bg-red-50 border border-red-200 rounded-xl p-3 text-red-600 text-sm">
+                    <div className="bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/50 rounded-xl p-3 text-red-600 dark:text-red-400 text-sm">
                       {errors.people}
                     </div>
                   )}
 
                   {/* Error message */}
                   {error && (
-                    <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-red-700 text-sm">
+                    <div className="bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/50 rounded-xl p-4 text-red-700 dark:text-red-400 text-sm">
                       {error}
                     </div>
                   )}
@@ -750,12 +779,12 @@ export function PostProject() {
               )}
 
               {/* Bottom action bar */}
-              <div className="flex items-center justify-between pt-6 mt-6 border-t border-gray-100">
+              <div className="flex items-center justify-between pt-5 mt-5 border-t border-slate-100 dark:border-[#1E3B34]">
                 {step > 1 && (
                   <button 
                     type="button"
                     onClick={() => setStep(s => s - 1)}
-                    className="text-sm text-gray-500 hover:text-gray-800"
+                    className="text-sm text-slate-500 dark:text-[#94C8AF] hover:text-slate-800 dark:hover:text-white"
                   >
                     ← Back
                   </button>
@@ -764,7 +793,7 @@ export function PostProject() {
                   <button 
                     type="button"
                     onClick={() => navigate(-1)}
-                    className="text-sm text-gray-500 border border-gray-200 px-4 py-2 rounded-xl hover:bg-gray-50"
+                    className="text-sm text-slate-600 dark:text-[#94C8AF] border border-slate-200 dark:border-[#1E3B34] min-h-[40px] px-4 py-2 rounded-lg hover:bg-slate-50 dark:hover:bg-[#0D1F18] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F8F6B]"
                   >
                     Cancel
                   </button>
@@ -772,7 +801,7 @@ export function PostProject() {
                     <button 
                       type="button"
                       onClick={handleContinue}
-                      className="bg-[#1a3a2a] text-white px-6 py-2 rounded-xl text-sm font-medium hover:bg-green-900 transition"
+                      className="bg-[#0F3D2E] text-white min-h-[40px] px-5 py-2 rounded-lg text-sm font-medium hover:bg-[#1a5241] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F8F6B]"
                     >
                       Continue →
                     </button>
@@ -781,7 +810,7 @@ export function PostProject() {
                       type="button"
                       onClick={handleSubmit}
                       disabled={isSubmitting}
-                      className="bg-[#1a3a2a] text-white px-6 py-2 rounded-xl text-sm font-medium hover:bg-green-900 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="bg-[#0F3D2E] text-white min-h-[40px] px-5 py-2 rounded-lg text-sm font-medium hover:bg-[#1a5241] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F8F6B] disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {isSubmitting 
                         ? (isEditMode ? "Saving..." : "Posting...") 
@@ -797,10 +826,10 @@ export function PostProject() {
           <div className="lg:col-span-2">
             <div className="sticky top-20">
               <div className="flex items-center gap-2 mb-3">
-                <Eye className="w-4 h-4 text-gray-400" />
-                <span className="text-sm font-semibold text-gray-500">Live Preview</span>
+                <Eye className="w-4 h-4 text-slate-400 dark:text-[#6B8F7F]" />
+                <span className="text-sm font-semibold text-slate-500 dark:text-[#94C8AF]">Live Preview</span>
               </div>
-              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+              <div className="bg-white dark:bg-[#132B23] rounded-xl border border-slate-200 dark:border-[#1E3B34] overflow-hidden">
                 {formData.bannerUrl ? (
                   <img src={formData.bannerUrl} alt="Project banner" className="h-40 w-full object-cover" />
                 ) : (
@@ -818,16 +847,16 @@ export function PostProject() {
                       URGENT
                     </div>
                   )}
-                  <p className="text-xs text-gray-400 mb-1 flex items-center gap-1">
+                  <p className="text-xs text-slate-400 dark:text-[#6B8F7F] mb-1 flex items-center gap-1">
                     <Building2 className="w-3 h-3" />
                     Your Organisation
-                    <span className="text-green-500">✓</span>
+                    <span className="text-[#2F8F6B] dark:text-[#6DD4A8]">✓</span>
                   </p>
-                  <h3 className="text-sm font-semibold text-gray-900 leading-snug mb-2">
+                  <h3 className="text-sm font-semibold text-slate-900 dark:text-white leading-snug mb-2">
                     {formData.title || "Your Project Title"}
                   </h3>
                   
-                  <div className="flex items-center gap-3 text-xs text-gray-500 mb-3">
+                  <div className="flex items-center gap-3 text-xs text-slate-500 dark:text-[#94C8AF] mb-3">
                     {formData.location && (
                       <span className="flex items-center gap-1">
                         <MapPin className="w-3 h-3" /> {formData.location}
@@ -842,37 +871,37 @@ export function PostProject() {
 
                   <div className="flex flex-wrap gap-1.5 mb-3">
                     {selectedFocus.map(f => (
-                      <span key={f} className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">{f}</span>
+                      <span key={f} className="text-xs bg-slate-100 dark:bg-[#0D1F18] text-slate-600 dark:text-[#94C8AF] px-2 py-0.5 rounded-full border border-transparent dark:border-[#1E3B34]">{f}</span>
                     ))}
                   </div>
 
                   {formData.description && (
-                    <p className="text-xs text-gray-500 line-clamp-3 mb-3">{formData.description}</p>
+                    <p className="text-xs text-slate-500 dark:text-[#94C8AF] line-clamp-3 mb-3">{formData.description}</p>
                   )}
 
                   <div className="flex items-center gap-2 flex-wrap mb-4">
                     {volunteerCount > 0 && (
-                      <span className="bg-green-50 text-green-700 text-xs px-2 py-1 rounded-full flex items-center gap-1">
+                      <span className="bg-green-50 dark:bg-emerald-950/50 text-green-700 dark:text-emerald-300 text-xs px-2 py-1 rounded-full flex items-center gap-1 border border-green-100 dark:border-emerald-800/40">
                         <Users className="w-3 h-3" /> {volunteerCount} volunteers
                       </span>
                     )}
                     {professionalCount > 0 && (
-                      <span className="bg-blue-50 text-blue-700 text-xs px-2 py-1 rounded-full flex items-center gap-1">
+                      <span className="bg-blue-50 dark:bg-sky-950/50 text-blue-700 dark:text-sky-300 text-xs px-2 py-1 rounded-full flex items-center gap-1 border border-blue-100 dark:border-sky-800/40">
                         <Briefcase className="w-3 h-3" /> {professionalCount} professionals
                       </span>
                     )}
                   </div>
 
-                  <div className="bg-[#1a3a2a] text-white text-sm font-medium text-center py-2 rounded-xl">
+                  <div className="bg-[#0F3D2E] dark:bg-[#0D1F18] text-white text-sm font-medium text-center min-h-[40px] flex items-center justify-center rounded-lg border border-[#2F8F6B]/40 dark:border-[#1E3B34]">
                     View & Apply
                   </div>
                 </div>
               </div>
 
-              {/* Tips */}
-              <div className="mt-4 bg-[#E6F4EE] rounded-xl p-4">
-                <p className="font-semibold text-[#0F3D2E] text-sm mb-2">💡 Tips for better matches</p>
-                <ul className="space-y-1.5 text-xs text-gray-600">
+              {/* Tips — light: mint panel; dark: deep surface + high-contrast text */}
+              <div className="mt-4 bg-[#E6F4EE] dark:bg-[#0D1F18] rounded-xl p-4 border border-slate-200/80 dark:border-[#1E3B34]">
+                <p className="font-semibold text-[#0F3D2E] dark:text-[#BEEBD7] text-sm mb-2">Tips for better matches</p>
+                <ul className="space-y-1.5 text-xs text-slate-600 dark:text-[#94C8AF]">
                   <li>• Add a clear project description</li>
                   <li>• Select specific focus areas</li>
                   <li>• Tag the exact skills you need</li>

@@ -81,20 +81,22 @@ export function ProgressTracker() {
       setLoading(true);
       try {
         const profileData = await getCurrentProfile();
-        if (!profileData?.id) {
-          setLoading(false);
-          return;
-        }
         setProfile(profileData);
 
-        // Fetch all data in parallel
-        await Promise.all([
-          fetchMissions(profileData.id),
-          fetchChallenges(profileData.id),
-          fetchBadges(profileData.id),
-          fetchLeaderboardRank(profileData.id),
-          fetchStreak(profileData.id),
-        ]);
+        // connections.responder_id is auth user id (same as applyToProject / Mission board), not profiles.id
+        const authUserId = user.id;
+        const profileId = profileData?.id;
+
+        const parallel: Promise<void>[] = [fetchMissions(authUserId)];
+        if (profileId) {
+          parallel.push(
+            fetchChallenges(profileId),
+            fetchBadges(profileId),
+            fetchLeaderboardRank(profileId),
+            fetchStreak(profileId),
+          );
+        }
+        await Promise.all(parallel);
       } catch (err) {
         console.error("Error fetching profile data:", err);
       } finally {
@@ -105,12 +107,12 @@ export function ProgressTracker() {
     fetchAllData();
   }, [user, authLoading]);
 
-  // Missions applied to
-  const fetchMissions = async (profileId: string) => {
+  // Mission applications (responder_id = Supabase auth user id, not profile row id)
+  const fetchMissions = async (authUserId: string) => {
     const { data, error } = await supabase
       .from("connections")
       .select("id, status, role, created_at, projects(title, location, duration, focus_area, status, type)")
-      .eq("responder_id", profileId)
+      .eq("responder_id", authUserId)
       .order("created_at", { ascending: false });
 
     if (error) {
@@ -336,7 +338,7 @@ export function ProgressTracker() {
             description="Browse available missions and apply to make an impact."
             action={{
               label: "Browse Missions",
-              onClick: () => navigate("/work")
+              onClick: () => navigate("/browse")
             }}
           />
         ) : (
