@@ -4,6 +4,7 @@ import { useAuth } from '../hooks/useAuth';
 import { getCurrentProfile } from '../utils/matchService';
 import { Loader2 } from 'lucide-react';
 import type { Profile } from '../types/database';
+import { useShowBlockingFullPageLoader } from '../hooks/useShowBlockingFullPageLoader';
 
 interface VerifierGuardProps {
   children: ReactNode;
@@ -13,6 +14,7 @@ export function VerifierGuard({ children }: VerifierGuardProps) {
   const { user, loading: authLoading } = useAuth();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [initialLoadDone, setInitialLoadDone] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,7 +29,7 @@ export function VerifierGuard({ children }: VerifierGuardProps) {
         }
 
         const currentProfile = await getCurrentProfile();
-        
+
         if (!currentProfile?.is_verifier) {
           navigate('/');
           return;
@@ -38,6 +40,7 @@ export function VerifierGuard({ children }: VerifierGuardProps) {
         console.error('Error checking verifier access:', err);
         navigate('/verifier-login');
       } finally {
+        setInitialLoadDone(true);
         setLoading(false);
       }
     }
@@ -45,8 +48,12 @@ export function VerifierGuard({ children }: VerifierGuardProps) {
     checkVerifierAccess();
   }, [user, authLoading, navigate]);
 
-  // Loading state
-  if (loading || authLoading || !profile?.is_verifier) {
+  const showBlockingLoader = useShowBlockingFullPageLoader(
+    loading || authLoading,
+    initialLoadDone
+  );
+
+  if (showBlockingLoader || !profile?.is_verifier) {
     return (
       <div className="min-h-screen bg-[#1a3a2a] flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">

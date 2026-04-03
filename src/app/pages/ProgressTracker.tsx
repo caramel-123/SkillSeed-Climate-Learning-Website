@@ -9,6 +9,7 @@ import { PageSkeleton } from "../components/ui/loading-skeleton";
 import { EmptyState } from "../components/ui/empty-state";
 import { toast } from "sonner";
 import type { Profile } from "../types/database";
+import { useShowBlockingFullPageLoader } from "../hooks/useShowBlockingFullPageLoader";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -74,6 +75,7 @@ export function ProgressTracker() {
   const [streak, setStreak] = useState(0);
   const [leaderboardRank, setLeaderboardRank] = useState<number | string>("—");
   const [loading, setLoading] = useState(true);
+  const [initialLoadDone, setInitialLoadDone] = useState(false);
   const [resettingCommunityDemo, setResettingCommunityDemo] = useState(false);
   const [withdrawingPendingMissions, setWithdrawingPendingMissions] = useState(false);
 
@@ -84,6 +86,7 @@ export function ProgressTracker() {
   useEffect(() => {
     if (!user || authLoading) {
       setLoading(false);
+      if (!user) setInitialLoadDone(false);
       return;
     }
 
@@ -110,12 +113,18 @@ export function ProgressTracker() {
       } catch (err) {
         console.error("Error fetching profile data:", err);
       } finally {
+        setInitialLoadDone(true);
         setLoading(false);
       }
     }
 
     fetchAllData();
   }, [user, authLoading]);
+
+  const showBlockingLoader = useShowBlockingFullPageLoader(
+    authLoading || loading,
+    initialLoadDone
+  );
 
   // Mission applications (responder_id = Supabase auth user id, not profile row id)
   const fetchMissions = async (authUserId: string): Promise<boolean> => {
@@ -278,7 +287,7 @@ export function ProgressTracker() {
   };
 
   // ── Loading / Auth Guards ───────────────────────────────────────────────────
-  if (authLoading || loading) {
+  if (showBlockingLoader) {
     return <PageSkeleton hasHero={true} />;
   }
 

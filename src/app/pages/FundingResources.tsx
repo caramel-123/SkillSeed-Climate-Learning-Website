@@ -25,6 +25,7 @@ import {
   FileText,
 } from "lucide-react";
 import { supabase } from "../utils/supabase";
+import { useShowBlockingFullPageLoader } from "../hooks/useShowBlockingFullPageLoader";
 import { PostFundingModal } from "../components/PostFundingModal";
 
 // ============================================================================
@@ -321,6 +322,7 @@ export function FundingResources() {
   const [currentProfile, setCurrentProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [initialLoadDone, setInitialLoadDone] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Fetch current user profile
@@ -370,6 +372,7 @@ export function FundingResources() {
       console.error("Error fetching opportunities:", err);
       setError("Failed to load funding opportunities. Please try again.");
     } finally {
+      setInitialLoadDone(true);
       setLoading(false);
     }
   };
@@ -471,13 +474,10 @@ export function FundingResources() {
     setSortBy("recommended");
   };
 
-  // ══════════════════════════════════════════════════════════════════════════
-  // Loading State
-  // ══════════════════════════════════════════════════════════════════════════
-  if (loading) {
+  const showBlockingLoader = useShowBlockingFullPageLoader(loading, initialLoadDone);
+  if (showBlockingLoader) {
     return (
       <div className="min-h-screen bg-slate-50 dark:bg-[#0D1F18]">
-        {/* Header skeleton */}
         <div className="bg-white dark:bg-[#132B23] border-b border-slate-200 dark:border-[#1E3B34]">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <div className="h-4 w-24 bg-slate-100 dark:bg-[#1E3B34] rounded mb-2 animate-pulse" />

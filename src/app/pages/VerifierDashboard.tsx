@@ -12,6 +12,7 @@ import {
 import { AdminManagement } from '../components/AdminManagement';
 import type { Profile, QuestProgressWithDetails } from '../types/database';
 import { toast } from 'sonner';
+import { useShowBlockingFullPageLoader } from '../hooks/useShowBlockingFullPageLoader';
 
 export function VerifierDashboard() {
   const { user, loading: authLoading } = useAuth();
@@ -21,6 +22,7 @@ export function VerifierDashboard() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [submissions, setSubmissions] = useState<QuestProgressWithDetails[]>([]);
   const [loading, setLoading] = useState(true);
+  const [initialLoadDone, setInitialLoadDone] = useState(false);
   const [processingId, setProcessingId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'submissions' | 'admins'>('submissions');
 
@@ -50,12 +52,18 @@ export function VerifierDashboard() {
       } catch (err) {
         console.error('Error loading submissions:', err);
       } finally {
+        setInitialLoadDone(true);
         setLoading(false);
       }
     }
 
     loadData();
   }, [user, authLoading, navigate]);
+
+  const showBlockingLoader = useShowBlockingFullPageLoader(
+    loading || authLoading,
+    initialLoadDone
+  );
 
   // Handle verify
   const handleVerify = async (submission: QuestProgressWithDetails) => {
@@ -107,8 +115,7 @@ export function VerifierDashboard() {
     navigate('/verifier-login');
   };
 
-  // Loading state
-  if (loading || authLoading) {
+  if (showBlockingLoader) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="flex flex-col items-center gap-4">

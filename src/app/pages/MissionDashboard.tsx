@@ -32,6 +32,7 @@ import {
 import { useAuth } from "../hooks/useAuth";
 import { getProjects, getMyProjects, deleteProject, getMatchingProjects } from "../utils/matchService";
 import { supabase } from "../utils/supabase";
+import { useShowBlockingFullPageLoader } from "../hooks/useShowBlockingFullPageLoader";
 import type { ConnectionStatus, Project } from "../types/database";
 
 // ============================================================================
@@ -199,6 +200,7 @@ export function MissionDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [missionDataRevision, setMissionDataRevision] = useState(0);
+  const [initialLoadDone, setInitialLoadDone] = useState(false);
 
   useEffect(() => {
     const bump = () => setMissionDataRevision((n) => n + 1);
@@ -341,11 +343,36 @@ export function MissionDashboard() {
         setError("Failed to load missions. Please try again.");
         console.error(err);
       } finally {
+        setInitialLoadDone(true);
         setLoading(false);
       }
     }
     fetchData();
   }, [user, location.pathname, missionDataRevision]);
+
+  const showBlockingLoader = useShowBlockingFullPageLoader(loading, initialLoadDone);
+  if (showBlockingLoader) {
+    return (
+      <div className="min-h-screen bg-slate-50 dark:bg-[#0D1F18]">
+        <div className="bg-white dark:bg-[#132B23] border-b border-slate-200 dark:border-[#1E3B34]">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div className="h-4 w-24 bg-slate-100 dark:bg-[#1E3B34] rounded mb-2 animate-pulse" />
+            <div className="h-8 w-48 bg-slate-100 dark:bg-[#1E3B34] rounded mb-3 animate-pulse" />
+            <div className="h-4 w-72 bg-slate-100 dark:bg-[#1E3B34] rounded animate-pulse" />
+          </div>
+        </div>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+          <KPIStripSkeleton />
+          <FilterBarSkeleton />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <MissionCardSkeleton key={i} />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // Validation: Filter out test/placeholder missions
   function isValidMission(m: Project): boolean {
@@ -447,33 +474,6 @@ export function MissionDashboard() {
     setUrgentOnly(false);
     setParticipantType("all");
     setSortBy("best_match");
-  }
-
-  // ══════════════════════════════════════════════════════════════════════════
-  // Loading State
-  // ══════════════════════════════════════════════════════════════════════════
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-slate-50 dark:bg-[#0D1F18]">
-        {/* Header skeleton */}
-        <div className="bg-white dark:bg-[#132B23] border-b border-slate-200 dark:border-[#1E3B34]">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            <div className="h-4 w-24 bg-slate-100 dark:bg-[#1E3B34] rounded mb-2 animate-pulse" />
-            <div className="h-8 w-48 bg-slate-100 dark:bg-[#1E3B34] rounded mb-3 animate-pulse" />
-            <div className="h-4 w-72 bg-slate-100 dark:bg-[#1E3B34] rounded animate-pulse" />
-          </div>
-        </div>
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
-          <KPIStripSkeleton />
-          <FilterBarSkeleton />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <MissionCardSkeleton key={i} />
-            ))}
-          </div>
-        </div>
-      </div>
-    );
   }
 
   // ══════════════════════════════════════════════════════════════════════════

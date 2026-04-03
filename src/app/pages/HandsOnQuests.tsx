@@ -15,6 +15,7 @@ import { QuestCard } from '../components/QuestCard';
 import { GridSkeleton } from '../components/ui/loading-skeleton';
 import { EmptyState } from '../components/ui/empty-state';
 import type { Profile, Quest, QuestProgress } from '../types/database';
+import { useShowBlockingFullPageLoader } from '../hooks/useShowBlockingFullPageLoader';
 
 type TabType = 'beginner' | 'advanced' | 'my-quests';
 
@@ -83,6 +84,7 @@ export function HandsOnQuests() {
   const [activeTab, setActiveTab] = useState<TabType>('beginner');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [initialLoadDone, setInitialLoadDone] = useState(false);
   const [query, setQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'not_started' | 'in_progress' | 'submitted' | 'verified' | 'rejected'>('all');
   const [sortBy, setSortBy] = useState<'recommended' | 'time' | 'points'>('recommended');
@@ -128,12 +130,18 @@ export function HandsOnQuests() {
         console.error('Error loading quests:', err);
         setError('Failed to load quests. Please try again.');
       } finally {
+        setInitialLoadDone(true);
         setLoading(false);
       }
     }
 
     loadData();
   }, [user, authLoading]);
+
+  const showBlockingLoader = useShowBlockingFullPageLoader(
+    authLoading || loading,
+    initialLoadDone
+  );
 
   const progressList = useMemo(() => Object.values(progressMap ?? {}), [progressMap]);
   const completedCount = useMemo(
@@ -235,7 +243,7 @@ export function HandsOnQuests() {
   // ══════════════════════════════════════════════════════════════════════════
   // Loading State
   // ══════════════════════════════════════════════════════════════════════════
-  if (loading || authLoading) {
+  if (showBlockingLoader) {
     return (
       <div className="min-h-screen bg-slate-50 dark:bg-[#0D1F18]">
         {/* Header skeleton */}

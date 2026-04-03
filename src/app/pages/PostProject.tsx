@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router";
 import { createProject, getProjectById, updateProject } from "../utils/matchService";
 import { useAuth } from "../hooks/useAuth";
+import { useShowBlockingFullPageLoader } from "../hooks/useShowBlockingFullPageLoader";
 import {
   MapPin,
   Calendar,
@@ -43,6 +44,7 @@ export function PostProject() {
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loading, setLoading] = useState(isEditMode);
+  const [initialLoadDone, setInitialLoadDone] = useState(!isEditMode);
   const [error, setError] = useState<string | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [formData, setFormData] = useState({
@@ -64,6 +66,8 @@ export function PostProject() {
 
       if (!project) {
         setError('Project not found.');
+        setInitialLoadDone(true);
+        setLoading(false);
         navigate('/work');
         return;
       }
@@ -71,6 +75,8 @@ export function PostProject() {
       // Guard — only owner can edit
       if (String(project.poster_id) !== String(user.id)) {
         setError('You do not have permission to edit this project.');
+        setInitialLoadDone(true);
+        setLoading(false);
         navigate('/work');
         return;
       }
@@ -93,6 +99,7 @@ export function PostProject() {
         bannerUrl: '',
       });
 
+      setInitialLoadDone(true);
       setLoading(false);
     };
 
@@ -109,6 +116,8 @@ export function PostProject() {
       document.body.style.overflow = prev;
     };
   }, [submitted]);
+
+  const showBlockingLoader = useShowBlockingFullPageLoader(loading, initialLoadDone);
 
   const resetForm = () => {
     setStep(1);
@@ -265,8 +274,7 @@ export function PostProject() {
 
   const stepLabels = ['Project Basics', 'Details', 'People Needed'];
 
-  // Loading state while fetching project data in edit mode
-  if (loading) {
+  if (showBlockingLoader) {
     return (
       <div className="min-h-screen bg-slate-50 dark:bg-[#0D1F18] flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin text-[#2F8F6B] dark:text-[#6DD4A8]" />

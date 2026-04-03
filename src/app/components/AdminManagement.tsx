@@ -29,6 +29,7 @@ import {
 } from '../utils/adminService';
 import type { AdminProfile, AdminInvite, AdminRole } from '../utils/adminService';
 import { toast } from 'sonner';
+import { useShowBlockingFullPageLoader } from '../hooks/useShowBlockingFullPageLoader';
 
 const ROLES: AdminRole[] = ['content_moderator', 'challenge_manager', 'user_manager', 'super_admin'];
 
@@ -47,6 +48,7 @@ export function AdminManagement({ currentProfileId }: AdminManagementProps) {
   const [admins, setAdmins] = useState<AdminProfile[]>([]);
   const [invites, setInvites] = useState<AdminInvite[]>([]);
   const [loading, setLoading] = useState(true);
+  const [initialLoadDone, setInitialLoadDone] = useState(false);
   const [processingId, setProcessingId] = useState<string | null>(null);
   const [copiedToken, setCopiedToken] = useState<string | null>(null);
 
@@ -64,12 +66,15 @@ export function AdminManagement({ currentProfileId }: AdminManagementProps) {
     ]);
     setAdmins(adminsData);
     setInvites(invitesData);
+    setInitialLoadDone(true);
     setLoading(false);
   };
 
   useEffect(() => {
     loadData();
   }, []);
+
+  const showBlockingLoader = useShowBlockingFullPageLoader(loading, initialLoadDone);
 
   const handleUpdateRole = async (profileId: string, role: AdminRole) => {
     setProcessingId(profileId);
@@ -137,7 +142,7 @@ export function AdminManagement({ currentProfileId }: AdminManagementProps) {
     setTimeout(() => setCopiedToken(null), 2000);
   };
 
-  if (loading) {
+  if (showBlockingLoader) {
     return (
       <div className="flex items-center justify-center py-16">
         <Loader2 className="w-6 h-6 animate-spin text-[#2F8F6B]" />

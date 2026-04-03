@@ -26,6 +26,7 @@ import {
   Info,
 } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
+import { useShowBlockingFullPageLoader } from "../hooks/useShowBlockingFullPageLoader";
 import { supabase } from "../utils/supabase";
 import {
   fetchActiveChallenges,
@@ -294,6 +295,7 @@ export function CommunityChallenges() {
 
   // UI state
   const [loading, setLoading] = useState(true);
+  const [initialLoadDone, setInitialLoadDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [leaderboardLoading, setLeaderboardLoading] = useState(false);
   const [joiningId, setJoiningId] = useState<string | null>(null);
@@ -370,6 +372,7 @@ export function CommunityChallenges() {
       console.error("Error fetching data:", err);
       setError("Failed to load challenges. Please try again.");
     } finally {
+      setInitialLoadDone(true);
       setLoading(false);
     }
   }, [user?.id, fetchUserProfile]);
@@ -589,7 +592,8 @@ export function CommunityChallenges() {
   // LOADING STATE
   // ══════════════════════════════════════════════════════════════════════════════
 
-  if (loading) {
+  const showBlockingLoader = useShowBlockingFullPageLoader(loading, initialLoadDone);
+  if (showBlockingLoader) {
     return (
       <div className="min-h-screen bg-slate-50 dark:bg-[#0D1F18]">
         {/* Header skeleton */}

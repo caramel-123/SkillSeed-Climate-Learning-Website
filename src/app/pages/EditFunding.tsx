@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useShowBlockingFullPageLoader } from "../hooks/useShowBlockingFullPageLoader";
 import { useParams, useNavigate } from "react-router";
 import { ArrowLeft, Trash2 } from "lucide-react";
 import { supabase } from "../utils/supabase";
@@ -20,6 +21,7 @@ export function EditFunding() {
   const { fundingId } = useParams();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const [initialLoadDone, setInitialLoadDone] = useState(false);
   const [currentProfile, setCurrentProfile] = useState<Profile | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -99,11 +101,14 @@ export function EditFunding() {
       );
       setApplyUrl(data.apply_url ?? "");
 
+      setInitialLoadDone(true);
       setLoading(false);
     };
 
     if (currentProfile?.id) fetchFunding();
   }, [fundingId, currentProfile?.id, navigate]);
+
+  const showBlockingLoader = useShowBlockingFullPageLoader(loading, initialLoadDone);
 
   const toggleFocusArea = (area: string) => {
     setFocusAreas(prev =>
@@ -190,7 +195,7 @@ export function EditFunding() {
     }
   };
 
-  if (loading) {
+  if (showBlockingLoader) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <p className="text-gray-400 text-sm">Loading...</p>

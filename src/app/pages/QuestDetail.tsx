@@ -19,6 +19,7 @@ import { supabase } from '../utils/supabase';
 import { AiCoachPanel } from '../components/AiCoachPanel';
 import type { Profile, Quest, QuestProgress } from '../types/database';
 import { toast } from 'sonner';
+import { useShowBlockingFullPageLoader } from '../hooks/useShowBlockingFullPageLoader';
 
 export function QuestDetail() {
   const { questId } = useParams<{ questId: string }>();
@@ -31,6 +32,7 @@ export function QuestDetail() {
   const [quest, setQuest] = useState<Quest | null>(null);
   const [progress, setProgress] = useState<QuestProgress | null>(null);
   const [loading, setLoading] = useState(true);
+  const [initialLoadDone, setInitialLoadDone] = useState(false);
 
   // Submission state
   const [photoFile, setPhotoFile] = useState<File | null>(null);
@@ -38,6 +40,10 @@ export function QuestDetail() {
   const [reflection, setReflection] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const photoInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setInitialLoadDone(false);
+  }, [questId]);
 
   // Load data
   useEffect(() => {
@@ -73,12 +79,18 @@ export function QuestDetail() {
       } catch (err) {
         console.error('Error loading quest:', err);
       } finally {
+        setInitialLoadDone(true);
         setLoading(false);
       }
     }
 
     loadData();
   }, [questId, user, authLoading, navigate]);
+
+  const showBlockingLoader = useShowBlockingFullPageLoader(
+    authLoading || loading,
+    initialLoadDone
+  );
 
   // Mark step as complete
   const markStepComplete = async (stepIndex: number) => {
@@ -254,8 +266,7 @@ export function QuestDetail() {
     ? (progress?.current_step ?? 0) >= quest.steps.length
     : false;
 
-  // Loading state
-  if (loading || authLoading) {
+  if (showBlockingLoader) {
     return <PageSkeleton hasHero={false} />;
   }
 

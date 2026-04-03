@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useShowBlockingFullPageLoader } from "../hooks/useShowBlockingFullPageLoader";
 import { useParams, Link, useNavigate } from "react-router";
 import {
   MapPin,
@@ -188,6 +189,7 @@ export function MissionDetail() {
   const [applicantsLoading, setApplicantsLoading] = useState(false);
   const [showApplicants, setShowApplicants] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [initialLoadDone, setInitialLoadDone] = useState(false);
   const [applying, setApplying] = useState(false);
   const [applyError, setApplyError] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
@@ -202,8 +204,12 @@ export function MissionDetail() {
     async function fetchData() {
       if (!id) {
         setLoading(false);
+        setInitialLoadDone(true);
         return;
       }
+
+      setLoading(true);
+      setInitialLoadDone(false);
 
       // Check if ID looks like a UUID (database project)
       const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
@@ -233,6 +239,7 @@ export function MissionDetail() {
         }
       }
       
+      setInitialLoadDone(true);
       setLoading(false);
     }
 
@@ -269,6 +276,11 @@ export function MissionDetail() {
 
     fetchMyApplicationStatus();
   }, [dbProject?.id, user]);
+
+  const showBlockingLoader = useShowBlockingFullPageLoader(
+    loading || authLoading,
+    initialLoadDone
+  );
 
   // Fetch applicants when owner clicks "View Applicants"
   const fetchApplicants = async () => {
@@ -414,8 +426,7 @@ export function MissionDetail() {
     }
   };
 
-  // Loading state
-  if (loading || authLoading) {
+  if (showBlockingLoader) {
     return (
       <div className="min-h-screen bg-[#F9FAFB] dark:bg-[#0D1F18] flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
