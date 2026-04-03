@@ -475,13 +475,57 @@ import type { FeedItem, ChallengeSubmission } from '../types/database';
 
 export type { ModerationResult } from './moderationService';
 
+function isMissingModerationColumnsError(err: unknown): boolean {
+  const message = String((err as { message?: string })?.message ?? err).toLowerCase();
+  if (!message) return false;
+  return (
+    message.includes('moderation_reason') ||
+    message.includes('moderation_status') ||
+    message.includes('moderation_score') ||
+    (message.includes('schema cache') && message.includes('challenge_submissions'))
+  );
+}
+
+/**
+ * Mark the participant completed and set points to the challenge reward (no second submission row).
+ * Replaces complete_challenge_rpc for the client insert flow — RPC also INSERTs into challenge_submissions.
+ */
+async function applyChallengeCompletionRewards(challengeId: string, userId: string): Promise<void> {
+  const { data: challenge, error: chErr } = await supabase
+    .from('challenges')
+    .select('points_reward')
+    .eq('id', challengeId)
+    .maybeSingle();
+
+  if (chErr) {
+    console.error('applyChallengeCompletionRewards: fetch challenge', chErr);
+    return;
+  }
+
+  const points = challenge?.points_reward ?? 0;
+
+  const { error: upErr } = await supabase
+    .from('challenge_participants')
+    .update({
+      status: 'completed',
+      points_earned: points,
+    })
+    .eq('challenge_id', challengeId)
+    .eq('user_id', userId);
+
+  if (upErr) {
+    console.error('applyChallengeCompletionRewards: update participant', upErr);
+  }
+}
+
 /**
  * Submit a challenge completion with AI moderation.
  *
  * Flow:
  * 1. Run AI moderation on the reflection + impact summary
- * 2. Insert the submission with the moderation outcome
- * 3. Only if approved: run the complete_challenge_rpc to award points and mark completed
+ * 2. Insert the submission (with moderation columns when migration 009 is applied)
+ * 3. If the DB has no moderation columns, retry a legacy insert; optionally PATCH moderation when approved
+ * 4. Only if approved: update challenge_participants (points + completed) — not complete_challenge_rpc, which would duplicate the submission row
  *
  * Returns the moderation result so the UI can inform the user.
  */
@@ -494,7 +538,6 @@ export async function submitChallengeCompletion(
   challengeTitle?: string,
   challengeCategory?: string | null,
 ): Promise<{ submissionId: string; moderation: import('./moderationService').ModerationResult }> {
-  // Step 1: Run AI moderation
   const moderation = await moderateSubmission({
     challengeTitle: challengeTitle || 'Climate Action Challenge',
     challengeCategory: challengeCategory || null,
@@ -502,41 +545,66 @@ export async function submitChallengeCompletion(
     impactSummary: impactSummary || '',
   });
 
-  // Step 2: Insert submission with moderation outcome
-  const { data: submission, error: insertError } = await supabase
+  const legacyPayload = {
+    challenge_id: challengeId,
+    user_id: userId,
+    photo_url: photoUrl,
+    reflection: reflection || null,
+    impact_summary: impactSummary || null,
+  };
+
+  const fullPayload = {
+    ...legacyPayload,
+    moderation_status: moderation.status,
+    moderation_reason: moderation.reason,
+    moderation_score: moderation.score,
+  };
+
+  let submission: { id: string };
+
+  const first = await supabase
     .from('challenge_submissions')
-    .insert({
-      challenge_id: challengeId,
-      user_id: userId,
-      photo_url: photoUrl,
-      reflection: reflection || null,
-      impact_summary: impactSummary || null,
-      moderation_status: moderation.status,
-      moderation_reason: moderation.reason,
-      moderation_score: moderation.score,
-    })
+    .insert(fullPayload)
     .select('id')
     .single();
 
-  if (insertError || !submission) {
-    console.error('Error inserting submission:', insertError);
-    throw insertError || new Error('Submission insert failed');
+  if (!first.error && first.data) {
+    submission = first.data;
+  } else if (first.error && isMissingModerationColumnsError(first.error)) {
+    const second = await supabase
+      .from('challenge_submissions')
+      .insert(legacyPayload)
+      .select('id')
+      .single();
+
+    if (second.error || !second.data) {
+      console.error('Error inserting submission (legacy columns):', second.error);
+      throw second.error || new Error('Submission insert failed');
+    }
+
+    submission = second.data;
+
+    if (moderation.status === 'approved') {
+      const { error: patchErr } = await supabase
+        .from('challenge_submissions')
+        .update({
+          moderation_status: 'approved',
+          moderation_reason: moderation.reason,
+          moderation_score: moderation.score,
+        })
+        .eq('id', submission.id);
+
+      if (patchErr && !isMissingModerationColumnsError(patchErr)) {
+        console.warn('Could not sync moderation fields on submission:', patchErr);
+      }
+    }
+  } else {
+    console.error('Error inserting submission:', first.error);
+    throw first.error || new Error('Submission insert failed');
   }
 
-  // Step 3: Only award points and mark completed if approved
   if (moderation.status === 'approved') {
-    const { error: rpcError } = await supabase.rpc('complete_challenge_rpc', {
-      p_challenge_id: challengeId,
-      p_user_id: userId,
-      p_photo_url: photoUrl,
-      p_reflection: reflection || null,
-      p_impact_summary: impactSummary || null,
-    });
-
-    if (rpcError) {
-      console.error('Error completing challenge via RPC:', rpcError);
-      // Don't throw — submission is saved, points can be reconciled later
-    }
+    await applyChallengeCompletionRewards(challengeId, userId);
   }
 
   return { submissionId: submission.id, moderation };
@@ -593,6 +661,89 @@ export async function hasUserSubmitted(challengeId: string, userId: string): Pro
   }
 
   return !!data;
+}
+
+/**
+ * Demo / redo helper: delete this profile's challenge_submissions (feed) and
+ * remove challenge_participants rows for those challenges and any still marked
+ * completed — same as leaving each challenge, so "My Challenges" on the profile
+ * clears and Community shows challenges as not joined.
+ */
+export async function resetMyChallengeSubmissions(profileId: string): Promise<{
+  deletedSubmissions: number;
+  removedParticipations: number;
+}> {
+  const { data: subRows, error: subSelErr } = await supabase
+    .from('challenge_submissions')
+    .select('challenge_id')
+    .eq('user_id', profileId);
+
+  if (subSelErr) {
+    console.error('resetMyChallengeSubmissions: submissions select', subSelErr);
+    throw subSelErr;
+  }
+
+  const { data: completedRows, error: compSelErr } = await supabase
+    .from('challenge_participants')
+    .select('challenge_id')
+    .eq('user_id', profileId)
+    .eq('status', 'completed');
+
+  if (compSelErr) {
+    console.error('resetMyChallengeSubmissions: participants select', compSelErr);
+    throw compSelErr;
+  }
+
+  const challengeIds = new Set<string>();
+  subRows?.forEach((r) => challengeIds.add(r.challenge_id));
+  completedRows?.forEach((r) => challengeIds.add(r.challenge_id));
+
+  const ids = [...challengeIds];
+
+  let deletedSubmissions = 0;
+  if (subRows?.length) {
+    const { error: delSubErr } = await supabase
+      .from('challenge_submissions')
+      .delete()
+      .eq('user_id', profileId);
+
+    if (delSubErr) {
+      console.error('resetMyChallengeSubmissions: submissions delete', delSubErr);
+      throw delSubErr;
+    }
+    deletedSubmissions = subRows.length;
+  }
+
+  if (ids.length === 0) {
+    return { deletedSubmissions, removedParticipations: 0 };
+  }
+
+  const { data: removedRows, error: delPartErr } = await supabase
+    .from('challenge_participants')
+    .delete()
+    .eq('user_id', profileId)
+    .in('challenge_id', ids)
+    .select('challenge_id');
+
+  if (delPartErr) {
+    console.error('resetMyChallengeSubmissions: participants delete', delPartErr);
+    throw delPartErr;
+  }
+
+  const uniqueChallenges = [...new Set((removedRows ?? []).map((r) => r.challenge_id))];
+  for (const challengeId of uniqueChallenges) {
+    const { error: rpcError } = await supabase.rpc('decrement_participant_count', {
+      p_challenge_id: challengeId,
+    });
+    if (rpcError) {
+      console.warn('resetMyChallengeSubmissions: decrement_participant_count', challengeId, rpcError);
+    }
+  }
+
+  return {
+    deletedSubmissions,
+    removedParticipations: removedRows?.length ?? 0,
+  };
 }
 
 // ============================================================================

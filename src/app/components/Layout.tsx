@@ -4,6 +4,7 @@ import { DemoBanner } from "./DemoBanner";
 import { Footer } from "./Footer";
 import { ScrollToTop } from "./ScrollToTop";
 import { ConfigError } from "./ConfigError";
+import { Toaster } from "./ui/sonner";
 import { isSupabaseConfigured } from "../utils/supabase";
 import { useAuth } from "../hooks/useAuth";
 import { useDemoMode } from "../hooks/useDemoMode";
@@ -17,6 +18,7 @@ export function Layout() {
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
       <Navbar />
+      <Toaster richColors closeButton position="top-center" />
       {!user && demoMode && <DemoBanner />}
       <ScrollToTop />
       <main className="flex-1">

@@ -44,6 +44,7 @@ import {
   fetchCommunityFeed,
   fetchUserLikedSubmissions,
   subscribeToFeed,
+  resetMyChallengeSubmissions,
 } from "../utils/challengeService";
 import { CreateChallengeModal } from "../components/CreateChallengeModal";
 import { SubmissionModal } from "../components/SubmissionModal";
@@ -306,6 +307,7 @@ export function CommunityChallenges() {
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [submissionModalOpen, setSubmissionModalOpen] = useState(false);
   const [selectedChallengeForSubmission, setSelectedChallengeForSubmission] = useState<Challenge | null>(null);
+  const [resettingMySubmissions, setResettingMySubmissions] = useState(false);
 
   const challengeById = useMemo(() => {
     const map = new Map<string, Challenge>();
@@ -464,6 +466,30 @@ export function CommunityChallenges() {
   // Handle successful submission
   const handleSubmissionSuccess = () => {
     fetchData();
+  };
+
+  const handleResetMyChallengeProgress = async () => {
+    if (!userProfileId) return;
+    const ok = window.confirm(
+      "Leave all community challenges you finished (removes them from your profile), delete your feed posts, and reset counts so you can join and submit again for a demo?",
+    );
+    if (!ok) return;
+    setResettingMySubmissions(true);
+    setError(null);
+    try {
+      const { deletedSubmissions, removedParticipations } = await resetMyChallengeSubmissions(userProfileId);
+      await fetchData();
+      if (deletedSubmissions === 0 && removedParticipations === 0) {
+        window.alert("Nothing to reset — you are not in any completed challenges and have no feed posts.");
+      }
+    } catch (err) {
+      console.error("Error resetting submissions:", err);
+      setError(
+        "Could not reset your challenges. Check you are signed in and that your Supabase policies allow updating challenge_participants and deleting challenge_submissions.",
+      );
+    } finally {
+      setResettingMySubmissions(false);
+    }
   };
 
   // Get challenge status for a user
@@ -749,6 +775,20 @@ export function CommunityChallenges() {
                 </button>
               ))}
             </div>
+            {user && userProfileId ? (
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-xs text-slate-500 dark:text-[#94C8AF]">Demo / redo</span>
+                <button
+                  type="button"
+                  disabled={resettingMySubmissions}
+                  onClick={handleResetMyChallengeProgress}
+                  title="Leave joined challenges, remove feed posts, and join again"
+                  className="inline-flex items-center justify-center px-3 py-2 rounded-lg text-xs font-semibold border border-slate-200 dark:border-[#1E3B34] bg-white dark:bg-[#132B23] text-slate-700 dark:text-[#BEEBD7] hover:bg-slate-50 dark:hover:bg-[#1E3B34] hover:border-[#2F8F6B]/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F8F6B]/40 disabled:opacity-50 disabled:pointer-events-none transition-colors min-h-[36px]"
+                >
+                  {resettingMySubmissions ? "Resetting…" : "Reset demo"}
+                </button>
+              </div>
+            ) : null}
 
             {/* Search & Filters - Mobile */}
             {activeTab !== "feed" && (
@@ -822,39 +862,41 @@ export function CommunityChallenges() {
                 CHALLENGE LIST
             ══════════════════════════════════════════════════════════════════════════════ */}
             {activeTab === "feed" ? (
-              feedItems.length === 0 ? (
-                <div className="bg-white dark:bg-[#132B23] rounded-xl border border-slate-200 dark:border-[#1E3B34] p-10 text-center">
-                  <div className="w-14 h-14 rounded-full bg-slate-100 dark:bg-[#1E3B34] flex items-center justify-center mx-auto mb-4">
-                    <Camera className="w-7 h-7 text-slate-400 dark:text-[#6DD4A8]" />
+              <>
+                {feedItems.length === 0 ? (
+                  <div className="bg-white dark:bg-[#132B23] rounded-xl border border-slate-200 dark:border-[#1E3B34] p-10 text-center">
+                    <div className="w-14 h-14 rounded-full bg-slate-100 dark:bg-[#1E3B34] flex items-center justify-center mx-auto mb-4">
+                      <Camera className="w-7 h-7 text-slate-400 dark:text-[#6DD4A8]" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">No submissions yet</h3>
+                    <p className="text-sm text-slate-600 dark:text-[#94C8AF] mb-5">
+                      Be the first to complete a challenge and share your progress.
+                    </p>
+                    <button
+                      onClick={() => setActiveTab("all")}
+                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#0F3D2E] text-white text-sm font-medium hover:bg-[#2F8F6B] transition-colors"
+                    >
+                      Browse challenges
+                    </button>
                   </div>
-                  <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">No submissions yet</h3>
-                  <p className="text-sm text-slate-600 dark:text-[#94C8AF] mb-5">
-                    Be the first to complete a challenge and share your progress.
-                  </p>
-                  <button
-                    onClick={() => setActiveTab("all")}
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#0F3D2E] text-white text-sm font-medium hover:bg-[#2F8F6B] transition-colors"
-                  >
-                    Browse challenges
-                  </button>
-                </div>
-              ) : (
-                <div className="max-w-xl mx-auto flex flex-col gap-4">
-                  {feedItems.map((item) => (
-                    <FeedCard
-                      key={item.id}
-                      item={item}
-                      isLiked={likedSubmissionIds.has(item.id)}
-                      userId={userProfileId}
-                      onOpenChallenge={(challengeId) => {
-                        const challenge = challengeById.get(challengeId);
-                        if (challenge) setSelectedChallenge(challenge);
-                      }}
-                      onLikeUpdate={handleLikeUpdate}
-                    />
-                  ))}
-                </div>
-              )
+                ) : (
+                  <div className="max-w-xl mx-auto flex flex-col gap-4">
+                    {feedItems.map((item) => (
+                      <FeedCard
+                        key={item.id}
+                        item={item}
+                        isLiked={likedSubmissionIds.has(item.id)}
+                        userId={userProfileId}
+                        onOpenChallenge={(challengeId) => {
+                          const challenge = challengeById.get(challengeId);
+                          if (challenge) setSelectedChallenge(challenge);
+                        }}
+                        onLikeUpdate={handleLikeUpdate}
+                      />
+                    ))}
+                  </div>
+                )}
+              </>
             ) : filteredChallenges.length === 0 ? (
               <div className="bg-white dark:bg-[#132B23] rounded-xl border border-slate-200 dark:border-[#1E3B34] p-10 text-center">
                 <div className="w-14 h-14 rounded-full bg-slate-100 dark:bg-[#1E3B34] flex items-center justify-center mx-auto mb-4">

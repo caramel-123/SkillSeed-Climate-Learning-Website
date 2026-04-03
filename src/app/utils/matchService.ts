@@ -417,6 +417,110 @@ export async function updateConnectionStatus(
   return data;
 }
 
+function formatSupabaseErr(err: unknown): string {
+  if (err && typeof err === 'object' && 'message' in err && typeof (err as { message: string }).message === 'string') {
+    return (err as { message: string }).message;
+  }
+  return String(err);
+}
+
+function connectionStatusIsOpen(status: string | null | undefined): boolean {
+  const s = (status ?? '').trim().toLowerCase();
+  return s !== 'accepted' && s !== 'declined';
+}
+
+/** Which of these connection ids still exist (RLS may allow DELETE request but delete 0 rows). */
+async function connectionIdsStillPresent(ids: string[]): Promise<string[]> {
+  if (ids.length === 0) return [];
+  const { data, error } = await supabase.from('connections').select('id').in('id', ids);
+  if (error) {
+    console.error('connectionIdsStillPresent', error);
+    throw error;
+  }
+  return (data ?? []).map((r) => r.id);
+}
+
+/**
+ * Withdraw mission applications that are still "open" (same set the profile UI labels Pending).
+ * Tries direct DELETE by id first, verifies rows are gone, then RPC `withdraw_my_open_connections` (014).
+ *
+ * PostgREST returns no error when RLS blocks every row — we must re-select to detect a no-op.
+ */
+export async function withdrawMyPendingApplications(
+  responderAuthUserId: string,
+): Promise<{ deleted: number; withdrawnIds: string[] }> {
+  if (!responderAuthUserId) {
+    return { deleted: 0, withdrawnIds: [] };
+  }
+
+  const { data: rows, error: selErr } = await supabase
+    .from('connections')
+    .select('id, status')
+    .eq('responder_id', responderAuthUserId);
+
+  if (selErr) {
+    console.error('withdrawMyPendingApplications: select', selErr);
+    throw selErr;
+  }
+
+  const withdrawnIds = (rows ?? [])
+    .filter((r) => connectionStatusIsOpen(r.status))
+    .map((r) => r.id)
+    .filter((id): id is string => typeof id === 'string' && id.length > 0);
+
+  if (withdrawnIds.length === 0) {
+    return { deleted: 0, withdrawnIds: [] };
+  }
+
+  const { error: delErr } = await supabase.from('connections').delete().in('id', withdrawnIds);
+
+  if (delErr) {
+    console.warn('withdrawMyPendingApplications: direct delete error, trying RPC', delErr);
+  }
+
+  let still = await connectionIdsStillPresent(withdrawnIds);
+  if (still.length === 0) {
+    return { deleted: withdrawnIds.length, withdrawnIds };
+  }
+
+  if (!delErr) {
+    console.warn(
+      'withdrawMyPendingApplications: DELETE returned OK but rows still exist (RLS blocked removal). Trying RPC.',
+      still.length,
+    );
+  }
+
+  const { error: rpcErr } = await supabase.rpc('withdraw_my_open_connections');
+
+  if (rpcErr) {
+    const rpcMsg = formatSupabaseErr(rpcErr);
+    const missingFn =
+      /withdraw_my_open_connections|schema cache|could not find the function|PGRST202|42883/i.test(
+        rpcMsg,
+      );
+    if (missingFn) {
+      throw new Error(
+        'Withdraw is not set up on Supabase yet. Open SQL Editor, run the full script in the repo file supabase/run_connections_withdraw_in_supabase.sql, then wait ~1 minute and try again (or restart the project if the API still says the function is missing). Technical detail: ' +
+          rpcMsg,
+      );
+    }
+    throw new Error(
+      'Could not withdraw applications — rows were not removed. Run supabase/run_connections_withdraw_in_supabase.sql in the SQL editor, then retry. Detail: ' +
+        rpcMsg,
+    );
+  }
+
+  still = await connectionIdsStillPresent(withdrawnIds);
+
+  if (still.length > 0) {
+    throw new Error(
+      `${still.length} application(s) are still in the database after withdraw. In Supabase SQL Editor, run the full script: supabase/run_connections_withdraw_in_supabase.sql, wait ~1 minute, then retry.`,
+    );
+  }
+
+  return { deleted: withdrawnIds.length, withdrawnIds };
+}
+
 /**
  * Get connections for a project (for posters)
  */

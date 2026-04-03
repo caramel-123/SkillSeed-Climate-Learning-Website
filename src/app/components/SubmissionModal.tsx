@@ -14,6 +14,26 @@ import { uploadProofPhoto, submitChallengeCompletion } from "../utils/challengeS
 import type { Challenge } from "../types/database";
 import type { ModerationResult } from "../utils/moderationService";
 
+/** Surface Supabase Storage / Postgrest errors instead of a generic toast. */
+function formatSubmissionError(err: unknown): string {
+  if (err == null) return "Something went wrong. Please try again.";
+  if (typeof err === "string") return err;
+  if (err instanceof Error) return err.message;
+  if (typeof err === "object") {
+    const e = err as Record<string, unknown>;
+    if (typeof e.message === "string" && e.message.trim()) return e.message.trim();
+    if (typeof e.error === "string" && e.error.trim()) return e.error.trim();
+    if (e.error && typeof e.error === "object") {
+      const nested = (e.error as Record<string, unknown>).message;
+      if (typeof nested === "string" && nested.trim()) return nested.trim();
+    }
+    if (typeof e.statusCode === "string" && typeof e.error === "string") {
+      return `${e.error} (${e.statusCode})`;
+    }
+  }
+  return "Could not complete submission. If you use Supabase: create a public storage bucket named challenge-photos with upload allowed for authenticated users, and ensure you are signed in.";
+}
+
 interface SubmissionModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -119,7 +139,8 @@ export function SubmissionModal({
       // For flagged/rejected, stay open so user can see the outcome
     } catch (err) {
       console.error("Submission error:", err);
-      setError("Failed to submit. Please try again.");
+      const raw = formatSubmissionError(err);
+      setError(raw.length > 320 ? `${raw.slice(0, 317)}…` : raw);
     } finally {
       setLoading(false);
       setUploading(false);

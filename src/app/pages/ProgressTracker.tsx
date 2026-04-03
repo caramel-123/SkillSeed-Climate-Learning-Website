@@ -2,10 +2,12 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router";
 import { MapPin, Clock, Award, Trophy, Target, Flame, Edit2 } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
-import { getCurrentProfile } from "../utils/matchService";
+import { getCurrentProfile, withdrawMyPendingApplications } from "../utils/matchService";
 import { supabase } from "../utils/supabase";
+import { resetMyChallengeSubmissions } from "../utils/challengeService";
 import { PageSkeleton } from "../components/ui/loading-skeleton";
 import { EmptyState } from "../components/ui/empty-state";
+import { toast } from "sonner";
 import type { Profile } from "../types/database";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -23,6 +25,12 @@ interface MissionWithProject {
     status: string;
     type: string;
   } | null;
+}
+
+/** Matches profile UI: anything not accepted/declined shows as "Pending". */
+function isOpenMissionApplication(m: MissionWithProject): boolean {
+  const s = (m.status ?? "").trim().toLowerCase();
+  return s !== "accepted" && s !== "declined";
 }
 
 interface ChallengeParticipantWithChallenge {
@@ -66,6 +74,8 @@ export function ProgressTracker() {
   const [streak, setStreak] = useState(0);
   const [leaderboardRank, setLeaderboardRank] = useState<number | string>("—");
   const [loading, setLoading] = useState(true);
+  const [resettingCommunityDemo, setResettingCommunityDemo] = useState(false);
+  const [withdrawingPendingMissions, setWithdrawingPendingMissions] = useState(false);
 
   // Derived
   const completedChallenges = challenges.filter(c => c.status === "completed").length;
@@ -108,7 +118,7 @@ export function ProgressTracker() {
   }, [user, authLoading]);
 
   // Mission applications (responder_id = Supabase auth user id, not profile row id)
-  const fetchMissions = async (authUserId: string) => {
+  const fetchMissions = async (authUserId: string): Promise<boolean> => {
     const { data, error } = await supabase
       .from("connections")
       .select("id, status, role, created_at, projects(title, location, duration, focus_area, status, type)")
@@ -117,10 +127,12 @@ export function ProgressTracker() {
 
     if (error) {
       console.error("Error fetching missions:", error);
-      return;
+      toast.error("Could not refresh mission list", { description: error.message });
+      return false;
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     setMissions((data as any) ?? []);
+    return true;
   };
 
   // Challenges — joined and completed
@@ -204,6 +216,65 @@ export function ProgressTracker() {
       else break;
     }
     setStreak(streakCount);
+  };
+
+  const handleWithdrawPendingMissions = async () => {
+    if (!user?.id) return;
+    const openCount = missions.filter(isOpenMissionApplication).length;
+    if (openCount === 0) {
+      toast.message("Nothing to withdraw", { description: "No open applications on this list." });
+      return;
+    }
+    const ok = window.confirm(
+      `Withdraw all ${openCount} open mission application${openCount === 1 ? "" : "s"}? You can apply again from the mission pages.`,
+    );
+    if (!ok) return;
+    setWithdrawingPendingMissions(true);
+    try {
+      const { deleted, withdrawnIds } = await withdrawMyPendingApplications(user.id);
+      if (deleted === 0) {
+        toast.error("No applications were removed", {
+          description:
+            "Run SQL migration 014_withdraw_my_open_connections_rpc.sql in Supabase, then try again.",
+        });
+        return;
+      }
+      setMissions((prev) => prev.filter((m) => !withdrawnIds.includes(m.id)));
+      window.dispatchEvent(new Event("skillseed:withdrew-mission-applications"));
+      const refreshed = await fetchMissions(user.id);
+      toast.success(`Withdrew ${deleted} application${deleted === 1 ? "" : "s"}`);
+      if (!refreshed) {
+        toast.message("List may be stale", { description: "Refresh the page if rows reappear." });
+      }
+    } catch (err) {
+      console.error("Withdraw pending missions failed:", err);
+      const msg = err instanceof Error ? err.message : String(err);
+      toast.error("Could not withdraw applications", { description: msg, duration: 12_000 });
+    } finally {
+      setWithdrawingPendingMissions(false);
+    }
+  };
+
+  const handleResetCommunityChallengesForDemo = async () => {
+    if (!profile?.id) return;
+    const ok = window.confirm(
+      "Leave your community challenges and remove your feed posts? They disappear from My Challenges here and on Community you can join again for a fresh demo.",
+    );
+    if (!ok) return;
+    setResettingCommunityDemo(true);
+    try {
+      await resetMyChallengeSubmissions(profile.id);
+      await fetchChallenges(profile.id);
+      await fetchLeaderboardRank(profile.id);
+      await fetchStreak(profile.id);
+    } catch (err) {
+      console.error("Reset community challenges failed:", err);
+      window.alert(
+        "Could not reset. Ensure Supabase allows deleting your challenge_participants and challenge_submissions rows.",
+      );
+    } finally {
+      setResettingCommunityDemo(false);
+    }
   };
 
   // ── Loading / Auth Guards ───────────────────────────────────────────────────
@@ -329,7 +400,20 @@ export function ProgressTracker() {
           SECTION 1 — My Missions
           ══════════════════════════════════════════════════════════════════════ */}
       <div className="max-w-4xl mx-auto px-6 md:px-8 py-10">
-        <h2 className="text-lg font-bold text-card-foreground mb-5">My Missions</h2>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
+          <h2 className="text-lg font-bold text-card-foreground">My Missions</h2>
+          {missions.some(isOpenMissionApplication) && user?.id ? (
+            <button
+              type="button"
+              disabled={withdrawingPendingMissions}
+              onClick={handleWithdrawPendingMissions}
+              title="Remove all pending applications from your profile"
+              className="inline-flex items-center justify-center px-3 py-2 rounded-lg text-xs font-semibold border border-slate-200 dark:border-[#1E3B34] bg-white dark:bg-[#132B23] text-slate-700 dark:text-[#BEEBD7] hover:bg-slate-50 dark:hover:bg-[#1E3B34] hover:border-[#2F8F6B]/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F8F6B]/40 disabled:opacity-50 disabled:pointer-events-none transition-colors min-h-[36px] shrink-0"
+            >
+              {withdrawingPendingMissions ? "Withdrawing…" : "Withdraw open applications"}
+            </button>
+          ) : null}
+        </div>
 
         {missions.length === 0 ? (
           <EmptyState
@@ -389,7 +473,20 @@ export function ProgressTracker() {
           SECTION 2 — My Challenges
           ══════════════════════════════════════════════════════════════════════ */}
       <div className="max-w-4xl mx-auto px-6 md:px-8 pb-10">
-        <h2 className="text-lg font-bold text-card-foreground mb-5">My Challenges</h2>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
+          <h2 className="text-lg font-bold text-card-foreground">My Challenges</h2>
+          {challenges.length > 0 && profile?.id ? (
+            <button
+              type="button"
+              disabled={resettingCommunityDemo}
+              onClick={handleResetCommunityChallengesForDemo}
+              title="Leave community challenges and clear feed posts so you can join again"
+              className="inline-flex items-center justify-center px-3 py-2 rounded-lg text-xs font-semibold border border-slate-200 dark:border-[#1E3B34] bg-white dark:bg-[#132B23] text-slate-700 dark:text-[#BEEBD7] hover:bg-slate-50 dark:hover:bg-[#1E3B34] hover:border-[#2F8F6B]/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F8F6B]/40 disabled:opacity-50 disabled:pointer-events-none transition-colors min-h-[36px] shrink-0"
+            >
+              {resettingCommunityDemo ? "Resetting…" : "Reset for demo"}
+            </button>
+          ) : null}
+        </div>
 
         {challenges.length === 0 ? (
           <EmptyState

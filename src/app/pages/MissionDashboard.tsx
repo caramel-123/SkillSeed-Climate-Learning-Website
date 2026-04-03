@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Link, useSearchParams } from "react-router";
+import { Link, useSearchParams, useLocation } from "react-router";
 import {
   Search,
   MapPin,
@@ -167,6 +167,7 @@ function KPIStripSkeleton() {
 
 export function MissionDashboard() {
   const { user } = useAuth();
+  const location = useLocation();
   const [searchParams] = useSearchParams();
   const [workTab, setWorkTab] = useState<WorkTabKey>(() => workTabFromSearchParams(searchParams));
 
@@ -197,6 +198,13 @@ export function MissionDashboard() {
   >({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [missionDataRevision, setMissionDataRevision] = useState(0);
+
+  useEffect(() => {
+    const bump = () => setMissionDataRevision((n) => n + 1);
+    window.addEventListener("skillseed:withdrew-mission-applications", bump);
+    return () => window.removeEventListener("skillseed:withdrew-mission-applications", bump);
+  }, []);
 
   // Close mobile filters on outside click
   useEffect(() => {
@@ -337,7 +345,7 @@ export function MissionDashboard() {
       }
     }
     fetchData();
-  }, [user]);
+  }, [user, location.pathname, missionDataRevision]);
 
   // Validation: Filter out test/placeholder missions
   function isValidMission(m: Project): boolean {
