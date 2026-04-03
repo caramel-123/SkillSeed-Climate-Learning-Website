@@ -389,6 +389,8 @@ export function FundingResources() {
     }
 
     const isSaved = savedIds.includes(fundingId);
+    // Optimistic: update UI immediately; revert on error.
+    setSavedIds((ids) => (isSaved ? ids.filter((id) => id !== fundingId) : [...ids, fundingId]));
     try {
       if (isSaved) {
         await supabase
@@ -396,15 +398,15 @@ export function FundingResources() {
           .delete()
           .eq("funding_id", fundingId)
           .eq("user_id", currentProfile.id);
-        setSavedIds(ids => ids.filter(id => id !== fundingId));
       } else {
         await supabase
           .from("saved_funding")
           .insert({ funding_id: fundingId, user_id: currentProfile.id });
-        setSavedIds(ids => [...ids, fundingId]);
       }
     } catch (err) {
       console.error("Error toggling save:", err);
+      // Revert optimistic update.
+      setSavedIds((ids) => (isSaved ? [...ids, fundingId] : ids.filter((id) => id !== fundingId)));
     }
   };
 

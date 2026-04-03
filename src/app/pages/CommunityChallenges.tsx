@@ -435,19 +435,34 @@ export function CommunityChallenges() {
     try {
       const isJoined = joinedChallengeIds.has(challengeId);
       if (isJoined) {
-        await leaveChallenge(challengeId, userProfileId);
+        // Optimistic: reflect the change immediately.
         setJoinedChallengeIds((prev) => {
-          const newSet = new Set(prev);
-          newSet.delete(challengeId);
-          return newSet;
+          const next = new Set(prev);
+          next.delete(challengeId);
+          return next;
         });
+        setChallenges((prev) =>
+          prev.map((c) =>
+            c.id === challengeId
+              ? { ...c, participant_count: Math.max(0, (c.participant_count ?? 0) - 1) }
+              : c
+          )
+        );
+        await leaveChallenge(challengeId, userProfileId);
       } else {
-        await joinChallenge(challengeId, userProfileId);
+        // Optimistic: reflect the change immediately.
         setJoinedChallengeIds((prev) => new Set(prev).add(challengeId));
+        setChallenges((prev) =>
+          prev.map((c) =>
+            c.id === challengeId ? { ...c, participant_count: (c.participant_count ?? 0) + 1 } : c
+          )
+        );
+        await joinChallenge(challengeId, userProfileId);
       }
-      fetchData();
     } catch (err) {
       console.error("Error joining/leaving challenge:", err);
+      // Best-effort: refresh from server to recover from optimistic mismatch.
+      void fetchData();
     } finally {
       setJoiningId(null);
     }
@@ -456,8 +471,18 @@ export function CommunityChallenges() {
   // Handle create challenge
   const handleCreateChallenge = async (data: CreateChallengeInput) => {
     if (!userProfileId) return;
-    await createChallenge(userProfileId, data);
-    fetchData();
+    try {
+      const created = await createChallenge(userProfileId, data);
+      // Optimistic: immediately add the new challenge to the list.
+      setChallenges((prev) => [created, ...prev]);
+      setCommunityStats((prev) => ({
+        ...prev,
+        totalChallenges: (prev.totalChallenges ?? 0) + 1,
+      }));
+    } catch (err) {
+      console.error("Error creating challenge:", err);
+      void fetchData();
+    }
   };
 
   // Handle opening submission modal
@@ -468,7 +493,14 @@ export function CommunityChallenges() {
 
   // Handle successful submission
   const handleSubmissionSuccess = () => {
-    fetchData();
+    // Optimistic: mark the selected challenge completed and keep UI snappy.
+    if (selectedChallengeForSubmission?.id) {
+      const id = selectedChallengeForSubmission.id;
+      setCompletedChallengeIds((prev) => new Set(prev).add(id));
+      setJoinedChallengeIds((prev) => new Set(prev).add(id));
+    }
+    // Refresh in background for feed + stats.
+    void fetchData();
   };
 
   const handleResetMyChallengeProgress = async () => {
