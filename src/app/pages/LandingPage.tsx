@@ -278,25 +278,6 @@ export function LandingPage() {
         <HeroAmbience reduced={reduceMotion} />
         <FloatingSeeds reduced={reduceMotion} />
 
-        {/* LinkedIn / brand cover — full banner (object-cover preserves composition on narrow viewports) */}
-        <motion.div
-          className="relative z-[1] max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-10 md:mb-12"
-          initial={reduceMotion ? false : { opacity: 0, y: 12 }}
-          animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}>
-          <div className="relative w-full overflow-hidden rounded-xl sm:rounded-2xl border border-slate-200/90 dark:border-white/10 shadow-md dark:shadow-none bg-[#0B1A14] ring-1 ring-black/5 dark:ring-white/10">
-            <div className="relative w-full h-[clamp(7.5rem,22vw,17.5rem)] sm:h-[clamp(8.5rem,20vw,18rem)]">
-              <img
-                src="/skillseed-hero-cover.png"
-                alt="SkillSeed — learn. grow. connect."
-                className="absolute inset-0 h-full w-full object-cover object-center"
-                decoding="async"
-                fetchPriority="high"
-              />
-            </div>
-          </div>
-        </motion.div>
-
         <motion.div
           className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
           initial="hidden"
