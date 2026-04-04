@@ -16,12 +16,12 @@ export function Layout() {
   const { demoMode } = useDemoMode();
 
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground">
+    <div className="min-h-screen flex flex-col bg-background text-foreground overflow-x-hidden min-w-0">
       <Navbar />
       <Toaster richColors closeButton position="top-center" />
       {!user && demoMode && <DemoBanner />}
       <ScrollToTop />
-      <main className="flex-1">
+      <main className="flex-1 min-w-0">
         {isSupabaseConfigured ? <Outlet /> : <ConfigError />}
       </main>
       {!hideFooter && <Footer />}

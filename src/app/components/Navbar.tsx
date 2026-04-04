@@ -26,6 +26,10 @@ export function Navbar() {
 
   useEffect(() => setMounted(true), []);
 
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [location.pathname]);
+
   // Helper to get user display name from Supabase user_metadata
   const getUserName = () => {
     if (!user) return "";
@@ -66,19 +70,19 @@ export function Navbar() {
 
   return (
     <nav
-      className="sticky top-0 z-50 bg-white/95 dark:bg-[#0D1F18]/95 backdrop-blur-sm border-b border-border dark:border-[#1E3B34] shadow-sm"
+      className="sticky top-0 z-50 bg-white/95 dark:bg-[#0D1F18]/95 backdrop-blur-sm border-b border-border dark:border-[#1E3B34] shadow-sm pt-[env(safe-area-inset-top,0px)]"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 relative">
 
           {/* ── Logo ── */}
-          <Link to="/" className="flex items-center gap-2 shrink-0">
+          <Link to="/" className="flex items-center gap-1.5 sm:gap-2 shrink-0 min-h-[44px] min-w-0 pr-1">
             <img 
               src="/logo.png" 
               alt="SkillSeed Logo" 
-              className="w-8 h-8 object-contain"
+              className="w-8 h-8 sm:w-9 sm:h-9 object-contain shrink-0"
             />
-            <span className="text-xl" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800 }}>
+            <span className="text-lg sm:text-xl truncate" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800 }}>
               <span className="text-[#0F3D2E] dark:text-[#BEEBD7]">Skill</span>
               <span className="text-[#2F8F6B] dark:text-[#6DD4A8]">Seed</span>
             </span>
@@ -210,14 +214,17 @@ export function Navbar() {
           </div>
 
           {/* ── Mobile controls ── */}
-          <div className="md:hidden flex items-center gap-1">
+          <div className="md:hidden flex items-center gap-0.5 shrink-0">
             {mounted && <ThemeToggle />}
             <button
+              type="button"
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="p-2 rounded-lg dark:!text-emerald-200"
+              className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center rounded-lg dark:!text-emerald-200"
               style={{ color: "#0F3D2E" }}
+              aria-expanded={mobileOpen}
+              aria-label={mobileOpen ? "Close menu" : "Open menu"}
             >
-              {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
         </div>
@@ -225,11 +232,11 @@ export function Navbar() {
 
       {/* ── Mobile Menu ── */}
       {mobileOpen && (
-        <div className="md:hidden border-t border-gray-100 dark:border-[#1E3B34] bg-white dark:bg-[#0D1F18] px-4 py-4 space-y-1">
+        <div className="md:hidden border-t border-gray-100 dark:border-[#1E3B34] bg-white dark:bg-[#0D1F18] px-3 py-3 space-y-0.5 max-h-[min(70vh,28rem)] overflow-y-auto overscroll-contain">
           {navLinks.map((link) => (
             <div key={link.label}>
               {link.comingSoon ? (
-                <span className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-gray-400 text-sm">
+                <span className="flex items-center gap-2 px-3 min-h-[48px] rounded-lg text-gray-400 text-sm">
                   {link.label}
                   <span className="text-xs px-1.5 py-0.5 rounded-full"
                     style={{ background: "#E6F4EE", color: "#2F8F6B", fontSize: "10px", fontWeight: 600 }}>
@@ -240,7 +247,7 @@ export function Navbar() {
                 <Link
                   to={link.href}
                   onClick={() => setMobileOpen(false)}
-                  className="block px-3 py-2.5 rounded-lg text-sm"
+                  className="flex items-center px-3 min-h-[48px] rounded-lg text-sm active:bg-slate-100 dark:active:bg-[#17342B]"
                   style={{ color: location.pathname === link.href ? "#0F3D2E" : "#374151", background: location.pathname === link.href ? "#E6F4EE" : "transparent", fontWeight: location.pathname === link.href ? 600 : 400 }}
                 >
                   {link.label}
@@ -249,7 +256,7 @@ export function Navbar() {
             </div>
           ))}
 
-          <div className="pt-3 flex flex-col gap-2 border-t border-gray-100 dark:border-[#1E3B34] mt-2">
+          <div className="pt-3 flex flex-col gap-2 border-t border-gray-100 dark:border-[#1E3B34] mt-2 pb-[env(safe-area-inset-bottom,0px)]">
             <div className="flex items-center justify-between px-1 pb-1">
               <span className="text-xs text-slate-500 dark:text-[#94C8AF]">Theme</span>
               <div className="flex items-center gap-1">
@@ -260,6 +267,7 @@ export function Navbar() {
                   const active = resolvedTheme === id;
                   return (
                     <button
+                      type="button"
                       key={id}
                       onClick={() => setTheme(id)}
                       className={`p-2.5 rounded-lg border transition-colors min-h-[44px] min-w-[44px] ${
@@ -288,12 +296,12 @@ export function Navbar() {
                   </div>
                 </div>
                 <Link to="/tracker" onClick={() => setMobileOpen(false)}
-                  className="text-center px-4 py-2.5 rounded-lg text-sm"
+                  className="inline-flex items-center justify-center min-h-[48px] text-center px-4 rounded-lg text-sm"
                   style={{ color: "#0F3D2E", fontWeight: 600, border: "1.5px solid #0F3D2E" }}>
                   My Tracker
                 </Link>
-                <button onClick={() => { signOut(); setMobileOpen(false); navigate("/"); }}
-                  className="text-center px-4 py-2.5 rounded-lg text-sm"
+                <button type="button" onClick={() => { signOut(); setMobileOpen(false); navigate("/"); }}
+                  className="inline-flex items-center justify-center min-h-[48px] text-center px-4 rounded-lg text-sm"
                   style={{ color: "#EF4444", fontWeight: 500, border: "1px solid #FECACA" }}>
                   Log Out
                 </button>
@@ -301,19 +309,20 @@ export function Navbar() {
             ) : (
               <>
                 <button
+                  type="button"
                   onClick={() => { handleTryDemo(); setMobileOpen(false); }}
-                  className="text-center px-4 py-2.5 rounded-lg text-sm"
+                  className="inline-flex items-center justify-center min-h-[48px] text-center px-4 rounded-lg text-sm"
                   style={{ color: "#0F3D2E", fontWeight: 600, border: "1px solid #E5E7EB" }}
                 >
                   Try demo
                 </button>
-                <button onClick={() => { navigate("/auth?tab=login"); setMobileOpen(false); }}
-                  className="text-center px-4 py-2.5 rounded-lg text-sm"
+                <button type="button" onClick={() => { navigate("/auth?tab=login"); setMobileOpen(false); }}
+                  className="inline-flex items-center justify-center min-h-[48px] text-center px-4 rounded-lg text-sm"
                   style={{ color: "#0F3D2E", fontWeight: 500, border: "1px solid #E5E7EB" }}>
                   Log In
                 </button>
-                <button onClick={() => { navigate("/auth?tab=signup"); setMobileOpen(false); }}
-                  className="text-center px-4 py-2.5 rounded-lg text-white text-sm flex items-center justify-center gap-1.5"
+                <button type="button" onClick={() => { navigate("/auth?tab=signup"); setMobileOpen(false); }}
+                  className="inline-flex items-center justify-center min-h-[48px] text-center px-4 rounded-lg text-white text-sm gap-1.5"
                   style={{ background: "linear-gradient(135deg, #0F3D2E 0%, #2F8F6B 100%)", fontWeight: 600 }}>
                   <Sprout className="w-3.5 h-3.5" />
                   Sign Up Free

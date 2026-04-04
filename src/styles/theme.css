@@ -555,3 +555,11 @@ svg {
     line-height: 1.5;
   }
 }
+
+/* Mobile: avoid accidental horizontal page scroll; keeps flex children from blowing out width */
+html,
+body,
+#root {
+  overflow-x: clip;
+  max-width: 100vw;
+}

@@ -306,7 +306,7 @@ export function QuestDetail() {
   return (
     <div className="min-h-screen bg-[#F9FAFB] dark:bg-[#0D1F18]">
       {/* Back navigation */}
-      <div className="bg-[#0F3D2E] px-6 md:px-8 py-4">
+      <div className="bg-[#0F3D2E] px-4 sm:px-6 md:px-8 py-3 sm:py-4">
         <div className="max-w-7xl mx-auto">
           <button
             onClick={() => navigate('/hands-on')}
@@ -319,7 +319,7 @@ export function QuestDetail() {
       </div>
 
       {/* Main content */}
-      <div className="max-w-7xl mx-auto px-6 md:px-8 py-8 md:py-10 flex flex-col lg:flex-row gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-6 sm:py-8 md:py-10 flex flex-col lg:flex-row gap-6 lg:gap-8">
         {/* LEFT — Quest steps */}
         <div className="flex-1 min-w-0">
           {/* Quest header */}
@@ -489,7 +489,7 @@ export function QuestDetail() {
                   onChange={e => setReflection(e.target.value)}
                   placeholder="What did you do? What did you learn? What impact did it make?"
                   rows={4}
-                  className="w-full border border-border dark:border-[#1E3B34] bg-input-background dark:bg-[#0D1F18] rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#2F8F6B]/30 focus:border-[#2F8F6B] resize-none"
+                  className="w-full border border-border dark:border-[#1E3B34] bg-input-background dark:bg-[#0D1F18] rounded-xl px-4 py-3 text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#2F8F6B]/30 focus:border-[#2F8F6B] resize-none"
                 />
                 <p
                   className={`text-xs mt-2 text-right font-medium ${

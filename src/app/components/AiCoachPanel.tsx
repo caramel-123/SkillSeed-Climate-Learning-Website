@@ -172,7 +172,7 @@ Tone: concise, practical, encouraging. Philippines context when relevant. Simple
   };
 
   return (
-    <div className="bg-white dark:bg-[#132B23] border border-border dark:border-[#1E3B34] rounded-xl overflow-hidden lg:sticky lg:top-20 flex flex-col h-[500px] lg:h-[560px] shadow-sm">
+    <div className="bg-white dark:bg-[#132B23] border border-border dark:border-[#1E3B34] rounded-xl overflow-hidden lg:sticky lg:top-24 flex flex-col h-[min(60dvh,28rem)] min-h-[17.5rem] lg:h-[560px] lg:min-h-0 shadow-sm">
       {/* Header */}
       <div className="bg-[#0F3D2E] px-4 py-3">
         <p className="text-white text-sm font-bold">Environmental Coach</p>
@@ -224,19 +224,19 @@ Tone: concise, practical, encouraging. Philippines context when relevant. Simple
       </div>
 
       {/* Input */}
-      <div className="p-3 border-t border-border dark:border-[#1E3B34] flex gap-2 bg-white dark:bg-[#132B23]">
+      <div className="p-3 border-t border-border dark:border-[#1E3B34] flex flex-col gap-2 sm:flex-row sm:items-stretch bg-white dark:bg-[#132B23] pb-[max(0.75rem,env(safe-area-inset-bottom))]">
         <input
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Ask your coach..."
-          className="flex-1 text-sm border border-border dark:border-[#1E3B34] bg-input-background dark:bg-[#0D1F18] rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#2F8F6B]/30 focus:border-[#2F8F6B]"
+          className="flex-1 min-w-0 text-base sm:text-sm border border-border dark:border-[#1E3B34] bg-input-background dark:bg-[#0D1F18] rounded-lg px-3 py-3 sm:py-2.5 focus:outline-none focus:ring-2 focus:ring-[#2F8F6B]/30 focus:border-[#2F8F6B]"
         />
         <button
           type="button"
           onClick={sendMessage}
           disabled={!input.trim() || loading}
-          className="min-h-[40px] bg-[#0F3D2E] dark:bg-[#2F8F6B] text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-[#2F8F6B] dark:hover:bg-[#6DD4A8] dark:hover:text-[#0A2E20] transition-colors disabled:opacity-40"
+          className="min-h-[48px] shrink-0 w-full sm:w-auto bg-[#0F3D2E] dark:bg-[#2F8F6B] text-white text-sm font-semibold px-4 py-2.5 rounded-lg hover:bg-[#2F8F6B] dark:hover:bg-[#6DD4A8] dark:hover:text-[#0A2E20] transition-colors disabled:opacity-40"
         >
           Send
         </button>

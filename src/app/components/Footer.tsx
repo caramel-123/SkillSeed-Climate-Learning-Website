@@ -4,7 +4,7 @@ import { Leaf, Twitter, Instagram, Github, Linkedin, Mail } from "lucide-react";
 export function Footer() {
   return (
     <footer className="bg-[#0A2E20] text-white">
-      <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8 py-14">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-14 pb-[max(3rem,env(safe-area-inset-bottom))]">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
           {/* Brand */}
           <div className="md:col-span-1">
@@ -19,17 +19,17 @@ export function Footer() {
             <p className="text-[#94C8AF] text-sm leading-relaxed max-w-xs">
               Connecting climate skills with real-world missions. Learn, act, and grow together.
             </p>
-            <div className="flex gap-2 mt-5">
-              <a href="#" className="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center hover:bg-[#2F8F6B] transition-colors" aria-label="Twitter">
+            <div className="flex flex-wrap gap-2 mt-5">
+              <a href="#" className="min-h-[44px] min-w-[44px] rounded-lg bg-white/10 inline-flex items-center justify-center hover:bg-[#2F8F6B] transition-colors" aria-label="Twitter">
                 <Twitter className="w-4 h-4" />
               </a>
-              <a href="#" className="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center hover:bg-[#2F8F6B] transition-colors" aria-label="Instagram">
+              <a href="#" className="min-h-[44px] min-w-[44px] rounded-lg bg-white/10 inline-flex items-center justify-center hover:bg-[#2F8F6B] transition-colors" aria-label="Instagram">
                 <Instagram className="w-4 h-4" />
               </a>
-              <a href="#" className="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center hover:bg-[#2F8F6B] transition-colors" aria-label="LinkedIn">
+              <a href="#" className="min-h-[44px] min-w-[44px] rounded-lg bg-white/10 inline-flex items-center justify-center hover:bg-[#2F8F6B] transition-colors" aria-label="LinkedIn">
                 <Linkedin className="w-4 h-4" />
               </a>
-              <a href="#" className="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center hover:bg-[#2F8F6B] transition-colors" aria-label="GitHub">
+              <a href="#" className="min-h-[44px] min-w-[44px] rounded-lg bg-white/10 inline-flex items-center justify-center hover:bg-[#2F8F6B] transition-colors" aria-label="GitHub">
                 <Github className="w-4 h-4" />
               </a>
             </div>
@@ -47,7 +47,7 @@ export function Footer() {
                 { label: "Funding Resources", to: "/funding" },
               ].map((item) => (
                 <li key={item.label}>
-                  <Link to={item.to} className="text-[#94C8AF] text-sm hover:text-white transition-colors">
+                  <Link to={item.to} className="text-[#94C8AF] text-sm hover:text-white transition-colors inline-flex items-center min-h-[40px] py-1.5 -my-0.5">
                     {item.label}
                   </Link>
                 </li>
@@ -61,7 +61,7 @@ export function Footer() {
             <ul className="space-y-2.5 text-[#94C8AF] text-sm">
               {["Urban Gardening", "Composting", "Repair & Reuse", "Energy Saving", "Reforestation", "Marine Conservation"].map((item) => (
                 <li key={item}>
-                  <Link to="/dashboard" className="hover:text-white transition-colors">{item}</Link>
+                  <Link to="/dashboard" className="hover:text-white transition-colors inline-flex items-center min-h-[40px] py-1.5 -my-0.5">{item}</Link>
                 </li>
               ))}
             </ul>
@@ -79,15 +79,15 @@ export function Footer() {
                 { label: "Verifier Portal", to: "/verifier-login" },
               ].map((item) => (
                 <li key={item.label}>
-                  <Link to={item.to} className="text-[#94C8AF] text-sm hover:text-white transition-colors">
+                  <Link to={item.to} className="text-[#94C8AF] text-sm hover:text-white transition-colors inline-flex items-center min-h-[40px] py-1.5 -my-0.5">
                     {item.label}
                   </Link>
                 </li>
               ))}
             </ul>
             <div className="mt-5 flex items-center gap-2 text-[#94C8AF] text-sm">
-              <Mail className="w-4 h-4" />
-              <Link to="/contact" className="hover:text-white transition-colors">
+              <Mail className="w-4 h-4 shrink-0" />
+              <Link to="/contact" className="hover:text-white transition-colors inline-flex items-center min-h-[44px] py-2">
                 Contact Us
               </Link>
             </div>
