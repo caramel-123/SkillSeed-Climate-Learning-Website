@@ -290,7 +290,7 @@ export function HandsOnQuests() {
   // Main Render
   // ══════════════════════════════════════════════════════════════════════════
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#0D1F18]">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#0D1F18] pb-[max(1.5rem,env(safe-area-inset-bottom,0px))]">
       {/* ─────────────────────────────────────────────────────────────────────
           Page Header (matches Missions pattern)
       ───────────────────────────────────────────────────────────────────── */}
@@ -304,7 +304,7 @@ export function HandsOnQuests() {
               <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white" style={{ fontFamily: "'Manrope', sans-serif" }}>
                 Learn by Doing
               </h1>
-              <p className="text-sm text-slate-600 dark:text-[#94C8AF] mt-1">
+              <p className="text-sm text-slate-600 dark:text-[#94C8AF] mt-1 leading-relaxed text-pretty">
                 Complete real-world quests, earn badges, and build a verified record of climate action.
               </p>
             </div>
@@ -326,7 +326,7 @@ export function HandsOnQuests() {
         {/* ─────────────────────────────────────────────────────────────────────
             KPI Strip (matches Missions pattern)
         ───────────────────────────────────────────────────────────────────── */}
-        <div className="grid grid-cols-1 min-[400px]:grid-cols-3 gap-2 sm:gap-3">
+        <div className="grid grid-cols-1 min-[400px]:grid-cols-3 gap-2 sm:gap-3 px-0.5 sm:px-0">
           <button
             onClick={() => setActiveTab('beginner')}
             className={`text-left bg-white dark:bg-[#132B23] rounded-xl border p-3 sm:p-4 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F8F6B] min-h-[44px] ${

@@ -272,7 +272,7 @@ export function LandingPage() {
     <div className="overflow-x-hidden">
 
       {/* ════════════════ HERO ════════════════ */}
-      <section className="relative pt-20 pb-16 md:pb-20 lg:pb-24 overflow-hidden bg-white dark:bg-[#0D1F18]">
+      <section className="relative pt-20 overflow-hidden bg-white dark:bg-[#0D1F18] pb-16 max-md:pb-[calc(4rem+env(safe-area-inset-bottom,0px))] md:pb-20 lg:pb-24">
         {/* subtle dot pattern */}
         <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: "radial-gradient(#0F3D2E 1px, transparent 1px)", backgroundSize: "32px 32px" }} aria-hidden="true" />
         <HeroAmbience reduced={reduceMotion} />
@@ -288,10 +288,10 @@ export function LandingPage() {
           </motion.p>
           <motion.h1
             variants={heroItem}
-            className="mb-5 text-slate-900 dark:text-[#BEEBD7] text-balance"
-            style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, fontSize: "clamp(2.25rem, 5vw, 3.25rem)", lineHeight: 1.1, letterSpacing: "-0.02em" }}>
-            Where climate action<br className="hidden sm:block" />
-            <span className="text-[#2F8F6B] dark:text-[#6DD4A8]">finds its people.</span>
+            className="mb-5 text-balance tracking-tight"
+            style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, fontSize: "clamp(2.25rem, 5vw, 3.25rem)", lineHeight: 1.15, letterSpacing: "-0.02em" }}>
+            <span className="block text-slate-900 dark:text-[#BEEBD7]">Where climate action</span>
+            <span className="block text-[#2F8F6B] dark:text-[#6DD4A8] mt-1 sm:mt-1.5">finds its people.</span>
           </motion.h1>
 
           <motion.p
@@ -307,13 +307,13 @@ export function LandingPage() {
               onClick={handleJoinProject}
               whileHover={reduceMotion ? undefined : { y: -1 }}
               whileTap={reduceMotion ? undefined : { scale: 0.98 }}
-              className="inline-flex items-center justify-center gap-2 min-h-[48px] px-6 rounded-lg text-white font-semibold transition-all duration-200 cursor-pointer bg-[#0F3D2E] hover:bg-[#1a5241] dark:bg-white dark:text-[#0F3D2E] dark:hover:bg-[#E8F5EF] active:scale-[0.98]"
+              className="inline-flex items-center justify-center gap-2 min-h-[48px] px-6 rounded-lg font-semibold transition-colors duration-200 cursor-pointer bg-[#0F3D2E] text-white hover:bg-[#1a5241] active:bg-[#163d32] dark:bg-white dark:text-[#0F3D2E] dark:hover:bg-[#E8F5EF] dark:active:bg-[#d4efe4] dark:active:text-[#0F3D2E]"
               style={{ fontFamily: "'Manrope', sans-serif" }}>
               <Users className="w-4 h-4" /> Join a Project
             </motion.button>
-            <motion.div whileHover={reduceMotion ? undefined : { y: -1 }} className="inline-flex justify-center">
+            <motion.div whileHover={reduceMotion ? undefined : { y: -1 }} className="inline-flex justify-center w-full sm:w-auto">
             <Link to="/hands-on"
-                className="inline-flex items-center justify-center gap-2 min-h-[48px] px-6 rounded-lg transition-all duration-200 bg-white border border-slate-200 text-slate-700 hover:border-slate-300 hover:bg-slate-50 dark:bg-transparent dark:border-[#6DD4A8]/60 dark:text-[#BEEBD7] dark:hover:bg-white/10 font-semibold active:scale-[0.98]"
+                className="inline-flex items-center justify-center gap-2 min-h-[48px] px-6 rounded-lg transition-colors duration-200 w-full sm:w-auto bg-white border border-slate-200 text-slate-700 hover:border-slate-300 hover:bg-slate-50 active:bg-slate-100 active:text-slate-900 dark:bg-[#132B23]/80 dark:border-[#6DD4A8]/55 dark:text-[#E8FFF4] dark:hover:bg-[#17342B] dark:active:bg-[#1E3B34] dark:active:text-[#E8FFF4] font-semibold"
                 style={{ fontFamily: "'Manrope', sans-serif" }}>
                 <Sprout className="w-4 h-4" /> Browse Quests
             </Link>
@@ -321,21 +321,21 @@ export function LandingPage() {
           </motion.div>
 
           {/* Social proof - honest pre-launch indicators */}
-          <motion.div variants={heroItem} className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm text-slate-500 dark:text-[#94C8AF]">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#E8F5EF] dark:bg-[#1E3B34] text-[#0F3D2E] dark:text-[#6DD4A8] text-xs font-medium">
-              <Leaf className="w-3 h-3" /> Beta
+          <motion.div variants={heroItem} className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2.5 text-sm text-slate-600 dark:text-[#B8E8D0]">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#E8F5EF] dark:bg-[#132B23] text-[#0F3D2E] dark:text-[#6DD4A8] text-xs font-medium border border-[#2F8F6B]/15 dark:border-[#6DD4A8]/25">
+              <Leaf className="w-3 h-3 shrink-0" /> Beta
             </span>
-            <span className="flex items-center gap-1.5">
-              <Globe className="w-3.5 h-3.5" /> Starting in Philippines
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-50 dark:bg-[#132B23] border border-slate-200/80 dark:border-[#6DD4A8]/20 text-xs font-medium">
+              <Globe className="w-3.5 h-3.5 shrink-0 text-[#2F8F6B] dark:text-[#6DD4A8]" /> Starting in Philippines
             </span>
-            <span className="hidden sm:inline text-slate-300 dark:text-[#1E3B34]">|</span>
-            <span>Free to join</span>
+            <span className="hidden sm:inline text-slate-300 dark:text-[#2A4D42]">|</span>
+            <span className="inline-flex items-center px-3 py-1.5 rounded-full bg-slate-50 dark:bg-[#132B23] border border-slate-200/80 dark:border-[#6DD4A8]/20 text-xs font-medium">Free to join</span>
           </motion.div>
         </motion.div>
 
         {/* Mission & Vision cards */}
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 md:mt-20">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 md:mt-20 pb-1">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-5">
             <motion.div
               className="rounded-xl p-6 sm:p-7 text-left bg-slate-50 dark:bg-[#132B23] border border-slate-100 dark:border-[#6DD4A8]/20"
               variants={scrollFade}

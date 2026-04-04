@@ -563,3 +563,9 @@ body,
   overflow-x: clip;
   max-width: 100vw;
 }
+
+/* iOS Safari: disable default tap flash; use explicit active: styles instead (avoids white veil on dark UI) */
+a,
+button {
+  -webkit-tap-highlight-color: transparent;
+}
