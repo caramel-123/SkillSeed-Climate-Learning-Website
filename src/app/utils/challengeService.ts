@@ -475,6 +475,18 @@ import type { FeedItem, ChallengeSubmission } from '../types/database';
 
 export type { ModerationResult } from './moderationService';
 
+/** Remove known test/joke rows from the community feed; delete in DB via supabase/delete_test_feed_submissions.sql when possible. */
+function filterPublicFeedItems(items: FeedItem[]): FeedItem[] {
+  return items.filter((item) => {
+    const reflection = (item.reflection ?? '').trim().toLowerCase();
+    const impact = (item.impact_summary ?? '').trim().toLowerCase();
+    const challengeTitle = (item.challenge_title ?? '').trim().toLowerCase();
+    if (reflection.includes('sleeping and doing nothing')) return false;
+    if (challengeTitle === 'test' && impact === 'testtest') return false;
+    return true;
+  });
+}
+
 function isMissingModerationColumnsError(err: unknown): boolean {
   const message = String((err as { message?: string })?.message ?? err).toLowerCase();
   if (!message) return false;
@@ -624,7 +636,7 @@ export async function fetchCommunityFeed(limit: number = 20): Promise<FeedItem[]
     throw error;
   }
 
-  return data || [];
+  return filterPublicFeedItems(data || []);
 }
 
 /**
