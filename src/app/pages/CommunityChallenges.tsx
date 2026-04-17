@@ -556,6 +556,25 @@ export function CommunityChallenges() {
   // Key: Filter out expired (0 days left) and invalid titles
   // ══════════════════════���═══════════════════════════════════════════════════════
 
+  // Trending Skills — derived from real challenge categories + participant counts
+  const trendingSkills = useMemo(() => {
+    const skillCount: Record<string, number> = {};
+    challenges.forEach((c) => {
+      if (c.category) {
+        skillCount[c.category] = (skillCount[c.category] || 0) + (c.participant_count || 1);
+      }
+    });
+    const sorted = Object.entries(skillCount)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5);
+    const max = sorted[0]?.[1] || 1;
+    return sorted.map(([skill, count]) => ({
+      skill,
+      count,
+      pct: Math.round((count / max) * 100),
+    }));
+  }, [challenges]);
+
   const categories = useMemo(() => {
     const cats = new Set(challenges.map((c) => c.category || "General"));
     return ["All", ...Array.from(cats)];
@@ -1214,40 +1233,38 @@ export function CommunityChallenges() {
               </div>
             )}
 
-            {/* Trending Skills - Marked as Beta Preview */}
+            {/* Trending Skills — derived from real challenge data */}
             <div className="bg-white dark:bg-[#132B23] rounded-xl border border-slate-200 dark:border-[#1E3B34] p-5">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <TrendingUp className="w-5 h-5 text-[#2F8F6B]" />
-                  <h3 className="font-semibold text-slate-900 dark:text-white">Trending Skills</h3>
-                </div>
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 dark:bg-[#1E3B34] text-slate-500 dark:text-[#94C8AF] font-medium">
-                  Demo
-                </span>
+              <div className="flex items-center gap-2 mb-4">
+                <TrendingUp className="w-5 h-5 text-[#2F8F6B]" />
+                <h3 className="font-semibold text-slate-900 dark:text-white">Trending Skills</h3>
               </div>
-              <div className="space-y-2.5">
-                {[
-                  { skill: "Urban Farming", pct: 100 },
-                  { skill: "Solar Installation", pct: 74 },
-                  { skill: "GIS Mapping", pct: 67 },
-                  { skill: "Composting", pct: 57 },
-                  { skill: "Community Organizing", pct: 45 },
-                ].map((item) => (
-                  <div key={item.skill} className="flex items-center justify-between gap-3">
-                    <span className="text-sm text-slate-700 dark:text-[#BEEBD7] truncate">{item.skill}</span>
-                    <div className="flex items-center gap-2 flex-shrink-0">
-                      <div className="h-1.5 w-16 bg-slate-100 dark:bg-[#0D1F18] rounded-full overflow-hidden">
-                        <div
-                          className="h-full bg-[#2F8F6B] rounded-full"
-                          style={{ width: `${item.pct}%` }}
-                        />
+              {trendingSkills.length === 0 ? (
+                <p className="text-sm text-slate-400 dark:text-[#6B8F7F] text-center py-3">
+                  No challenge data yet.
+                </p>
+              ) : (
+                <div className="space-y-2.5">
+                  {trendingSkills.map((item) => (
+                    <div key={item.skill} className="flex items-center justify-between gap-3">
+                      <span className="text-sm text-slate-700 dark:text-[#BEEBD7] truncate">{item.skill}</span>
+                      <div className="flex items-center gap-2 flex-shrink-0">
+                        <div className="h-1.5 w-16 bg-slate-100 dark:bg-[#0D1F18] rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-[#2F8F6B] rounded-full"
+                            style={{ width: `${item.pct}%` }}
+                          />
+                        </div>
+                        <span className="text-xs text-slate-400 dark:text-[#6B8F7F] w-8 text-right">
+                          {item.count}
+                        </span>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
               <p className="text-[10px] text-slate-400 dark:text-[#6B8F7F] mt-3 text-center">
-                Live data will appear after launch
+                Based on participant counts across active challenges
               </p>
             </div>
           </aside>
