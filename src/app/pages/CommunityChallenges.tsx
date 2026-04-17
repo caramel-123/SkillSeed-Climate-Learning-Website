@@ -1435,4 +1435,5 @@ export function CommunityChallenges() {
       )}
     </div>
   );
+  
 }
