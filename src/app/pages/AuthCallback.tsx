@@ -41,48 +41,13 @@ export function AuthCallback() {
 
         if (session) {
           setState("success");
-          setTimeout(() => {
-            // OAuth opened in a pop-up: notify opener and close (avoid trapping dashboard in tiny window).
-            if (window.opener && !window.opener.closed) {
-              try {
-                window.opener.postMessage(
-                  { type: "skillseed-oauth-success", next },
-                  window.location.origin
-                );
-              } catch {
-                navigate(next, { replace: true });
-                return;
-              }
-              window.close();
-              return;
-            }
-            navigate(next, { replace: true });
-          }, 500);
+          setTimeout(() => navigate(next, { replace: true }), 500);
         } else {
-          // No session - might still be processing or failed
-          // Wait a moment and check again
           await new Promise(resolve => setTimeout(resolve, 1000));
-          
           const { data: { session: retrySession } } = await supabase.auth.getSession();
-          
           if (retrySession) {
             setState("success");
-            setTimeout(() => {
-              if (window.opener && !window.opener.closed) {
-                try {
-                  window.opener.postMessage(
-                    { type: "skillseed-oauth-success", next },
-                    window.location.origin
-                  );
-                } catch {
-                  navigate(next, { replace: true });
-                  return;
-                }
-                window.close();
-                return;
-              }
-              navigate(next, { replace: true });
-            }, 500);
+            setTimeout(() => navigate(next, { replace: true }), 500);
           } else {
             setError("Authentication failed. Please try again.");
             setState("error");
