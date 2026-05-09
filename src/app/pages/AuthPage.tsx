@@ -261,7 +261,7 @@ export function AuthPage() {
     <div className="min-h-screen flex bg-[#F9FAFB] dark:bg-[#0D1F18]">
 
       {/* ── Left panel (no redundant logo - navbar has it) ── */}
-      <div className="hidden lg:flex flex-col justify-between w-[420px] shrink-0 p-10 bg-[#0F3D2E]">
+      <div className="hidden lg:flex flex-col justify-between w-[420px] shrink-0 p-10 bg-[#2F8F6B]">
         {/* Top spacer */}
         <div />
 
@@ -270,7 +270,7 @@ export function AuthPage() {
           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/10 text-white/80 text-xs font-medium mb-4">
             <Leaf className="w-3 h-3" /> Early Access
           </span>
-          <h2 className="text-white mb-4" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, fontSize: "1.75rem", lineHeight: 1.3 }}>
+          <h2 className="text-white mb-4" style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 800, fontSize: "1.75rem", lineHeight: 1.3 }}>
             Every skill planted grows into real climate action.
           </h2>
           <p className="text-white/65 text-sm leading-relaxed">
@@ -311,10 +311,10 @@ export function AuthPage() {
 
           {/* Mobile logo + beta badge */}
           <Link to="/" className="flex items-center gap-2 mb-8 lg:hidden">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-[#0F3D2E]">
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-[#2F8F6B]">
               <Leaf className="w-4 h-4 text-white" />
             </div>
-            <span className="text-lg text-[#0F3D2E] dark:text-[#BEEBD7]" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800 }}>SkillSeed</span>
+            <span className="text-lg text-[#0F3D2E] dark:text-[#BEEBD7]" style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 800 }}>SkillSeed</span>
             <span className="px-1.5 py-0.5 rounded bg-[#E8F5EF] dark:bg-[#1E3B34] text-[#2F8F6B] dark:text-[#6DD4A8] text-[10px] font-semibold">Beta</span>
           </Link>
 
@@ -345,7 +345,7 @@ export function AuthPage() {
           {/* ═══ SIGN UP — STEP 1: Role Selection ═══ */}
           {tab === "signup" && step === 1 && (
             <div>
-              <h2 className="mb-1" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, color: "#0F3D2E", fontSize: "1.6rem" }}>
+              <h2 className="mb-1" style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 800, color: "#0F3D2E", fontSize: "1.6rem" }}>
                 Who are you?
               </h2>
               <p className="text-sm mb-7" style={{ color: "#6B7280", lineHeight: 1.6 }}>
@@ -374,13 +374,13 @@ export function AuthPage() {
                       )}
                       <div className="flex items-start gap-4">
                         <div className={`w-11 h-11 rounded-lg flex items-center justify-center shrink-0 ${
-                          selected ? "bg-[#0F3D2E]" : "bg-slate-100 dark:bg-[#1E3B34]"
+                          selected ? "bg-[#2F8F6B]" : "bg-slate-100 dark:bg-[#1E3B34]"
                         }`}>
                           <Icon className={`w-5 h-5 ${selected ? "text-white" : "text-[#0F3D2E] dark:text-[#6DD4A8]"}`} />
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1 flex-wrap">
-                            <span className="text-sm text-slate-900 dark:text-[#BEEBD7]" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 700 }}>
+                            <span className="text-sm text-slate-900 dark:text-[#BEEBD7]" style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700 }}>
                               {title}
                             </span>
                             <span className="px-2 py-0.5 rounded bg-slate-100 dark:bg-[#1E3B34] text-slate-600 dark:text-[#94C8AF] text-[10px] font-medium">
@@ -407,7 +407,7 @@ export function AuthPage() {
                 style={{
                   background: role ? "linear-gradient(135deg, #0F3D2E 0%, #2F8F6B 100%)" : "#D1D5DB",
                   fontWeight: 700,
-                  fontFamily: "'Manrope', sans-serif",
+                  fontFamily: "'Nunito', sans-serif",
                   cursor: role ? "pointer" : "not-allowed",
                   boxShadow: role ? "0 4px 16px rgba(47,143,107,0.35)" : "none",
                 }}
@@ -476,7 +476,7 @@ export function AuthPage() {
                 </div>
               )}
 
-              <h2 className="mb-1" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, color: "#0F3D2E", fontSize: "1.4rem" }}>
+              <h2 className="mb-1" style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 800, color: "#0F3D2E", fontSize: "1.4rem" }}>
                 Create your account
               </h2>
               <p className="text-sm mb-5" style={{ color: "#6B7280" }}>
@@ -524,7 +524,7 @@ export function AuthPage() {
               <button
                 onClick={handleContinueToStep3}
                 className="w-full py-3.5 rounded-xl text-white mt-5 transition-all"
-                style={{ background: "linear-gradient(135deg, #0F3D2E 0%, #2F8F6B 100%)", fontWeight: 700, fontFamily: "'Manrope', sans-serif", boxShadow: "0 4px 16px rgba(47,143,107,0.35)" }}
+                style={{ background: "linear-gradient(135deg, #0F3D2E 0%, #2F8F6B 100%)", fontWeight: 700, fontFamily: "'Nunito', sans-serif", boxShadow: "0 4px 16px rgba(47,143,107,0.35)" }}
               >
                 Continue →
               </button>
@@ -560,7 +560,7 @@ export function AuthPage() {
               {/* ── Learner onboarding ── */}
               {role === "learner" && (
                 <div>
-                  <h2 className="mb-1" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, color: "#0F3D2E", fontSize: "1.3rem" }}>
+                  <h2 className="mb-1" style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 800, color: "#0F3D2E", fontSize: "1.3rem" }}>
                     What do you want to learn?
                   </h2>
                   <p className="text-sm mb-5" style={{ color: "#6B7280" }}>
@@ -596,7 +596,7 @@ export function AuthPage() {
               {/* ── Job Ready onboarding ── */}
               {role === "jobready" && (
                 <div>
-                  <h2 className="mb-1" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, color: "#0F3D2E", fontSize: "1.3rem" }}>
+                  <h2 className="mb-1" style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 800, color: "#0F3D2E", fontSize: "1.3rem" }}>
                     Build your skills profile
                   </h2>
                   <p className="text-sm mb-5" style={{ color: "#6B7280" }}>
@@ -643,7 +643,7 @@ export function AuthPage() {
               {/* ── Organization onboarding ── */}
               {role === "organization" && (
                 <div>
-                  <h2 className="mb-1" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, color: "#0F3D2E", fontSize: "1.3rem" }}>
+                  <h2 className="mb-1" style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 800, color: "#0F3D2E", fontSize: "1.3rem" }}>
                     Organisation Details
                   </h2>
                   <p className="text-sm mb-5" style={{ color: "#6B7280" }}>
@@ -689,7 +689,7 @@ export function AuthPage() {
                   onClick={handleFinalSignup}
                   disabled={loading}
                   className="flex-1 py-3.5 rounded-xl text-white text-sm flex items-center justify-center gap-2 transition-all disabled:opacity-50"
-                  style={{ background: "linear-gradient(135deg, #0F3D2E 0%, #2F8F6B 100%)", fontWeight: 700, fontFamily: "'Manrope', sans-serif", boxShadow: "0 4px 16px rgba(47,143,107,0.35)" }}
+                  style={{ background: "linear-gradient(135deg, #0F3D2E 0%, #2F8F6B 100%)", fontWeight: 700, fontFamily: "'Nunito', sans-serif", boxShadow: "0 4px 16px rgba(47,143,107,0.35)" }}
                 >
                   {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : (
                     role === "organization" ? "Save & Continue 🌱" : role === "jobready" ? "Build My Profile 🌱" : "Start Learning 🌱"
@@ -708,7 +708,7 @@ export function AuthPage() {
           {tab === "login" && (
             <form onSubmit={handleLogin} className="space-y-3">
               <div className="mb-2">
-                <h2 className="mb-1" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, color: "#0F3D2E", fontSize: "1.4rem" }}>
+                <h2 className="mb-1" style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 800, color: "#0F3D2E", fontSize: "1.4rem" }}>
                   Welcome back
                 </h2>
                 <p className="text-sm" style={{ color: "#6B7280" }}>
@@ -756,7 +756,7 @@ export function AuthPage() {
                 type="submit"
                 disabled={loading}
                 className="w-full py-3.5 rounded-xl text-white flex items-center justify-center gap-2 mt-2 disabled:opacity-50"
-                style={{ background: "linear-gradient(135deg, #0F3D2E 0%, #2F8F6B 100%)", fontWeight: 700, fontFamily: "'Manrope', sans-serif", boxShadow: "0 4px 16px rgba(47,143,107,0.35)" }}
+                style={{ background: "linear-gradient(135deg, #0F3D2E 0%, #2F8F6B 100%)", fontWeight: 700, fontFamily: "'Nunito', sans-serif", boxShadow: "0 4px 16px rgba(47,143,107,0.35)" }}
               >
                 {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Log In →"}
               </button>
@@ -924,7 +924,7 @@ function TagButton({ label, selected, onToggle }: { label: string; selected: boo
       onClick={onToggle}
       className={`px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
         selected 
-          ? "bg-[#0F3D2E] text-white" 
+          ? "bg-[#2F8F6B] text-white" 
           : "bg-[#F3F4F6] dark:bg-[#1E3B34] text-muted-foreground hover:bg-[#E6F4EE] dark:hover:bg-[#132B23]"
       }`}
     >

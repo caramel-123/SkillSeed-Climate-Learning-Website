@@ -306,7 +306,7 @@ export function QuestDetail() {
   return (
     <div className="min-h-screen bg-[#F9FAFB] dark:bg-[#0D1F18]">
       {/* Back navigation */}
-      <div className="bg-[#0F3D2E] px-4 sm:px-6 md:px-8 py-3 sm:py-4">
+      <div className="bg-[#2F8F6B] px-4 sm:px-6 md:px-8 py-3 sm:py-4">
         <div className="max-w-7xl mx-auto">
           <button
             onClick={() => navigate('/hands-on')}
@@ -391,7 +391,7 @@ export function QuestDetail() {
                         isCompleted
                           ? 'bg-[#2F8F6B] dark:bg-[#6DD4A8] text-white dark:text-[#0A2E20]'
                           : isCurrent
-                          ? 'bg-[#0F3D2E] dark:bg-[#6DD4A8] text-white dark:text-[#0A2E20]'
+                          ? 'bg-[#2F8F6B] dark:bg-[#6DD4A8] text-white dark:text-[#0A2E20]'
                           : 'bg-muted text-muted-foreground'
                       }`}
                     >

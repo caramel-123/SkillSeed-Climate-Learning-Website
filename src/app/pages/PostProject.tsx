@@ -294,7 +294,7 @@ export function PostProject() {
             <div className="w-20 h-20 bg-[#E6F4EE] dark:bg-[#1E3B34] rounded-full flex items-center justify-center mx-auto mb-6">
               <CheckCircle className="w-10 h-10 text-[#2F8F6B] dark:text-[#6DD4A8]" />
             </div>
-            <h2 className="font-[Manrope] font-bold text-slate-900 dark:text-white text-2xl mb-3">Project Posted!</h2>
+            <h2 className="font-[Nunito] font-bold text-slate-900 dark:text-white text-2xl mb-3">Project Posted!</h2>
             <p className="text-slate-500 dark:text-[#94C8AF] mb-2">
               Your project is live. We're matching vetted profiles right now.
             </p>
@@ -309,7 +309,7 @@ export function PostProject() {
               </div>
             </div>
             <div className="space-y-3">
-              <Link to="/browse" className="w-full flex items-center justify-center gap-2 bg-[#0F3D2E] text-white min-h-[44px] py-2.5 rounded-lg text-sm font-semibold hover:bg-[#1a5241] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F8F6B]">
+              <Link to="/browse" className="w-full flex items-center justify-center gap-2 bg-[#0F3D2E] text-white min-h-[44px] py-2.5 rounded-lg text-sm font-semibold hover:bg-[#2F8F6B] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F8F6B]">
                 View Matches <ChevronRight className="w-4 h-4" />
               </Link>
               <button type="button" onClick={resetForm} className="w-full text-sm text-slate-400 dark:text-[#6B8F7F] hover:text-slate-600 dark:hover:text-[#94C8AF] py-2">
@@ -331,7 +331,7 @@ export function PostProject() {
           </p>
           <h1
             className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white"
-            style={{ fontFamily: "'Manrope', sans-serif" }}
+            style={{ fontFamily: "'Nunito', sans-serif" }}
           >
             {isEditMode ? 'Update your project details' : 'Find the right people for your climate mission'}
           </h1>
@@ -353,7 +353,7 @@ export function PostProject() {
                 <div key={i} className="flex items-center gap-2">
                   <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${
                     step > i + 1 ? 'bg-[#2F8F6B] text-white' :
-                    step === i + 1 ? 'bg-[#0F3D2E] text-white dark:bg-[#2F8F6B]' :
+                    step === i + 1 ? 'bg-[#2F8F6B] text-white dark:bg-[#2F8F6B]' :
                     'bg-slate-100 dark:bg-[#1E3B34] text-slate-400 dark:text-[#6B8F7F]'
                   }`}>
                     {step > i + 1 ? '✓' : i + 1}
@@ -372,7 +372,7 @@ export function PostProject() {
                 <div className="space-y-4">
                   <h2
                     className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-1"
-                    style={{ fontFamily: "'Manrope', sans-serif" }}
+                    style={{ fontFamily: "'Nunito', sans-serif" }}
                   >
                     Project Basics
                   </h2>
@@ -386,7 +386,7 @@ export function PostProject() {
                         onClick={() => setProjectType("ongoing")}
                         className={`flex-1 min-h-[44px] px-4 py-2.5 rounded-lg text-sm font-semibold transition-colors flex items-center justify-center gap-2 ${
                           projectType === "ongoing"
-                            ? "bg-[#0F3D2E] text-white dark:bg-[#2F8F6B]"
+                            ? "bg-[#2F8F6B] text-white dark:bg-[#2F8F6B]"
                             : "border border-slate-200 dark:border-[#1E3B34] text-slate-600 dark:text-[#94C8AF] hover:border-[#2F8F6B] dark:hover:border-[#2F8F6B]"
                         }`}
                       >
@@ -514,7 +514,7 @@ export function PostProject() {
                           }}
                           className={`text-xs font-medium px-3 py-1.5 rounded-full border transition-colors ${
                             selectedFocus.includes(area)
-                              ? "bg-[#0F3D2E] text-white border-[#0F3D2E] dark:bg-[#2F8F6B] dark:border-[#2F8F6B]"
+                              ? "bg-[#2F8F6B] text-white border-[#0F3D2E] dark:bg-[#2F8F6B] dark:border-[#2F8F6B]"
                               : "border-slate-200 dark:border-[#1E3B34] text-slate-600 dark:text-[#94C8AF] hover:border-[#2F8F6B]"
                           }`}
                         >
@@ -534,7 +534,7 @@ export function PostProject() {
                 <div className="space-y-4">
                   <h2
                     className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-1"
-                    style={{ fontFamily: "'Manrope', sans-serif" }}
+                    style={{ fontFamily: "'Nunito', sans-serif" }}
                   >
                     Project Details
                   </h2>
@@ -589,7 +589,7 @@ export function PostProject() {
                 <div className="space-y-4">
                   <h2
                     className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-1 flex items-center gap-2"
-                    style={{ fontFamily: "'Manrope', sans-serif" }}
+                    style={{ fontFamily: "'Nunito', sans-serif" }}
                   >
                     <Users className="w-5 h-5 text-[#2F8F6B] dark:text-[#6DD4A8]" /> People Needed
                   </h2>
@@ -809,7 +809,7 @@ export function PostProject() {
                     <button 
                       type="button"
                       onClick={handleContinue}
-                      className="bg-[#0F3D2E] text-white min-h-[40px] px-5 py-2 rounded-lg text-sm font-medium hover:bg-[#1a5241] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F8F6B]"
+                      className="bg-[#0F3D2E] text-white min-h-[40px] px-5 py-2 rounded-lg text-sm font-medium hover:bg-[#2F8F6B] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F8F6B]"
                     >
                       Continue →
                     </button>
@@ -818,7 +818,7 @@ export function PostProject() {
                       type="button"
                       onClick={handleSubmit}
                       disabled={isSubmitting}
-                      className="bg-[#0F3D2E] text-white min-h-[40px] px-5 py-2 rounded-lg text-sm font-medium hover:bg-[#1a5241] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F8F6B] disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="bg-[#0F3D2E] text-white min-h-[40px] px-5 py-2 rounded-lg text-sm font-medium hover:bg-[#2F8F6B] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F8F6B] disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {isSubmitting 
                         ? (isEditMode ? "Saving..." : "Posting...") 
@@ -900,7 +900,7 @@ export function PostProject() {
                     )}
                   </div>
 
-                  <div className="bg-[#0F3D2E] dark:bg-[#0D1F18] text-white text-sm font-medium text-center min-h-[40px] flex items-center justify-center rounded-lg border border-[#2F8F6B]/40 dark:border-[#1E3B34]">
+                  <div className="bg-[#2F8F6B] dark:bg-[#0D1F18] text-white text-sm font-medium text-center min-h-[40px] flex items-center justify-center rounded-lg border border-[#2F8F6B]/40 dark:border-[#1E3B34]">
                     View & Apply
                   </div>
                 </div>

@@ -1,16 +1,16 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
-import { Menu, X, Sprout, User, LogOut, Moon, Sun } from "lucide-react";
+import { Menu, X, User, LogOut, Moon, Sun, Compass, Users, GraduationCap, Landmark } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
 import { useDemoMode } from "../hooks/useDemoMode";
 import { useTheme } from "next-themes";
 import { cn } from "./ui/utils";
 
 const navLinks = [
-  { label: "Missions",     href: "/browse",    comingSoon: false },
-  { label: "Community", href: "/community", comingSoon: false },
-  { label: "Hands-on",   href: "/hands-on",   comingSoon: false },
-  { label: "Funding",   href: "/funding",   comingSoon: false },
+  { label: "Missions",   href: "/browse",    icon: Compass,       comingSoon: false },
+  { label: "Community",  href: "/community", icon: Users,         comingSoon: false },
+  { label: "Hands-on",  href: "/hands-on",  icon: GraduationCap, comingSoon: false },
+  { label: "Funding",   href: "/funding",   icon: Landmark,      comingSoon: false },
 ];
 
 export function Navbar() {
@@ -69,10 +69,6 @@ export function Navbar() {
     navigate("/");
   };
 
-  const handleTryDemo = () => {
-    enableDemoMode();
-    navigate("/browse", { replace: false });
-  };
 
   return (
     <nav
@@ -95,33 +91,34 @@ export function Navbar() {
               alt="SkillSeed Logo" 
               className="w-8 h-8 sm:w-9 sm:h-9 object-contain shrink-0"
             />
-            <span className="text-lg sm:text-xl truncate" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800 }}>
+            <span className="text-lg sm:text-xl truncate" style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 800 }}>
               <span className="text-[#0F3D2E] dark:text-[#BEEBD7]">Skill</span>
               <span className="text-[#2F8F6B] dark:text-[#6DD4A8]">Seed</span>
             </span>
           </Link>
 
-          {/* ── Center Nav (desktop) ── */}
-          <div className="hidden lg:flex items-center gap-1">
+          {/* ── Center Nav (desktop) — absolutely centered so logo/avatar don't affect alignment ── */}
+          <div className="hidden sm:flex absolute left-1/2 -translate-x-1/2 items-center gap-1">
             {navLinks.map((link) => (
               <div key={link.label} className="relative">
                 {link.comingSoon ? (
-                  <span className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-muted-foreground cursor-default select-none text-sm">
-                    {link.label}
-                    <span className="text-xs px-1.5 py-0.5 rounded-md bg-[#E6F4EE] dark:bg-[#1E3B34] text-[#2F8F6B] dark:text-[#6DD4A8] font-semibold">
-                      Soon
-                    </span>
+                  <span className="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-lg text-muted-foreground cursor-default select-none">
+                    <link.icon className="w-4 h-4 shrink-0" />
+                    <span className="text-[11px] font-medium leading-none">{link.label}</span>
+                    <span className="text-[9px] px-1 py-0.5 rounded bg-[#E6F4EE] dark:bg-[#1E3B34] text-[#2F8F6B] dark:text-[#6DD4A8] font-semibold leading-none">Soon</span>
                   </span>
                 ) : (
                   <Link
                     to={link.href}
-                    className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-150 ${
+                    onClick={() => { if (!user) enableDemoMode(); }}
+                    className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-lg transition-all duration-150 ${
                       location.pathname === link.href
-                        ? "bg-[#E6F4EE] dark:bg-[#1E3B34] text-[#0F3D2E] dark:text-[#6DD4A8] font-semibold"
+                        ? "bg-[#E6F4EE] dark:bg-[#1E3B34] text-[#0F3D2E] dark:text-[#6DD4A8]"
                         : "text-muted-foreground hover:bg-muted dark:hover:bg-[#17342B] hover:text-foreground"
                     }`}
                   >
-                    {link.label}
+                    <link.icon className="w-4 h-4 shrink-0" />
+                    <span className={`text-[11px] leading-none ${location.pathname === link.href ? "font-semibold" : "font-medium"}`}>{link.label}</span>
                   </Link>
                 )}
               </div>
@@ -129,7 +126,7 @@ export function Navbar() {
           </div>
 
           {/* ── Right Side (desktop) ── */}
-          <div className="hidden lg:flex items-center gap-2">
+          <div className="hidden sm:flex items-center gap-2">
             {!user && (
               <button
                 onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
@@ -223,40 +220,11 @@ export function Navbar() {
                   )}
                 </div>
               </>
-            ) : (
-              /* ── LOGGED OUT ── */
-              <>
-                {!demoMode && (
-                  <button
-                    onClick={handleTryDemo}
-                    className="min-h-[40px] px-4 py-2 rounded-lg text-sm font-semibold border border-slate-200 dark:border-[#1E3B34] bg-white/70 dark:bg-[#132B23] text-slate-700 dark:text-[#BEEBD7] hover:bg-white dark:hover:bg-[#17342B] transition-colors"
-                  >
-                    Try demo
-                  </button>
-                )}
-                {!demoMode && (
-                  <>
-                    <button
-                      onClick={() => navigate("/auth?tab=login")}
-                      className="min-h-[40px] px-4 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:bg-muted dark:hover:bg-[#17342B] transition-colors"
-                    >
-                      Log In
-                    </button>
-                    <button
-                      onClick={() => navigate("/auth?tab=signup")}
-                      className="min-h-[40px] px-5 py-2 rounded-lg text-white text-sm font-semibold bg-[linear-gradient(135deg,#0F3D2E_0%,#2F8F6B_100%)] shadow-sm shadow-[#2F8F6B]/25 hover:shadow-md hover:shadow-[#2F8F6B]/30 transition-all flex items-center gap-1.5 active:scale-[0.98]"
-                    >
-                      <Sprout className="w-3.5 h-3.5" />
-                      Sign Up
-                    </button>
-                  </>
-                )}
-              </>
-            )}
+            ) : null}
           </div>
 
           {/* ── Mobile controls ── */}
-          <div className="lg:hidden flex items-center gap-0.5 shrink-0">
+          <div className="sm:hidden flex items-center gap-0.5 shrink-0">
             <button
               type="button"
               onClick={() => setMobileOpen(!mobileOpen)}
@@ -276,12 +244,12 @@ export function Navbar() {
           <button
             type="button"
             aria-label="Close menu"
-            className="lg:hidden fixed inset-x-0 bottom-0 z-[80] bg-black/45 dark:bg-black/55"
+            className="sm:hidden fixed inset-x-0 bottom-0 z-[80] bg-black/45 dark:bg-black/55"
             style={{ top: "calc(env(safe-area-inset-top, 0px) + 4rem)" }}
             onClick={() => setMobileOpen(false)}
           />
           <div
-            className="lg:hidden fixed left-0 right-0 bottom-0 z-[90] flex flex-col bg-white dark:bg-[#0D1F18] border-t border-slate-200 dark:border-[#1E3B34] shadow-[0_-8px_30px_rgba(0,0,0,0.12)] dark:shadow-[0_-8px_30px_rgba(0,0,0,0.4)]"
+            className="sm:hidden fixed left-0 right-0 bottom-0 z-[90] flex flex-col bg-white dark:bg-[#0D1F18] border-t border-slate-200 dark:border-[#1E3B34] shadow-[0_-8px_30px_rgba(0,0,0,0.12)] dark:shadow-[0_-8px_30px_rgba(0,0,0,0.4)]"
             style={{
               top: "calc(env(safe-area-inset-top, 0px) + 4rem)",
               paddingBottom: "max(0.75rem, env(safe-area-inset-bottom, 0px))",
@@ -294,7 +262,8 @@ export function Navbar() {
               {navLinks.map((link) => (
                 <div key={link.label}>
                   {link.comingSoon ? (
-                    <span className="flex items-center gap-2 px-3 min-h-[48px] rounded-lg text-slate-600 dark:text-[#A8E6CA] text-sm">
+                    <span className="flex items-center gap-2.5 px-3 min-h-[48px] rounded-lg text-slate-600 dark:text-[#A8E6CA] text-sm">
+                      <link.icon className="w-5 h-5 shrink-0" />
                       {link.label}
                       <span className="text-xs px-1.5 py-0.5 rounded-full bg-[#E6F4EE] dark:bg-[#1E3B34] text-[#2F8F6B] dark:text-[#6DD4A8] font-semibold">
                         Soon
@@ -303,9 +272,9 @@ export function Navbar() {
                   ) : (
                     <Link
                       to={link.href}
-                      onClick={() => setMobileOpen(false)}
+                      onClick={() => { if (!user) enableDemoMode(); setMobileOpen(false); }}
                       className={cn(
-                        "flex items-center px-3 min-h-[48px] rounded-lg text-sm font-medium transition-colors",
+                        "flex items-center gap-2.5 px-3 min-h-[48px] rounded-lg text-sm font-medium transition-colors",
                         "text-slate-900 dark:text-[#E8FFF4]",
                         "hover:bg-slate-100 dark:hover:bg-[#17342B]",
                         "active:bg-slate-200 dark:active:bg-[#1E3B34] active:text-slate-900 dark:active:text-[#E8FFF4]",
@@ -313,6 +282,7 @@ export function Navbar() {
                           "bg-[#E6F4EE] dark:bg-[#1E3B34] text-[#0F3D2E] dark:text-[#6DD4A8] font-semibold ring-1 ring-[#2F8F6B]/25 dark:ring-[#6DD4A8]/30"
                       )}
                     >
+                      <link.icon className="w-5 h-5 shrink-0" />
                       {link.label}
                     </Link>
                   )}
@@ -376,41 +346,7 @@ export function Navbar() {
                       Log Out
                     </button>
                   </>
-                ) : (
-                  <>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        handleTryDemo();
-                        setMobileOpen(false);
-                      }}
-                      className="inline-flex items-center justify-center min-h-[48px] text-center px-4 rounded-lg text-sm font-semibold border border-slate-200 dark:border-[#6DD4A8]/45 text-[#0F3D2E] dark:text-[#E8FFF4] bg-white dark:bg-[#132B23] hover:bg-slate-50 dark:hover:bg-[#17342B] active:bg-slate-200 dark:active:bg-[#1E3B34] transition-colors mx-0.5"
-                    >
-                      Try demo
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        navigate("/auth?tab=login");
-                        setMobileOpen(false);
-                      }}
-                      className="inline-flex items-center justify-center min-h-[48px] text-center px-4 rounded-lg text-sm font-medium border border-slate-200 dark:border-[#6DD4A8]/45 text-[#0F3D2E] dark:text-[#E8FFF4] bg-white dark:bg-[#132B23] hover:bg-slate-50 dark:hover:bg-[#17342B] active:bg-slate-200 dark:active:bg-[#1E3B34] transition-colors mx-0.5"
-                    >
-                      Log In
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        navigate("/auth?tab=signup");
-                        setMobileOpen(false);
-                      }}
-                      className="inline-flex items-center justify-center min-h-[48px] text-center px-4 rounded-lg text-white text-sm font-semibold gap-1.5 bg-gradient-to-br from-[#0F3D2E] to-[#2F8F6B] hover:brightness-110 active:brightness-95 transition-all shadow-sm mx-0.5"
-                    >
-                      <Sprout className="w-3.5 h-3.5" />
-                      Sign Up Free
-                    </button>
-                  </>
-                )}
+                ) : null}
               </div>
             </div>
           </div>

@@ -82,7 +82,7 @@ function FloatingSeeds({ reduced }: { reduced: boolean }) {
 function PreLaunchStat({ label, desc }: { label: string; desc?: string }) {
   return (
     <div className="text-center">
-      <div className="text-4xl sm:text-5xl mb-1" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, color: "white" }}>
+      <div className="text-4xl sm:text-5xl mb-1" style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 800, color: "white" }}>
         —
       </div>
       <div className="text-sm" style={{ color: "rgba(255,255,255,0.9)", fontWeight: 600 }}>{label}</div>
@@ -229,14 +229,6 @@ export function LandingPage() {
   };
 
   // Auth-aware CTA
-  const handleJoinProject = () => {
-    if (!user) {
-      enableDemoMode();
-      navigate("/browse");
-    } else {
-      navigate("/dashboard");
-    }
-  };
 
   const roles = [
     {
@@ -289,7 +281,7 @@ export function LandingPage() {
           <motion.h1
             variants={heroItem}
             className="mb-5 text-balance tracking-tight"
-            style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, fontSize: "clamp(2.25rem, 5vw, 3.25rem)", lineHeight: 1.15, letterSpacing: "-0.02em" }}>
+            style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 800, fontSize: "clamp(2.25rem, 5vw, 3.25rem)", lineHeight: 1.15, letterSpacing: "-0.02em" }}>
             <span className="block text-slate-900 dark:text-[#BEEBD7]">Where climate action</span>
             <span className="block text-[#2F8F6B] dark:text-[#6DD4A8] mt-1 sm:mt-1.5">finds its people.</span>
           </motion.h1>
@@ -304,19 +296,21 @@ export function LandingPage() {
           <motion.div variants={heroItem} className="flex flex-col sm:flex-row gap-3 justify-center mb-10">
             <motion.button
               type="button"
-              onClick={handleJoinProject}
+              onClick={() => navigate("/auth?tab=login")}
               whileHover={reduceMotion ? undefined : { y: -1 }}
               whileTap={reduceMotion ? undefined : { scale: 0.98 }}
-              className="inline-flex items-center justify-center gap-2 min-h-[48px] px-6 rounded-lg font-semibold transition-colors duration-200 cursor-pointer bg-[#0F3D2E] text-white hover:bg-[#1a5241] active:bg-[#163d32] dark:bg-white dark:text-[#0F3D2E] dark:hover:bg-[#E8F5EF] dark:active:bg-[#d4efe4] dark:active:text-[#0F3D2E]"
-              style={{ fontFamily: "'Manrope', sans-serif" }}>
-              <Users className="w-4 h-4" /> Join a Project
+              className="inline-flex items-center justify-center gap-2 min-h-[48px] px-6 rounded-lg font-semibold transition-colors duration-200 cursor-pointer bg-[#0F3D2E] text-white hover:bg-[#2F8F6B] active:bg-[#163d32] dark:bg-white dark:text-[#0F3D2E] dark:hover:bg-[#E8F5EF] dark:active:bg-[#d4efe4] dark:active:text-[#0F3D2E]"
+              style={{ fontFamily: "'Nunito', sans-serif" }}>
+              <Users className="w-4 h-4" /> Sign In
             </motion.button>
             <motion.div whileHover={reduceMotion ? undefined : { y: -1 }} className="inline-flex justify-center w-full sm:w-auto">
-            <Link to="/hands-on"
+            <button
+                type="button"
+                onClick={() => { enableDemoMode(); navigate("/browse"); }}
                 className="inline-flex items-center justify-center gap-2 min-h-[48px] px-6 rounded-lg transition-colors duration-200 w-full sm:w-auto bg-white border border-slate-200 text-slate-700 hover:border-slate-300 hover:bg-slate-50 active:bg-slate-100 active:text-slate-900 dark:bg-[#132B23]/80 dark:border-[#6DD4A8]/55 dark:text-[#E8FFF4] dark:hover:bg-[#17342B] dark:active:bg-[#1E3B34] dark:active:text-[#E8FFF4] font-semibold"
-                style={{ fontFamily: "'Manrope', sans-serif" }}>
-                <Sprout className="w-4 h-4" /> Browse Quests
-            </Link>
+                style={{ fontFamily: "'Nunito', sans-serif" }}>
+                <Sprout className="w-4 h-4" /> Try Demo
+            </button>
             </motion.div>
           </motion.div>
 
@@ -345,12 +339,12 @@ export function LandingPage() {
               transition={{ delay: reduceMotion ? 0 : 0.05 }}
               whileHover={reduceMotion ? undefined : { y: -3, transition: { duration: 0.2 } }}>
               <div className="flex items-center gap-2.5 mb-4">
-                <div className="w-9 h-9 rounded-lg flex items-center justify-center bg-[#0F3D2E]">
+                <div className="w-9 h-9 rounded-lg flex items-center justify-center bg-[#2F8F6B]">
                   <Heart className="w-4 h-4 text-white" />
                 </div>
                 <span className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-[#6DD4A8]">Mission</span>
               </div>
-              <h3 className="mb-2.5 text-slate-900 dark:text-[#BEEBD7]" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 700, fontSize: "1.05rem", lineHeight: 1.4 }}>
+              <h3 className="mb-2.5 text-slate-900 dark:text-[#BEEBD7]" style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700, fontSize: "1.05rem", lineHeight: 1.4 }}>
                 Build capacity. Deploy people. Solve climate challenges.
               </h3>
               <p className="text-slate-600 dark:text-[#94C8AF] text-sm leading-relaxed">
@@ -366,12 +360,12 @@ export function LandingPage() {
               transition={{ delay: reduceMotion ? 0 : 0.12 }}
               whileHover={reduceMotion ? undefined : { y: -3, transition: { duration: 0.2 } }}>
               <div className="flex items-center gap-2.5 mb-4">
-                <div className="w-9 h-9 rounded-lg flex items-center justify-center bg-[#0F3D2E]">
+                <div className="w-9 h-9 rounded-lg flex items-center justify-center bg-[#2F8F6B]">
                   <Eye className="w-4 h-4 text-white" />
                 </div>
                 <span className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-[#6DD4A8]">Vision</span>
               </div>
-              <h3 className="mb-2.5 text-slate-900 dark:text-[#BEEBD7]" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 700, fontSize: "1.05rem", lineHeight: 1.4 }}>
+              <h3 className="mb-2.5 text-slate-900 dark:text-[#BEEBD7]" style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700, fontSize: "1.05rem", lineHeight: 1.4 }}>
                 A world where no climate crisis goes unanswered.
               </h3>
               <p className="text-slate-600 dark:text-[#94C8AF] text-sm leading-relaxed">
@@ -392,10 +386,10 @@ export function LandingPage() {
             initial="hidden"
             whileInView="show"
             viewport={LANDING_VIEWPORT}>
-            <span className="inline-block px-3 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wide mb-4 bg-[#0F3D2E]/10 text-[#0F3D2E] dark:bg-[#6DD4A8]/15 dark:text-[#6DD4A8]">
+            <span className="inline-block px-3 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wide mb-4 bg-[#2F8F6B]/10 text-[#0F3D2E] dark:bg-[#6DD4A8]/15 dark:text-[#6DD4A8]">
               How it works
             </span>
-            <h2 className="mb-3 text-slate-900 dark:text-[#BEEBD7]" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, fontSize: "clamp(1.5rem, 3vw, 2rem)" }}>
+            <h2 className="mb-3 text-slate-900 dark:text-[#BEEBD7]" style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 800, fontSize: "clamp(1.5rem, 3vw, 2rem)" }}>
               From signup to impact in three steps
             </h2>
             <p className="max-w-lg mx-auto text-slate-600 dark:text-[#94C8AF]">
@@ -449,7 +443,7 @@ export function LandingPage() {
                 </div>
                 
                 {/* Title */}
-                <h3 className="mb-2 text-slate-900 dark:text-[#BEEBD7]" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 700, fontSize: "1.05rem" }}>
+                <h3 className="mb-2 text-slate-900 dark:text-[#BEEBD7]" style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700, fontSize: "1.05rem" }}>
                   {title}
                 </h3>
                 
@@ -473,7 +467,7 @@ export function LandingPage() {
       </section>
 
       {/* ════════════════ STATS (Pre-launch) ════════════════ */}
-      <section className="py-16 md:py-20 relative overflow-hidden bg-[#0F3D2E]">
+      <section className="py-16 md:py-20 relative overflow-hidden bg-[#2F8F6B]">
         {!reduceMotion && (
           <motion.div
             aria-hidden
@@ -512,7 +506,7 @@ export function LandingPage() {
             initial="hidden"
             whileInView="show"
             viewport={LANDING_VIEWPORT}>
-            <h2 className="mb-3 text-slate-900 dark:text-[#BEEBD7]" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, fontSize: "clamp(1.5rem, 3vw, 2rem)" }}>
+            <h2 className="mb-3 text-slate-900 dark:text-[#BEEBD7]" style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 800, fontSize: "clamp(1.5rem, 3vw, 2rem)" }}>
               Built for everyone
             </h2>
             <p className="max-w-md mx-auto text-slate-600 dark:text-[#94C8AF]">
@@ -542,7 +536,7 @@ export function LandingPage() {
                 {/* Icon tile */}
                 <div className={`w-11 h-11 rounded-lg flex items-center justify-center mb-4 ${
                   featured 
-                    ? "bg-[#0F3D2E] dark:bg-[#2F8F6B]" 
+                    ? "bg-[#2F8F6B] dark:bg-[#2F8F6B]" 
                     : "bg-slate-100 dark:bg-[#1E3B34]"
                 }`}>
                   <Icon className={`w-5 h-5 ${featured ? "text-white" : "text-[#0F3D2E] dark:text-[#6DD4A8]"}`} />
@@ -557,7 +551,7 @@ export function LandingPage() {
                   {subtitle}
                 </span>
                 {/* Title */}
-                <h3 className="mb-2 text-slate-900 dark:text-[#BEEBD7]" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 700, fontSize: "1.05rem" }}>
+                <h3 className="mb-2 text-slate-900 dark:text-[#BEEBD7]" style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700, fontSize: "1.05rem" }}>
                   {title}
                 </h3>
                 {/* Description */}
@@ -584,7 +578,7 @@ export function LandingPage() {
             whileInView="show"
             viewport={LANDING_VIEWPORT}>
             <div>
-              <h2 className="text-slate-900 dark:text-emerald-50" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, fontSize: "clamp(1.5rem, 3vw, 2rem)" }}>
+              <h2 className="text-slate-900 dark:text-emerald-50" style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 800, fontSize: "clamp(1.5rem, 3vw, 2rem)" }}>
                 Featured quests
               </h2>
               <p className="text-slate-600 dark:text-emerald-200/75 text-sm mt-1">Hands-on climate missions you can start today.</p>
@@ -615,7 +609,7 @@ export function LandingPage() {
                       <div className="transition-transform duration-300 group-hover:scale-110">
                         {getQuestIcon(quest)}
                       </div>
-                      <span className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded text-[10px] font-semibold bg-white text-slate-700 dark:bg-[#0F3D2E] dark:text-emerald-200">
+                      <span className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded text-[10px] font-semibold bg-white text-slate-700 dark:bg-[#2F8F6B] dark:text-emerald-200">
                         {quest.category || quest.tier}
                       </span>
                     </div>
@@ -661,7 +655,7 @@ export function LandingPage() {
             initial="hidden"
             whileInView="show"
             viewport={LANDING_VIEWPORT}>
-            <h2 className="text-slate-900 dark:text-emerald-50" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, fontSize: "clamp(1.5rem, 3vw, 2rem)" }}>
+            <h2 className="text-slate-900 dark:text-emerald-50" style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 800, fontSize: "clamp(1.5rem, 3vw, 2rem)" }}>
               Built with early community feedback
             </h2>
             <p className="text-slate-600 dark:text-emerald-200/75 text-sm mt-2 max-w-md mx-auto">
@@ -695,14 +689,14 @@ export function LandingPage() {
       </section>
 
       {/* ════════════════ FINAL CTA ════════════════ */}
-      <section className="py-20 md:py-24 bg-[#0F3D2E] relative overflow-hidden">
+      <section className="py-20 md:py-24 bg-[#2F8F6B] relative overflow-hidden">
         <motion.div
           className="relative z-10 max-w-2xl mx-auto px-4 text-center"
           variants={staggerWrap}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, amount: 0.35 }}>
-          <motion.h2 variants={heroItem} className="text-white mb-4" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, fontSize: "clamp(1.5rem, 4vw, 2.25rem)", lineHeight: 1.2 }}>
+          <motion.h2 variants={heroItem} className="text-white mb-4" style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 800, fontSize: "clamp(1.5rem, 4vw, 2.25rem)", lineHeight: 1.2 }}>
             Ready to make an impact?
           </motion.h2>
           <motion.p variants={heroItem} className="mb-8 text-white/70 text-base sm:text-lg">
@@ -713,7 +707,7 @@ export function LandingPage() {
               <Link
                 to={user ? "/dashboard" : "/auth?tab=signup"}
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-semibold bg-white text-[#0F3D2E] hover:bg-[#E8F5EF] dark:bg-white dark:text-white dark:hover:bg-[#E8F5EF] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#0F3D2E] min-h-[48px]"
-                style={{ fontFamily: "'Manrope', sans-serif" }}
+                style={{ fontFamily: "'Nunito', sans-serif" }}
               >
                 <Sprout className="w-4 h-4" /> Get started
               </Link>

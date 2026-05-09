@@ -69,10 +69,10 @@ export function AuthCallback() {
       <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-[#0D1F18]">
         <div className="text-center">
           <div className="mb-6 flex items-center justify-center gap-2">
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-[#0F3D2E]">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-[#2F8F6B]">
               <Leaf className="w-5 h-5 text-white" />
             </div>
-            <span className="text-xl text-[#0F3D2E] dark:text-[#BEEBD7]" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800 }}>
+            <span className="text-xl text-[#0F3D2E] dark:text-[#BEEBD7]" style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 800 }}>
               SkillSeed
             </span>
           </div>
@@ -116,10 +116,10 @@ export function AuthCallback() {
     <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-[#0D1F18]">
       <div className="text-center">
         <div className="mb-6 flex items-center justify-center gap-2">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-[#0F3D2E]">
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-[#2F8F6B]">
             <Leaf className="w-5 h-5 text-white" />
           </div>
-          <span className="text-xl text-[#0F3D2E] dark:text-[#BEEBD7]" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800 }}>
+          <span className="text-xl text-[#0F3D2E] dark:text-[#BEEBD7]" style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 800 }}>
             SkillSeed
           </span>
         </div>

@@ -174,7 +174,7 @@ Tone: concise, practical, encouraging. Philippines context when relevant. Simple
   return (
     <div className="bg-white dark:bg-[#132B23] border border-border dark:border-[#1E3B34] rounded-xl overflow-hidden lg:sticky lg:top-24 flex flex-col h-[min(60dvh,28rem)] min-h-[17.5rem] lg:h-[560px] lg:min-h-0 shadow-sm">
       {/* Header */}
-      <div className="bg-[#0F3D2E] px-4 py-3">
+      <div className="bg-[#2F8F6B] px-4 py-3">
         <p className="text-white text-sm font-bold">Environmental Coach</p>
         <p className="text-[#6DD4A8] text-xs">AI-powered</p>
       </div>
@@ -192,7 +192,7 @@ Tone: concise, practical, encouraging. Philippines context when relevant. Simple
             <div
               className={`max-w-[85%] rounded-xl px-3.5 py-2.5 text-sm leading-relaxed ${
                 msg.role === 'user'
-                  ? 'bg-[#0F3D2E] text-white rounded-br-sm'
+                  ? 'bg-[#2F8F6B] text-white rounded-br-sm'
                   : 'bg-white dark:bg-[#132B23] text-card-foreground rounded-bl-sm border border-border dark:border-[#1E3B34]'
               }`}
             >
@@ -236,7 +236,7 @@ Tone: concise, practical, encouraging. Philippines context when relevant. Simple
           type="button"
           onClick={sendMessage}
           disabled={!input.trim() || loading}
-          className="min-h-[48px] shrink-0 w-full sm:w-auto bg-[#0F3D2E] dark:bg-[#2F8F6B] text-white text-sm font-semibold px-4 py-2.5 rounded-lg hover:bg-[#2F8F6B] dark:hover:bg-[#6DD4A8] dark:hover:text-[#0A2E20] transition-colors disabled:opacity-40"
+          className="min-h-[48px] shrink-0 w-full sm:w-auto bg-[#0F3D2E] dark:bg-[#0F3D2E] text-white text-sm font-semibold px-4 py-2.5 rounded-lg hover:bg-[#2F8F6B] dark:hover:bg-[#6DD4A8] dark:hover:text-[#0A2E20] transition-colors disabled:opacity-40"
         >
           Send
         </button>

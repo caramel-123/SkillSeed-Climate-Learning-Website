@@ -289,7 +289,7 @@ export function HandsOnQuests() {
           <p className="text-sm text-slate-600 dark:text-slate-400 mb-6">{error}</p>
           <button
             onClick={() => window.location.reload()}
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#0F3D2E] text-white text-sm font-medium rounded-lg hover:bg-[#1a5241] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F8F6B] focus-visible:ring-offset-2"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#0F3D2E] text-white text-sm font-medium rounded-lg hover:bg-[#2F8F6B] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F8F6B] focus-visible:ring-offset-2"
           >
             <RefreshCw className="w-4 h-4" />
             Try Again
@@ -311,7 +311,7 @@ export function HandsOnQuests() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white" style={{ fontFamily: "'Manrope', sans-serif" }}>
+              <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white" style={{ fontFamily: "'Nunito', sans-serif" }}>
                 Learn by Doing
               </h1>
               <p className="text-sm text-slate-600 dark:text-[#94C8AF] mt-1 leading-relaxed text-pretty">
@@ -450,7 +450,7 @@ export function HandsOnQuests() {
                               <button
                                 key={skill}
                                 onClick={() => { setQuery(skill); setSearchFocused(false); }}
-                                className="text-xs px-3 py-1.5 rounded-full bg-slate-100 dark:bg-[#1E3B34] text-slate-600 dark:text-[#94C8AF] hover:bg-[#E8F5EF] dark:hover:bg-[#0F3D2E]/50 transition-colors"
+                                className="text-xs px-3 py-1.5 rounded-full bg-slate-100 dark:bg-[#1E3B34] text-slate-600 dark:text-[#94C8AF] hover:bg-[#E8F5EF] dark:hover:bg-[#2F8F6B]/50 transition-colors"
                               >
                                 {skill}
                               </button>
@@ -466,8 +466,8 @@ export function HandsOnQuests() {
                                 onClick={() => { setQuery(cat === "All" ? "" : cat); setSearchFocused(false); }}
                                 className={`text-xs px-3 py-1.5 rounded-full transition-colors ${
                                   (cat === "All" ? query === "" : query === cat)
-                                    ? "bg-[#0F3D2E] text-white"
-                                    : "bg-slate-100 dark:bg-[#1E3B34] text-slate-600 dark:text-[#94C8AF] hover:bg-[#E8F5EF] dark:hover:bg-[#0F3D2E]/50"
+                                    ? "bg-[#2F8F6B] text-white"
+                                    : "bg-slate-100 dark:bg-[#1E3B34] text-slate-600 dark:text-[#94C8AF] hover:bg-[#E8F5EF] dark:hover:bg-[#2F8F6B]/50"
                                 }`}
                               >
                                 {cat}
@@ -488,7 +488,7 @@ export function HandsOnQuests() {
                 onClick={() => setShowFilters((v) => !v)}
                 className={`min-h-[40px] flex items-center gap-2 px-3 py-2 rounded-lg border text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F8F6B] ${
                   showFilters
-                    ? "bg-[#0F3D2E] text-white border-transparent"
+                    ? "bg-[#2F8F6B] text-white border-transparent"
                     : "border-slate-200 dark:border-[#1E3B34] text-slate-600 dark:text-[#94C8AF] hover:bg-slate-100 dark:hover:bg-[#1E3B34]"
                 }`}
               >
@@ -527,7 +527,7 @@ export function HandsOnQuests() {
                   <button
                     type="button"
                     onClick={() => { setShowFilters(false); }}
-                    className="w-full py-2 bg-[#0F3D2E] text-white text-sm font-medium rounded-lg hover:bg-[#1a5241] transition-colors"
+                    className="w-full py-2 bg-[#0F3D2E] text-white text-sm font-medium rounded-lg hover:bg-[#2F8F6B] transition-colors"
                   >
                     Apply
                   </button>
@@ -707,7 +707,7 @@ export function HandsOnQuests() {
                 ) : (
                   <button
                     onClick={() => { setSelectedQuestData(null); handleStartQuest(quest); }}
-                    className="w-full min-h-[48px] flex items-center justify-center gap-2 text-sm font-semibold rounded-xl bg-[#0F3D2E] text-white hover:bg-[#1a5241] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F8F6B]"
+                    className="w-full min-h-[48px] flex items-center justify-center gap-2 text-sm font-semibold rounded-xl bg-[#0F3D2E] text-white hover:bg-[#2F8F6B] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F8F6B]"
                   >
                     {status === 'not_started' ? 'Start Quest' : status === 'rejected' ? 'Resubmit Quest' : 'Continue Quest'}
                     <ChevronRight className="w-4 h-4" />

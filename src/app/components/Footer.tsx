@@ -12,7 +12,7 @@ export function Footer() {
               <div className="w-9 h-9 bg-[#2F8F6B] rounded-xl flex items-center justify-center">
                 <Leaf className="w-5 h-5 text-white" />
               </div>
-              <span className="font-[Manrope] font-extrabold text-xl text-white">
+              <span className="font-[Nunito] font-extrabold text-xl text-white">
                 Skill<span className="text-[#6DD4A8]">Seed</span>
               </span>
             </div>
@@ -37,7 +37,7 @@ export function Footer() {
 
           {/* Platform */}
           <div>
-            <h4 className="font-bold text-white mb-4 font-[Manrope]">Platform</h4>
+            <h4 className="font-bold text-white mb-4 font-[Nunito]">Platform</h4>
             <ul className="space-y-2.5">
               {[
                 { label: "Mission Dashboard", to: "/dashboard" },
@@ -57,7 +57,7 @@ export function Footer() {
 
           {/* Missions */}
           <div>
-            <h4 className="font-bold text-white mb-4 font-[Manrope]">Mission Types</h4>
+            <h4 className="font-bold text-white mb-4 font-[Nunito]">Mission Types</h4>
             <ul className="space-y-2.5 text-[#94C8AF] text-sm">
               {["Urban Gardening", "Composting", "Repair & Reuse", "Energy Saving", "Reforestation", "Marine Conservation"].map((item) => (
                 <li key={item}>
@@ -69,7 +69,7 @@ export function Footer() {
 
           {/* Legal */}
           <div>
-            <h4 className="font-bold text-white mb-4 font-[Manrope]">Company</h4>
+            <h4 className="font-bold text-white mb-4 font-[Nunito]">Company</h4>
             <ul className="space-y-2.5">
               {[
                 { label: "About SkillSeed", to: "/" },

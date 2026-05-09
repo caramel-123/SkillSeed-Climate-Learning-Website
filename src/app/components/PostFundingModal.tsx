@@ -165,7 +165,7 @@ export function PostFundingModal({ isOpen, onClose, currentProfileId, onSuccess 
         <div className="sticky top-0 bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between rounded-t-2xl z-10">
           <h2
             className="text-lg font-bold"
-            style={{ fontFamily: "'Manrope', sans-serif", color: "#0F3D2E" }}
+            style={{ fontFamily: "'Nunito', sans-serif", color: "#0F3D2E" }}
           >
             Post a Funding Opportunity
           </h2>

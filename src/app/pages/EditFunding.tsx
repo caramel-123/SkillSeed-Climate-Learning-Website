@@ -217,7 +217,7 @@ export function EditFunding() {
           </button>
           <h1
             className="text-xl font-bold"
-            style={{ fontFamily: "'Manrope', sans-serif", color: "#0F3D2E" }}
+            style={{ fontFamily: "'Nunito', sans-serif", color: "#0F3D2E" }}
           >
             Edit Funding Opportunity
           </h1>
