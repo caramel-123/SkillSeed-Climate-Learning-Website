@@ -504,7 +504,7 @@ export function MissionDashboard() {
           <p className="text-sm text-slate-600 dark:text-slate-400 mb-6">{error}</p>
           <button
             onClick={() => window.location.reload()}
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#0F3D2E] text-white text-sm font-medium rounded-lg hover:bg-[#1a5241] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F8F6B] focus-visible:ring-offset-2"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#0F3D2E] text-white text-sm font-medium rounded-lg hover:bg-[#2F8F6B] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F8F6B] focus-visible:ring-offset-2"
           >
             <RefreshCw className="w-4 h-4" />
             Try Again
@@ -635,7 +635,7 @@ export function MissionDashboard() {
                                 <button
                                   key={skill}
                                   onClick={() => { setSearchQuery(skill); setSearchFocused(false); }}
-                                  className="text-xs px-3 py-1.5 rounded-full bg-slate-100 dark:bg-[#1E3B34] text-slate-600 dark:text-[#94C8AF] hover:bg-[#E8F5EF] dark:hover:bg-[#0F3D2E]/50 transition-colors"
+                                  className="text-xs px-3 py-1.5 rounded-full bg-slate-100 dark:bg-[#1E3B34] text-slate-600 dark:text-[#94C8AF] hover:bg-[#E8F5EF] dark:hover:bg-[#2F8F6B]/50 transition-colors"
                                 >
                                   {skill}
                                 </button>
@@ -651,8 +651,8 @@ export function MissionDashboard() {
                                   onClick={() => { setSelectedCategory(cat); setSearchFocused(false); }}
                                   className={`text-xs px-3 py-1.5 rounded-full transition-colors ${
                                     selectedCategory === cat
-                                      ? "bg-[#0F3D2E] text-white"
-                                      : "bg-slate-100 dark:bg-[#1E3B34] text-slate-600 dark:text-[#94C8AF] hover:bg-[#E8F5EF] dark:hover:bg-[#0F3D2E]/50"
+                                      ? "bg-[#2F8F6B] text-white"
+                                      : "bg-slate-100 dark:bg-[#1E3B34] text-slate-600 dark:text-[#94C8AF] hover:bg-[#E8F5EF] dark:hover:bg-[#2F8F6B]/50"
                                   }`}
                                 >
                                   {cat}
@@ -698,7 +698,7 @@ export function MissionDashboard() {
                   onClick={() => setShowFilters((v) => !v)}
                   className={`min-h-[40px] flex items-center gap-2 px-3 py-2 rounded-lg border text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F8F6B] ${
                     showFilters
-                      ? "bg-[#0F3D2E] text-white border-transparent"
+                      ? "bg-[#2F8F6B] text-white border-transparent"
                       : "border-slate-200 dark:border-[#1E3B34] text-slate-600 dark:text-[#94C8AF] hover:bg-slate-100 dark:hover:bg-[#1E3B34]"
                   }`}
                 >
@@ -731,7 +731,7 @@ export function MissionDashboard() {
                     </div>
                     <button
                       onClick={() => setShowFilters(false)}
-                      className="w-full py-2 bg-[#0F3D2E] text-white text-sm font-medium rounded-lg hover:bg-[#1a5241] transition-colors"
+                      className="w-full py-2 bg-[#0F3D2E] text-white text-sm font-medium rounded-lg hover:bg-[#2F8F6B] transition-colors"
                     >
                       Apply
                     </button>
@@ -807,7 +807,7 @@ export function MissionDashboard() {
                 {hasActiveFilters ? (
                   <button
                     onClick={clearAllFilters}
-                    className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#0F3D2E] text-white text-sm font-medium rounded-lg hover:bg-[#1a5241] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F8F6B] focus-visible:ring-offset-2"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#0F3D2E] text-white text-sm font-medium rounded-lg hover:bg-[#2F8F6B] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F8F6B] focus-visible:ring-offset-2"
                   >
                     <RefreshCw className="w-4 h-4" />
                     Reset Filters
@@ -815,7 +815,7 @@ export function MissionDashboard() {
                 ) : (
                   <Link
                     to={user ? "/post-project" : "/auth"}
-                    className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#0F3D2E] text-white text-sm font-medium rounded-lg hover:bg-[#1a5241] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F8F6B] focus-visible:ring-offset-2"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#0F3D2E] text-white text-sm font-medium rounded-lg hover:bg-[#2F8F6B] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F8F6B] focus-visible:ring-offset-2"
                   >
                     <Plus className="w-4 h-4" />
                     Post a Project
@@ -946,7 +946,7 @@ export function MissionDashboard() {
                               ? "bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400"
                               : appStatus === "accepted"
                               ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400"
-                              : "bg-[#0F3D2E] text-white hover:bg-[#1a5241]"
+                              : "bg-[#0F3D2E] text-white hover:bg-[#2F8F6B]"
                           }`}
                         >
                           {isOwner
@@ -1055,7 +1055,7 @@ export function MissionDashboard() {
                 </button>
                 <button
                   onClick={() => setShowMobileFilters(false)}
-                  className="flex-1 min-h-[44px] px-4 py-2 bg-[#0F3D2E] text-white rounded-lg text-sm font-medium"
+                  className="flex-1 min-h-[44px] px-4 py-2 bg-[#2F8F6B] text-white rounded-lg text-sm font-medium"
                 >
                   Apply Filters
                 </button>
@@ -1206,7 +1206,7 @@ export function MissionDashboard() {
                       ? "bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400"
                       : dmAppStatus === "accepted"
                       ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400"
-                      : "bg-[#0F3D2E] text-white hover:bg-[#1a5241]"
+                      : "bg-[#0F3D2E] text-white hover:bg-[#2F8F6B]"
                   }`}
                 >
                   {dmAppStatus === "pending"
@@ -1276,7 +1276,7 @@ function MyProjectsView({
         </p>
         <Link
           to="/post-project"
-          className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#0F3D2E] text-white text-sm font-medium rounded-lg hover:bg-[#1a5241] transition-colors"
+          className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#0F3D2E] text-white text-sm font-medium rounded-lg hover:bg-[#2F8F6B] transition-colors"
         >
           <Building2 className="w-4 h-4" />
           Post a Project

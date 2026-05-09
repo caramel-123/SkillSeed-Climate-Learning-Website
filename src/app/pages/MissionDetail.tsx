@@ -851,7 +851,7 @@ export function MissionDetail() {
           {/* Sidebar */}
           <div className="space-y-5">
             {/* Points & Impact */}
-            <div className="bg-[#0F3D2E] rounded-2xl p-5 text-white">
+            <div className="bg-[#2F8F6B] rounded-2xl p-5 text-white">
               <div className="flex items-center gap-2 mb-4">
                 <Award className="w-5 h-5 text-[#6DD4A8]" />
                 <span className="font-semibold">Mission Rewards</span>

@@ -229,14 +229,6 @@ export function LandingPage() {
   };
 
   // Auth-aware CTA
-  const handleJoinProject = () => {
-    if (!user) {
-      enableDemoMode();
-      navigate("/browse");
-    } else {
-      navigate("/dashboard");
-    }
-  };
 
   const roles = [
     {
@@ -304,19 +296,21 @@ export function LandingPage() {
           <motion.div variants={heroItem} className="flex flex-col sm:flex-row gap-3 justify-center mb-10">
             <motion.button
               type="button"
-              onClick={handleJoinProject}
+              onClick={() => navigate("/auth?tab=login")}
               whileHover={reduceMotion ? undefined : { y: -1 }}
               whileTap={reduceMotion ? undefined : { scale: 0.98 }}
-              className="inline-flex items-center justify-center gap-2 min-h-[48px] px-6 rounded-lg font-semibold transition-colors duration-200 cursor-pointer bg-[#0F3D2E] text-white hover:bg-[#1a5241] active:bg-[#163d32] dark:bg-white dark:text-[#0F3D2E] dark:hover:bg-[#E8F5EF] dark:active:bg-[#d4efe4] dark:active:text-[#0F3D2E]"
+              className="inline-flex items-center justify-center gap-2 min-h-[48px] px-6 rounded-lg font-semibold transition-colors duration-200 cursor-pointer bg-[#0F3D2E] text-white hover:bg-[#2F8F6B] active:bg-[#163d32] dark:bg-white dark:text-[#0F3D2E] dark:hover:bg-[#E8F5EF] dark:active:bg-[#d4efe4] dark:active:text-[#0F3D2E]"
               style={{ fontFamily: "'Nunito', sans-serif" }}>
-              <Users className="w-4 h-4" /> Join a Project
+              <Users className="w-4 h-4" /> Sign In
             </motion.button>
             <motion.div whileHover={reduceMotion ? undefined : { y: -1 }} className="inline-flex justify-center w-full sm:w-auto">
-            <Link to="/hands-on"
+            <button
+                type="button"
+                onClick={() => { enableDemoMode(); navigate("/browse"); }}
                 className="inline-flex items-center justify-center gap-2 min-h-[48px] px-6 rounded-lg transition-colors duration-200 w-full sm:w-auto bg-white border border-slate-200 text-slate-700 hover:border-slate-300 hover:bg-slate-50 active:bg-slate-100 active:text-slate-900 dark:bg-[#132B23]/80 dark:border-[#6DD4A8]/55 dark:text-[#E8FFF4] dark:hover:bg-[#17342B] dark:active:bg-[#1E3B34] dark:active:text-[#E8FFF4] font-semibold"
                 style={{ fontFamily: "'Nunito', sans-serif" }}>
-                <Sprout className="w-4 h-4" /> Browse Quests
-            </Link>
+                <Sprout className="w-4 h-4" /> Try Demo
+            </button>
             </motion.div>
           </motion.div>
 
@@ -345,7 +339,7 @@ export function LandingPage() {
               transition={{ delay: reduceMotion ? 0 : 0.05 }}
               whileHover={reduceMotion ? undefined : { y: -3, transition: { duration: 0.2 } }}>
               <div className="flex items-center gap-2.5 mb-4">
-                <div className="w-9 h-9 rounded-lg flex items-center justify-center bg-[#0F3D2E]">
+                <div className="w-9 h-9 rounded-lg flex items-center justify-center bg-[#2F8F6B]">
                   <Heart className="w-4 h-4 text-white" />
                 </div>
                 <span className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-[#6DD4A8]">Mission</span>
@@ -366,7 +360,7 @@ export function LandingPage() {
               transition={{ delay: reduceMotion ? 0 : 0.12 }}
               whileHover={reduceMotion ? undefined : { y: -3, transition: { duration: 0.2 } }}>
               <div className="flex items-center gap-2.5 mb-4">
-                <div className="w-9 h-9 rounded-lg flex items-center justify-center bg-[#0F3D2E]">
+                <div className="w-9 h-9 rounded-lg flex items-center justify-center bg-[#2F8F6B]">
                   <Eye className="w-4 h-4 text-white" />
                 </div>
                 <span className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-[#6DD4A8]">Vision</span>
@@ -392,7 +386,7 @@ export function LandingPage() {
             initial="hidden"
             whileInView="show"
             viewport={LANDING_VIEWPORT}>
-            <span className="inline-block px-3 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wide mb-4 bg-[#0F3D2E]/10 text-[#0F3D2E] dark:bg-[#6DD4A8]/15 dark:text-[#6DD4A8]">
+            <span className="inline-block px-3 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wide mb-4 bg-[#2F8F6B]/10 text-[#0F3D2E] dark:bg-[#6DD4A8]/15 dark:text-[#6DD4A8]">
               How it works
             </span>
             <h2 className="mb-3 text-slate-900 dark:text-[#BEEBD7]" style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 800, fontSize: "clamp(1.5rem, 3vw, 2rem)" }}>
@@ -473,7 +467,7 @@ export function LandingPage() {
       </section>
 
       {/* ════════════════ STATS (Pre-launch) ════════════════ */}
-      <section className="py-16 md:py-20 relative overflow-hidden bg-[#0F3D2E]">
+      <section className="py-16 md:py-20 relative overflow-hidden bg-[#2F8F6B]">
         {!reduceMotion && (
           <motion.div
             aria-hidden
@@ -542,7 +536,7 @@ export function LandingPage() {
                 {/* Icon tile */}
                 <div className={`w-11 h-11 rounded-lg flex items-center justify-center mb-4 ${
                   featured 
-                    ? "bg-[#0F3D2E] dark:bg-[#2F8F6B]" 
+                    ? "bg-[#2F8F6B] dark:bg-[#2F8F6B]" 
                     : "bg-slate-100 dark:bg-[#1E3B34]"
                 }`}>
                   <Icon className={`w-5 h-5 ${featured ? "text-white" : "text-[#0F3D2E] dark:text-[#6DD4A8]"}`} />
@@ -615,7 +609,7 @@ export function LandingPage() {
                       <div className="transition-transform duration-300 group-hover:scale-110">
                         {getQuestIcon(quest)}
                       </div>
-                      <span className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded text-[10px] font-semibold bg-white text-slate-700 dark:bg-[#0F3D2E] dark:text-emerald-200">
+                      <span className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded text-[10px] font-semibold bg-white text-slate-700 dark:bg-[#2F8F6B] dark:text-emerald-200">
                         {quest.category || quest.tier}
                       </span>
                     </div>
@@ -695,7 +689,7 @@ export function LandingPage() {
       </section>
 
       {/* ════════════════ FINAL CTA ════════════════ */}
-      <section className="py-20 md:py-24 bg-[#0F3D2E] relative overflow-hidden">
+      <section className="py-20 md:py-24 bg-[#2F8F6B] relative overflow-hidden">
         <motion.div
           className="relative z-10 max-w-2xl mx-auto px-4 text-center"
           variants={staggerWrap}

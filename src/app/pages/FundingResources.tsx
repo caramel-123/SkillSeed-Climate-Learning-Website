@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useNavigate, Link } from "react-router";
+import { useNavigate } from "react-router";
 import {
   Search,
   ExternalLink,
@@ -20,7 +20,6 @@ import {
   DollarSign,
   Clock,
   RefreshCw,
-  Banknote,
   Users,
   FileText,
 } from "lucide-react";
@@ -525,7 +524,7 @@ export function FundingResources() {
           <p className="text-sm text-slate-600 dark:text-slate-400 mb-6">{error}</p>
           <button
             onClick={() => window.location.reload()}
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#0F3D2E] text-white text-sm font-medium rounded-lg hover:bg-[#1a5241] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F8F6B] focus-visible:ring-offset-2"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#0F3D2E] text-white text-sm font-medium rounded-lg hover:bg-[#2F8F6B] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F8F6B] focus-visible:ring-offset-2"
           >
             <RefreshCw className="w-4 h-4" />
             Try Again
@@ -666,7 +665,7 @@ export function FundingResources() {
                               <button
                                 key={s}
                                 onClick={() => { setSearch(s); setSearchFocused(false); }}
-                                className="text-xs px-3 py-1.5 rounded-full bg-slate-100 dark:bg-[#1E3B34] text-slate-600 dark:text-[#94C8AF] hover:bg-[#E8F5EF] dark:hover:bg-[#0F3D2E]/50 transition-colors"
+                                className="text-xs px-3 py-1.5 rounded-full bg-slate-100 dark:bg-[#1E3B34] text-slate-600 dark:text-[#94C8AF] hover:bg-[#E8F5EF] dark:hover:bg-[#2F8F6B]/50 transition-colors"
                               >
                                 {s}
                               </button>
@@ -682,8 +681,8 @@ export function FundingResources() {
                                 onClick={() => { setTypeFilter(t); setSearchFocused(false); }}
                                 className={`text-xs px-3 py-1.5 rounded-full transition-colors ${
                                   typeFilter === t
-                                    ? "bg-[#0F3D2E] text-white"
-                                    : "bg-slate-100 dark:bg-[#1E3B34] text-slate-600 dark:text-[#94C8AF] hover:bg-[#E8F5EF] dark:hover:bg-[#0F3D2E]/50"
+                                    ? "bg-[#2F8F6B] text-white"
+                                    : "bg-slate-100 dark:bg-[#1E3B34] text-slate-600 dark:text-[#94C8AF] hover:bg-[#E8F5EF] dark:hover:bg-[#2F8F6B]/50"
                                 }`}
                               >
                                 {t}
@@ -703,7 +702,7 @@ export function FundingResources() {
                 onClick={() => setShowFilters((v) => !v)}
                 className={`min-h-[40px] flex items-center gap-2 px-3 py-2 rounded-lg border text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F8F6B] ${
                   showFilters
-                    ? "bg-[#0F3D2E] text-white border-transparent"
+                    ? "bg-[#2F8F6B] text-white border-transparent"
                     : "border-slate-200 dark:border-[#1E3B34] text-slate-600 dark:text-[#94C8AF] hover:bg-slate-100 dark:hover:bg-[#1E3B34]"
                 }`}
               >
@@ -747,7 +746,7 @@ export function FundingResources() {
                   </div>
                   <button
                     onClick={() => setShowFilters(false)}
-                    className="w-full py-2 bg-[#0F3D2E] text-white text-sm font-medium rounded-lg hover:bg-[#1a5241] transition-colors"
+                    className="w-full py-2 bg-[#0F3D2E] text-white text-sm font-medium rounded-lg hover:bg-[#2F8F6B] transition-colors"
                   >
                     Apply
                   </button>

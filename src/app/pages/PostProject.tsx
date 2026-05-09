@@ -309,7 +309,7 @@ export function PostProject() {
               </div>
             </div>
             <div className="space-y-3">
-              <Link to="/browse" className="w-full flex items-center justify-center gap-2 bg-[#0F3D2E] text-white min-h-[44px] py-2.5 rounded-lg text-sm font-semibold hover:bg-[#1a5241] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F8F6B]">
+              <Link to="/browse" className="w-full flex items-center justify-center gap-2 bg-[#0F3D2E] text-white min-h-[44px] py-2.5 rounded-lg text-sm font-semibold hover:bg-[#2F8F6B] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F8F6B]">
                 View Matches <ChevronRight className="w-4 h-4" />
               </Link>
               <button type="button" onClick={resetForm} className="w-full text-sm text-slate-400 dark:text-[#6B8F7F] hover:text-slate-600 dark:hover:text-[#94C8AF] py-2">
@@ -353,7 +353,7 @@ export function PostProject() {
                 <div key={i} className="flex items-center gap-2">
                   <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${
                     step > i + 1 ? 'bg-[#2F8F6B] text-white' :
-                    step === i + 1 ? 'bg-[#0F3D2E] text-white dark:bg-[#2F8F6B]' :
+                    step === i + 1 ? 'bg-[#2F8F6B] text-white dark:bg-[#2F8F6B]' :
                     'bg-slate-100 dark:bg-[#1E3B34] text-slate-400 dark:text-[#6B8F7F]'
                   }`}>
                     {step > i + 1 ? '✓' : i + 1}
@@ -386,7 +386,7 @@ export function PostProject() {
                         onClick={() => setProjectType("ongoing")}
                         className={`flex-1 min-h-[44px] px-4 py-2.5 rounded-lg text-sm font-semibold transition-colors flex items-center justify-center gap-2 ${
                           projectType === "ongoing"
-                            ? "bg-[#0F3D2E] text-white dark:bg-[#2F8F6B]"
+                            ? "bg-[#2F8F6B] text-white dark:bg-[#2F8F6B]"
                             : "border border-slate-200 dark:border-[#1E3B34] text-slate-600 dark:text-[#94C8AF] hover:border-[#2F8F6B] dark:hover:border-[#2F8F6B]"
                         }`}
                       >
@@ -514,7 +514,7 @@ export function PostProject() {
                           }}
                           className={`text-xs font-medium px-3 py-1.5 rounded-full border transition-colors ${
                             selectedFocus.includes(area)
-                              ? "bg-[#0F3D2E] text-white border-[#0F3D2E] dark:bg-[#2F8F6B] dark:border-[#2F8F6B]"
+                              ? "bg-[#2F8F6B] text-white border-[#0F3D2E] dark:bg-[#2F8F6B] dark:border-[#2F8F6B]"
                               : "border-slate-200 dark:border-[#1E3B34] text-slate-600 dark:text-[#94C8AF] hover:border-[#2F8F6B]"
                           }`}
                         >
@@ -809,7 +809,7 @@ export function PostProject() {
                     <button 
                       type="button"
                       onClick={handleContinue}
-                      className="bg-[#0F3D2E] text-white min-h-[40px] px-5 py-2 rounded-lg text-sm font-medium hover:bg-[#1a5241] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F8F6B]"
+                      className="bg-[#0F3D2E] text-white min-h-[40px] px-5 py-2 rounded-lg text-sm font-medium hover:bg-[#2F8F6B] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F8F6B]"
                     >
                       Continue →
                     </button>
@@ -818,7 +818,7 @@ export function PostProject() {
                       type="button"
                       onClick={handleSubmit}
                       disabled={isSubmitting}
-                      className="bg-[#0F3D2E] text-white min-h-[40px] px-5 py-2 rounded-lg text-sm font-medium hover:bg-[#1a5241] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F8F6B] disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="bg-[#0F3D2E] text-white min-h-[40px] px-5 py-2 rounded-lg text-sm font-medium hover:bg-[#2F8F6B] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F8F6B] disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {isSubmitting 
                         ? (isEditMode ? "Saving..." : "Posting...") 
@@ -900,7 +900,7 @@ export function PostProject() {
                     )}
                   </div>
 
-                  <div className="bg-[#0F3D2E] dark:bg-[#0D1F18] text-white text-sm font-medium text-center min-h-[40px] flex items-center justify-center rounded-lg border border-[#2F8F6B]/40 dark:border-[#1E3B34]">
+                  <div className="bg-[#2F8F6B] dark:bg-[#0D1F18] text-white text-sm font-medium text-center min-h-[40px] flex items-center justify-center rounded-lg border border-[#2F8F6B]/40 dark:border-[#1E3B34]">
                     View & Apply
                   </div>
                 </div>

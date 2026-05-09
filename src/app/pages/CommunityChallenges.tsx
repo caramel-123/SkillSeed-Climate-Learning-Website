@@ -851,7 +851,7 @@ export function CommunityChallenges() {
                                 <button
                                   key={skill}
                                   onClick={() => { setSearch(skill); setSearchFocused(false); }}
-                                  className="text-xs px-3 py-1.5 rounded-full bg-slate-100 dark:bg-[#1E3B34] text-slate-600 dark:text-[#94C8AF] hover:bg-[#E8F5EF] dark:hover:bg-[#0F3D2E]/50 transition-colors"
+                                  className="text-xs px-3 py-1.5 rounded-full bg-slate-100 dark:bg-[#1E3B34] text-slate-600 dark:text-[#94C8AF] hover:bg-[#E8F5EF] dark:hover:bg-[#2F8F6B]/50 transition-colors"
                                 >
                                   {skill}
                                 </button>
@@ -867,8 +867,8 @@ export function CommunityChallenges() {
                                   onClick={() => { setCategoryFilter(cat); setSearchFocused(false); }}
                                   className={`text-xs px-3 py-1.5 rounded-full transition-colors ${
                                     categoryFilter === cat
-                                      ? "bg-[#0F3D2E] text-white"
-                                      : "bg-slate-100 dark:bg-[#1E3B34] text-slate-600 dark:text-[#94C8AF] hover:bg-[#E8F5EF] dark:hover:bg-[#0F3D2E]/50"
+                                      ? "bg-[#2F8F6B] text-white"
+                                      : "bg-slate-100 dark:bg-[#1E3B34] text-slate-600 dark:text-[#94C8AF] hover:bg-[#E8F5EF] dark:hover:bg-[#2F8F6B]/50"
                                   }`}
                                 >
                                   {cat}
@@ -892,7 +892,7 @@ export function CommunityChallenges() {
                   onClick={() => setShowFilters((v) => !v)}
                   className={`min-h-[40px] flex items-center gap-2 px-3 py-2 rounded-lg border text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F8F6B] ${
                     showFilters
-                      ? "bg-[#0F3D2E] text-white border-transparent"
+                      ? "bg-[#2F8F6B] text-white border-transparent"
                       : "border-slate-200 dark:border-[#1E3B34] text-slate-600 dark:text-[#94C8AF] hover:bg-slate-100 dark:hover:bg-[#1E3B34]"
                   }`}
                 >
@@ -951,7 +951,7 @@ export function CommunityChallenges() {
                     </div>
                     <button
                       onClick={() => setShowFilters(false)}
-                      className="w-full py-2 bg-[#0F3D2E] text-white text-sm font-medium rounded-lg hover:bg-[#1a5241] transition-colors"
+                      className="w-full py-2 bg-[#0F3D2E] text-white text-sm font-medium rounded-lg hover:bg-[#2F8F6B] transition-colors"
                     >
                       Apply
                     </button>
@@ -1264,7 +1264,7 @@ export function CommunityChallenges() {
 
             {/* My Stats - Only show if logged in */}
             {user && (
-              <div style={{ animationDelay: '390ms' }} className="animate-slide-in bg-[#0F3D2E] rounded-xl p-5 text-white">
+              <div style={{ animationDelay: '390ms' }} className="animate-slide-in bg-[#2F8F6B] rounded-xl p-5 text-white">
                 <div className="flex items-center gap-2 mb-4">
                   <Award className="w-5 h-5 text-[#6DD4A8]" />
                   <span className="font-semibold">My Stats</span>

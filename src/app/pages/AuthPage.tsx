@@ -261,7 +261,7 @@ export function AuthPage() {
     <div className="min-h-screen flex bg-[#F9FAFB] dark:bg-[#0D1F18]">
 
       {/* ── Left panel (no redundant logo - navbar has it) ── */}
-      <div className="hidden lg:flex flex-col justify-between w-[420px] shrink-0 p-10 bg-[#0F3D2E]">
+      <div className="hidden lg:flex flex-col justify-between w-[420px] shrink-0 p-10 bg-[#2F8F6B]">
         {/* Top spacer */}
         <div />
 
@@ -311,7 +311,7 @@ export function AuthPage() {
 
           {/* Mobile logo + beta badge */}
           <Link to="/" className="flex items-center gap-2 mb-8 lg:hidden">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-[#0F3D2E]">
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-[#2F8F6B]">
               <Leaf className="w-4 h-4 text-white" />
             </div>
             <span className="text-lg text-[#0F3D2E] dark:text-[#BEEBD7]" style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 800 }}>SkillSeed</span>
@@ -374,7 +374,7 @@ export function AuthPage() {
                       )}
                       <div className="flex items-start gap-4">
                         <div className={`w-11 h-11 rounded-lg flex items-center justify-center shrink-0 ${
-                          selected ? "bg-[#0F3D2E]" : "bg-slate-100 dark:bg-[#1E3B34]"
+                          selected ? "bg-[#2F8F6B]" : "bg-slate-100 dark:bg-[#1E3B34]"
                         }`}>
                           <Icon className={`w-5 h-5 ${selected ? "text-white" : "text-[#0F3D2E] dark:text-[#6DD4A8]"}`} />
                         </div>
@@ -924,7 +924,7 @@ function TagButton({ label, selected, onToggle }: { label: string; selected: boo
       onClick={onToggle}
       className={`px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
         selected 
-          ? "bg-[#0F3D2E] text-white" 
+          ? "bg-[#2F8F6B] text-white" 
           : "bg-[#F3F4F6] dark:bg-[#1E3B34] text-muted-foreground hover:bg-[#E6F4EE] dark:hover:bg-[#132B23]"
       }`}
     >
