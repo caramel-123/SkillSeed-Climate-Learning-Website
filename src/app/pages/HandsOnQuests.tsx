@@ -311,7 +311,7 @@ export function HandsOnQuests() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white" style={{ fontFamily: "'Manrope', sans-serif" }}>
+              <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white" style={{ fontFamily: "'Nunito', sans-serif" }}>
                 Learn by Doing
               </h1>
               <p className="text-sm text-slate-600 dark:text-[#94C8AF] mt-1 leading-relaxed text-pretty">

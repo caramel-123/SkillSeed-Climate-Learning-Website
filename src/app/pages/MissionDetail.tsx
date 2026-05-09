@@ -472,7 +472,7 @@ export function MissionDetail() {
                 </span>
               )}
             </div>
-            <h1 className="text-white font-[Manrope] font-bold text-2xl md:text-3xl mt-2">{mission.title}</h1>
+            <h1 className="text-white font-[Nunito] font-bold text-2xl md:text-3xl mt-2">{mission.title}</h1>
           </div>
         </div>
       </div>
@@ -517,7 +517,7 @@ export function MissionDetail() {
 
             {/* Description */}
             <div className="bg-white dark:bg-[#132B23] rounded-2xl border border-slate-200 dark:border-[#1E3B34] shadow-sm p-6">
-              <h2 className="font-[Manrope] font-bold text-slate-900 dark:text-white text-xl mb-4">About this Mission</h2>
+              <h2 className="font-[Nunito] font-bold text-slate-900 dark:text-white text-xl mb-4">About this Mission</h2>
               <div className="text-slate-600 dark:text-[#BEEBD7]/85 text-sm leading-relaxed whitespace-pre-line">
                 {mission.description}
               </div>
@@ -525,7 +525,7 @@ export function MissionDetail() {
 
             {/* What you'll do */}
             <div className="bg-white dark:bg-[#132B23] rounded-2xl border border-slate-200 dark:border-[#1E3B34] shadow-sm p-6">
-              <h2 className="font-[Manrope] font-bold text-slate-900 dark:text-white text-xl mb-4">
+              <h2 className="font-[Nunito] font-bold text-slate-900 dark:text-white text-xl mb-4">
                 <span className="flex items-center gap-2"><Target className="w-5 h-5 text-[#2F8F6B] dark:text-[#6DD4A8]" /> What You'll Accomplish</span>
               </h2>
               <ul className="space-y-3">
@@ -542,7 +542,7 @@ export function MissionDetail() {
 
             {/* People needed */}
             <div className="bg-white dark:bg-[#132B23] rounded-2xl border border-slate-200 dark:border-[#1E3B34] shadow-sm p-6">
-              <h2 className="font-[Manrope] font-bold text-slate-900 dark:text-white text-xl mb-4">
+              <h2 className="font-[Nunito] font-bold text-slate-900 dark:text-white text-xl mb-4">
                 <span className="flex items-center gap-2"><Users className="w-5 h-5 text-[#2F8F6B] dark:text-[#6DD4A8]" /> People Needed</span>
               </h2>
               <div className="grid sm:grid-cols-2 gap-4">
@@ -579,7 +579,7 @@ export function MissionDetail() {
 
             {/* Apply Form / Owner Actions */}
             <div className="bg-white dark:bg-[#132B23] rounded-2xl border border-[#2F8F6B]/20 dark:border-[#1E3B34] shadow-sm p-6">
-              <h2 className="font-[Manrope] font-bold text-slate-900 dark:text-white text-xl mb-5">
+              <h2 className="font-[Nunito] font-bold text-slate-900 dark:text-white text-xl mb-5">
                 {isOwner ? "Manage Your Project" : "Apply to This Mission"}
               </h2>
 
@@ -722,7 +722,7 @@ export function MissionDetail() {
                     )}
                   </div>
 
-                  <h3 className="font-[Manrope] font-bold text-slate-900 dark:text-white text-xl mb-2">
+                  <h3 className="font-[Nunito] font-bold text-slate-900 dark:text-white text-xl mb-2">
                     {myApplicationStatus === "accepted"
                       ? "Application Accepted"
                       : myApplicationStatus === "pending"
@@ -750,7 +750,7 @@ export function MissionDetail() {
                   <div className="w-16 h-16 bg-[#E6F4EE] dark:bg-[#1E3B34] rounded-full flex items-center justify-center mx-auto mb-4">
                     <CheckCircle className="w-8 h-8 text-[#2F8F6B] dark:text-[#6DD4A8]" />
                   </div>
-                  <h3 className="font-[Manrope] font-bold text-slate-900 dark:text-white text-xl mb-2">Application Submitted!</h3>
+                  <h3 className="font-[Nunito] font-bold text-slate-900 dark:text-white text-xl mb-2">Application Submitted!</h3>
                   <p className="text-slate-500 dark:text-[#94C8AF] text-sm mb-6">
                     {mission.org} will review your application and get back to you within 3 business days.
                   </p>
@@ -857,7 +857,7 @@ export function MissionDetail() {
                 <span className="font-semibold">Mission Rewards</span>
               </div>
               <div className="text-center py-3">
-                <div className="text-4xl font-[Manrope] font-bold text-[#6DD4A8]">+{mission.points}</div>
+                <div className="text-4xl font-[Nunito] font-bold text-[#6DD4A8]">+{mission.points}</div>
                 <div className="text-[#A8D5BF] text-sm mt-1">Impact Points</div>
               </div>
               <div className="space-y-2 mt-4">
@@ -896,7 +896,7 @@ export function MissionDetail() {
 
             {/* Skills required */}
             <div className="bg-white dark:bg-[#132B23] rounded-2xl border border-slate-200 dark:border-[#1E3B34] shadow-sm p-5">
-              <h3 className="font-[Manrope] font-bold text-slate-900 dark:text-white mb-3">Skills for this Mission</h3>
+              <h3 className="font-[Nunito] font-bold text-slate-900 dark:text-white mb-3">Skills for this Mission</h3>
               <div className="flex flex-wrap gap-2">
                 {mission.skills.map((skill: string) => (
                   <span key={skill} className="text-xs bg-[#E6F4EE] dark:bg-[#1E3B34] text-[#0F3D2E] dark:text-[#BEEBD7] px-3 py-1.5 rounded-full font-medium">
@@ -908,7 +908,7 @@ export function MissionDetail() {
 
             {/* Related missions */}
             <div className="bg-white dark:bg-[#132B23] rounded-2xl border border-slate-200 dark:border-[#1E3B34] shadow-sm p-5">
-              <h3 className="font-[Manrope] font-bold text-slate-900 dark:text-white mb-3">Related Missions</h3>
+              <h3 className="font-[Nunito] font-bold text-slate-900 dark:text-white mb-3">Related Missions</h3>
 
               {relatedLoading ? (
                 <div className="flex items-center justify-center py-4">

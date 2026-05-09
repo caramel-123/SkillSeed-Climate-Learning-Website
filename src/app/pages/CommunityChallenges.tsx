@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import {
   Trophy,
   Users,
@@ -269,6 +269,7 @@ function LeaderboardCard({ leaderboard, leaderboardLoading, userProfileId, user 
 
 export function CommunityChallenges() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [isLoaded, setIsLoaded] = useState(false);
 
   // Data state
@@ -483,19 +484,13 @@ export function CommunityChallenges() {
 
   // Handle create challenge
   const handleCreateChallenge = async (data: CreateChallengeInput) => {
-    if (!userProfileId) return;
-    try {
-      const created = await createChallenge(userProfileId, data);
-      // Optimistic: immediately add the new challenge to the list.
-      setChallenges((prev) => [created, ...prev]);
-      setCommunityStats((prev) => ({
-        ...prev,
-        totalChallenges: (prev.totalChallenges ?? 0) + 1,
-      }));
-    } catch (err) {
-      console.error("Error creating challenge:", err);
-      void fetchData();
-    }
+    if (!userProfileId) throw new Error("Profile not loaded. Please refresh and try again.");
+    const created = await createChallenge(userProfileId, data);
+    setChallenges((prev) => [created, ...prev]);
+    setCommunityStats((prev) => ({
+      ...prev,
+      activeChallenges: prev.activeChallenges + 1,
+    }));
   };
 
   // Handle opening submission modal
@@ -741,7 +736,7 @@ export function CommunityChallenges() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white" style={{ fontFamily: "'Manrope', sans-serif" }}>
+              <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white" style={{ fontFamily: "'Nunito', sans-serif" }}>
                 Compete. Collaborate. Impact.
               </h1>
               <p className="text-sm text-slate-600 dark:text-[#94C8AF] mt-1">
@@ -749,8 +744,7 @@ export function CommunityChallenges() {
               </p>
             </div>
             <button
-              onClick={() => user ? setCreateModalOpen(true) : null}
-              disabled={!user}
+              onClick={() => user ? setCreateModalOpen(true) : navigate('/auth')}
               className="inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-medium rounded-lg border border-slate-200 dark:border-[#1E3B34] bg-white dark:bg-transparent text-slate-700 dark:text-[#BEEBD7] hover:bg-slate-50 dark:hover:bg-[#1E3B34] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F8F6B] whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Plus className="w-4 h-4" />

@@ -54,6 +54,7 @@ export function CreateChallengeModal({
   onSubmit,
 }: CreateChallengeModalProps) {
   const [loading, setLoading] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [formData, setFormData] = useState<CreateChallengeInput>({
     title: "",
     description: "",
@@ -97,9 +98,9 @@ export function CreateChallengeModal({
     if (!validateForm()) return;
 
     setLoading(true);
+    setSubmitError(null);
     try {
       await onSubmit(formData);
-      // Reset form on success
       setFormData({
         title: "",
         description: "",
@@ -112,7 +113,7 @@ export function CreateChallengeModal({
       setErrors({});
       onOpenChange(false);
     } catch (error) {
-      console.error("Error creating challenge:", error);
+      setSubmitError(error instanceof Error ? error.message : "Failed to create challenge. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -153,7 +154,7 @@ export function CreateChallengeModal({
               <Trophy className="w-5 h-5 text-[#2F8F6B]" />
             </div>
             <div>
-              <DialogTitle className="text-[#0F3D2E] font-[Manrope]">
+              <DialogTitle className="text-[#0F3D2E] font-[Nunito]">
                 Create Challenge
               </DialogTitle>
               <DialogDescription>
@@ -304,6 +305,12 @@ export function CreateChallengeModal({
               onChange={(e) => handleChange("banner_url", e.target.value)}
             />
           </div>
+
+          {submitError && (
+            <p className="text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 rounded-lg px-3 py-2">
+              {submitError}
+            </p>
+          )}
 
           {/* Submit */}
           <div className="flex gap-3 pt-4">

@@ -95,7 +95,7 @@ export function Navbar() {
               alt="SkillSeed Logo" 
               className="w-8 h-8 sm:w-9 sm:h-9 object-contain shrink-0"
             />
-            <span className="text-lg sm:text-xl truncate" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800 }}>
+            <span className="text-lg sm:text-xl truncate" style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 800 }}>
               <span className="text-[#0F3D2E] dark:text-[#BEEBD7]">Skill</span>
               <span className="text-[#2F8F6B] dark:text-[#6DD4A8]">Seed</span>
             </span>

@@ -547,7 +547,7 @@ export function FundingResources() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white" style={{ fontFamily: "'Manrope', sans-serif" }}>
+              <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white" style={{ fontFamily: "'Nunito', sans-serif" }}>
                 Fund Your Project
               </h1>
               <p className="text-sm text-slate-600 dark:text-[#94C8AF] mt-1">
@@ -820,7 +820,7 @@ export function FundingResources() {
         <div className="pt-6">
           <div className="flex items-center gap-2 mb-4">
             <Leaf className="w-4 h-4 text-[#2F8F6B] dark:text-[#6DD4A8]" />
-            <h2 className="text-lg font-bold text-slate-900 dark:text-white" style={{ fontFamily: "'Manrope', sans-serif" }}>
+            <h2 className="text-lg font-bold text-slate-900 dark:text-white" style={{ fontFamily: "'Nunito', sans-serif" }}>
               Resource Library
             </h2>
           </div>
@@ -838,7 +838,7 @@ export function FundingResources() {
                   >
                     <span className="flex items-center gap-2.5">
                       <SectionIcon className="w-4 h-4 text-[#2F8F6B] dark:text-[#6DD4A8]" />
-                      <span className="text-sm font-semibold text-slate-900 dark:text-white" style={{ fontFamily: "'Manrope', sans-serif" }}>
+                      <span className="text-sm font-semibold text-slate-900 dark:text-white" style={{ fontFamily: "'Nunito', sans-serif" }}>
                         {section.title}
                       </span>
                     </span>
@@ -895,7 +895,7 @@ export function FundingResources() {
             <div className="sticky top-0 bg-white dark:bg-[#132B23] p-5 border-b border-slate-200 dark:border-[#1E3B34] flex items-start justify-between gap-3 z-10">
               <div className="min-w-0">
                 <p className="text-xs font-semibold text-[#2F8F6B] dark:text-[#6DD4A8] uppercase tracking-wide mb-1">Funding details</p>
-                <h2 className="text-lg font-bold text-slate-900 dark:text-white" style={{ fontFamily: "'Manrope', sans-serif" }}>
+                <h2 className="text-lg font-bold text-slate-900 dark:text-white" style={{ fontFamily: "'Nunito', sans-serif" }}>
                   {selectedOpportunity.title}
                 </h2>
                 <p className="text-sm text-slate-500 dark:text-[#94C8AF] mt-1">

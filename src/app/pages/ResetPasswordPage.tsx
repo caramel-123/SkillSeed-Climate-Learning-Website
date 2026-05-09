@@ -175,7 +175,7 @@ export function ResetPasswordPage() {
           <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-[#0F3D2E]">
             <Leaf className="w-5 h-5 text-white" />
           </div>
-          <span className="text-xl text-[#0F3D2E] dark:text-[#BEEBD7]" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800 }}>
+          <span className="text-xl text-[#0F3D2E] dark:text-[#BEEBD7]" style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 800 }}>
             SkillSeed
           </span>
         </Link>

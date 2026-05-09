@@ -294,7 +294,7 @@ export function PostProject() {
             <div className="w-20 h-20 bg-[#E6F4EE] dark:bg-[#1E3B34] rounded-full flex items-center justify-center mx-auto mb-6">
               <CheckCircle className="w-10 h-10 text-[#2F8F6B] dark:text-[#6DD4A8]" />
             </div>
-            <h2 className="font-[Manrope] font-bold text-slate-900 dark:text-white text-2xl mb-3">Project Posted!</h2>
+            <h2 className="font-[Nunito] font-bold text-slate-900 dark:text-white text-2xl mb-3">Project Posted!</h2>
             <p className="text-slate-500 dark:text-[#94C8AF] mb-2">
               Your project is live. We're matching vetted profiles right now.
             </p>
@@ -331,7 +331,7 @@ export function PostProject() {
           </p>
           <h1
             className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white"
-            style={{ fontFamily: "'Manrope', sans-serif" }}
+            style={{ fontFamily: "'Nunito', sans-serif" }}
           >
             {isEditMode ? 'Update your project details' : 'Find the right people for your climate mission'}
           </h1>
@@ -372,7 +372,7 @@ export function PostProject() {
                 <div className="space-y-4">
                   <h2
                     className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-1"
-                    style={{ fontFamily: "'Manrope', sans-serif" }}
+                    style={{ fontFamily: "'Nunito', sans-serif" }}
                   >
                     Project Basics
                   </h2>
@@ -534,7 +534,7 @@ export function PostProject() {
                 <div className="space-y-4">
                   <h2
                     className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-1"
-                    style={{ fontFamily: "'Manrope', sans-serif" }}
+                    style={{ fontFamily: "'Nunito', sans-serif" }}
                   >
                     Project Details
                   </h2>
@@ -589,7 +589,7 @@ export function PostProject() {
                 <div className="space-y-4">
                   <h2
                     className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-1 flex items-center gap-2"
-                    style={{ fontFamily: "'Manrope', sans-serif" }}
+                    style={{ fontFamily: "'Nunito', sans-serif" }}
                   >
                     <Users className="w-5 h-5 text-[#2F8F6B] dark:text-[#6DD4A8]" /> People Needed
                   </h2>
