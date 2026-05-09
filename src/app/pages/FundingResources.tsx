@@ -169,7 +169,7 @@ function FundingCard({
   const isClosingSoon = opportunity.is_closing_soon;
 
   return (
-    <article className="group bg-white dark:bg-[#132B23] rounded-xl border border-slate-200 dark:border-[#1E3B34] overflow-hidden hover:border-[#2F8F6B]/40 dark:hover:border-[#6DD4A8]/40 hover:shadow-md transition-all duration-200">
+    <article onClick={() => onViewDetails(opportunity)} className="cursor-pointer group bg-white dark:bg-[#132B23] rounded-xl border border-slate-200 dark:border-[#1E3B34] overflow-hidden hover:border-[#2F8F6B]/40 dark:hover:border-[#6DD4A8]/40 hover:shadow-md transition-all duration-200">
       <div className="p-4">
         {/* Top row: Type chip + Funder + Verified badge */}
         <div className="flex items-center gap-2 mb-2 flex-wrap">
@@ -256,7 +256,7 @@ function FundingCard({
         )}
 
         {/* Actions */}
-        <div className="animate-btn-entrance flex gap-2" style={{ animationDelay: 'calc(var(--card-delay, 0ms) + 320ms)' }}>
+        <div className="animate-btn-entrance flex gap-2" style={{ animationDelay: 'calc(var(--card-delay, 0ms) + 320ms)' }} onClick={(e) => e.stopPropagation()}>
           {isOwner ? (
             <button
               onClick={() => onEdit?.(opportunity.id)}
@@ -881,14 +881,16 @@ export function FundingResources() {
           Details Drawer
       ───────────────────────────────────────────────────────────────────── */}
       {selectedOpportunity && (
-        <div className="fixed inset-0 z-50">
-          <div
-            className="absolute inset-0 bg-black/30 backdrop-blur-sm"
-            onClick={() => setSelectedOpportunity(null)}
-            role="button"
-            aria-label="Close funding details"
-          />
-          <div className="absolute right-0 top-0 h-full w-full sm:w-[480px] bg-white dark:bg-[#132B23] shadow-2xl border-l border-slate-200 dark:border-[#1E3B34] overflow-y-auto">
+        <div
+          className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm"
+          onClick={() => setSelectedOpportunity(null)}
+          role="button"
+          aria-label="Close funding details"
+        />
+      )}
+      <div className={`fixed top-0 right-0 h-full w-full sm:w-[480px] z-50 bg-white dark:bg-[#132B23] shadow-2xl border-l border-slate-200 dark:border-[#1E3B34] overflow-y-auto transition-transform duration-[650ms] ease-out ${selectedOpportunity ? 'translate-x-0' : 'translate-x-full pointer-events-none'}`}>
+        {selectedOpportunity && (
+          <>
             {/* Drawer header */}
             <div className="sticky top-0 bg-white dark:bg-[#132B23] p-5 border-b border-slate-200 dark:border-[#1E3B34] flex items-start justify-between gap-3 z-10">
               <div className="min-w-0">
@@ -984,9 +986,9 @@ export function FundingResources() {
                 </button>
               </div>
             </div>
-          </div>
-        </div>
-      )}
+          </>
+        )}
+      </div>
     </div>
   );
 }

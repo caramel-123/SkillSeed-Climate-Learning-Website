@@ -26,6 +26,19 @@
   .animate-slide-down { animation: none; }
 }
 
+@keyframes slide-from-right {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+
+.animate-slide-from-right {
+  animation: slide-from-right 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-slide-from-right { animation: none; }
+}
+
 @keyframes btn-entrance {
   from { opacity: 0; transform: translateY(6px) scale(0.95); }
   to   { opacity: 1; transform: translateY(0) scale(1); }
