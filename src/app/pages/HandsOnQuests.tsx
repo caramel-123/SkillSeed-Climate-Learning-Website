@@ -1,6 +1,6 @@
 import { useMemo, useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router';
-import { ChevronRight, Search, ShieldCheck, SlidersHorizontal, Sparkles, RefreshCw, AlertTriangle, Leaf } from 'lucide-react';
+import { ChevronRight, Search, ShieldCheck, SlidersHorizontal, Sparkles, RefreshCw, AlertTriangle, Leaf, X, CheckCircle2, Hourglass } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { useDemoMode } from '../hooks/useDemoMode';
 import { getCurrentProfile } from '../utils/matchService';
@@ -84,6 +84,7 @@ export function HandsOnQuests() {
   const [statusFilter, setStatusFilter] = useState<'all' | 'not_started' | 'in_progress' | 'submitted' | 'verified' | 'rejected'>('all');
   const [sortBy, setSortBy] = useState<'recommended' | 'time' | 'points'>('recommended');
   const [showFilters, setShowFilters] = useState(false);
+  const [selectedQuestData, setSelectedQuestData] = useState<{ quest: Quest; progress: QuestProgress | null } | null>(null);
   const filtersDropdownRef = useRef<HTMLDivElement>(null);
 
   // Close filters dropdown on outside click
@@ -573,7 +574,7 @@ export function HandsOnQuests() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {myQuestsWithProgress.map(({ quest, progress }, index) => (
-              <div key={quest.id} style={{ animationDelay: `${Math.min(500, 300 + index * 50)}ms`, '--card-delay': `${Math.min(500, 300 + index * 50)}ms` } as React.CSSProperties} className="animate-slide-in">
+              <div key={quest.id} onClick={() => setSelectedQuestData({ quest, progress })} style={{ animationDelay: `${Math.min(500, 300 + index * 50)}ms`, '--card-delay': `${Math.min(500, 300 + index * 50)}ms` } as React.CSSProperties} className="animate-slide-in cursor-pointer">
                 <QuestCard
                   quest={quest}
                   progress={progress}
@@ -603,6 +604,119 @@ export function HandsOnQuests() {
             </Link>
           </div>
         )}
+      </div>
+
+      {/* Quest Preview Drawer */}
+      {selectedQuestData && (
+        <div
+          className="fixed inset-0 z-40 bg-black/30"
+          onClick={() => setSelectedQuestData(null)}
+          role="button"
+          aria-label="Close"
+        />
+      )}
+      <div className={`fixed top-0 right-0 h-full w-full sm:w-[420px] z-50 bg-white dark:bg-[#132B23] shadow-2xl overflow-y-auto flex flex-col transition-transform duration-[650ms] ease-out ${selectedQuestData ? 'translate-x-0' : 'translate-x-full pointer-events-none'}`}>
+        {selectedQuestData && (() => {
+          const { quest, progress } = selectedQuestData;
+          const status = progress?.status ?? 'not_started';
+          const totalSteps = quest.steps?.length ?? 0;
+          const currentStep = progress?.current_step ?? 0;
+          const progressRatio = totalSteps > 0 ? Math.min(1, Math.max(0, currentStep / totalSteps)) : 0;
+          return (
+            <>
+              <div className="p-5 border-b border-slate-200 dark:border-[#1E3B34]">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-xs font-medium text-slate-500 dark:text-[#94C8AF] uppercase tracking-wide mb-1">Quest Details</p>
+                    <h2 className="text-lg font-bold text-slate-900 dark:text-white">{quest.title}</h2>
+                  </div>
+                  <button
+                    onClick={() => setSelectedQuestData(null)}
+                    className="p-2 rounded-lg border border-slate-200 dark:border-[#1E3B34] text-slate-500 dark:text-[#94C8AF] hover:bg-slate-50 dark:hover:bg-[#1E3B34] transition-colors min-h-[40px] min-w-[40px]"
+                    aria-label="Close"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+
+              <div className="p-5 space-y-5 flex-1">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className={`text-xs px-2.5 py-1 rounded-full font-semibold ${quest.tier === 'beginner' ? 'bg-[#E6F4EE] dark:bg-[#1E3B34] text-[#0F3D2E] dark:text-[#6DD4A8]' : 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300'}`}>
+                    {quest.tier === 'beginner' ? 'Beginner' : 'Advanced'}
+                  </span>
+                  <span className="px-2 py-0.5 rounded bg-slate-100 dark:bg-[#1E3B34] text-slate-600 dark:text-[#94C8AF] text-xs font-medium">
+                    {quest.category || 'Quest'}
+                  </span>
+                </div>
+
+                <p className="text-sm text-slate-600 dark:text-[#94C8AF] leading-relaxed">{quest.description}</p>
+
+                <div className="grid grid-cols-3 gap-3">
+                  <div className="bg-slate-50 dark:bg-[#0D1F18] rounded-lg p-3 text-center">
+                    <p className="text-xs text-slate-400 dark:text-[#6B8F7F]">Duration</p>
+                    <p className="text-sm font-bold text-slate-900 dark:text-white mt-0.5">~{quest.estimated_days}d</p>
+                  </div>
+                  <div className="bg-slate-50 dark:bg-[#0D1F18] rounded-lg p-3 text-center">
+                    <p className="text-xs text-slate-400 dark:text-[#6B8F7F]">Points</p>
+                    <p className="text-sm font-bold text-[#2F8F6B] dark:text-[#6DD4A8] mt-0.5">+{quest.points_reward}</p>
+                  </div>
+                  <div className="bg-slate-50 dark:bg-[#0D1F18] rounded-lg p-3 text-center">
+                    <p className="text-xs text-slate-400 dark:text-[#6B8F7F]">Steps</p>
+                    <p className="text-sm font-bold text-slate-900 dark:text-white mt-0.5">{totalSteps}</p>
+                  </div>
+                </div>
+
+                <div className="bg-slate-50 dark:bg-[#0D1F18] rounded-lg px-3 py-2 text-xs text-slate-700 dark:text-[#BEEBD7]">
+                  {quest.tier === 'beginner' ? (
+                    <span className="inline-flex items-center gap-1.5">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-[#2F8F6B] dark:text-[#6DD4A8]" />
+                      Badge: {quest.badge_name}
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-1.5">
+                      <Hourglass className="w-3.5 h-3.5 text-amber-500" />
+                      Certificate: {quest.certificate_name}
+                    </span>
+                  )}
+                </div>
+
+                {status !== 'not_started' && totalSteps > 0 && (
+                  <div>
+                    <div className="flex items-center justify-between text-[10px] text-slate-400 dark:text-[#6B8F7F] mb-1">
+                      <span>Step {Math.min(totalSteps, currentStep + 1)} of {totalSteps}</span>
+                      <span className="font-medium">{Math.round(progressRatio * 100)}%</span>
+                    </div>
+                    <div className="h-1.5 rounded-full bg-slate-100 dark:bg-[#0D1F18] overflow-hidden">
+                      <div className="h-full bg-[#2F8F6B] dark:bg-[#6DD4A8] rounded-full" style={{ width: `${Math.round(progressRatio * 100)}%` }} />
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex-shrink-0 p-4 border-t border-slate-200 dark:border-[#1E3B34]">
+                {status === 'submitted' ? (
+                  <div className="w-full min-h-[48px] bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300 text-sm font-medium rounded-xl flex items-center justify-center">
+                    Pending Review
+                  </div>
+                ) : status === 'verified' ? (
+                  <div className="w-full min-h-[48px] bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300 text-sm font-semibold rounded-xl flex items-center justify-center gap-1.5">
+                    <CheckCircle2 className="w-4 h-4" />
+                    Completed
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => { setSelectedQuestData(null); handleStartQuest(quest); }}
+                    className="w-full min-h-[48px] flex items-center justify-center gap-2 text-sm font-semibold rounded-xl bg-[#0F3D2E] text-white hover:bg-[#1a5241] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F8F6B]"
+                  >
+                    {status === 'not_started' ? 'Start Quest' : status === 'rejected' ? 'Resubmit Quest' : 'Continue Quest'}
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
+            </>
+          );
+        })()}
       </div>
     </div>
   );

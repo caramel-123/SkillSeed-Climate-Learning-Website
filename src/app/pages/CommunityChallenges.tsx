@@ -1068,7 +1068,8 @@ export function CommunityChallenges() {
                   return (
                     <article
                       key={challenge.id}
-                      className={`bg-white dark:bg-[#132B23] rounded-xl border overflow-hidden transition-all duration-200 hover:shadow-md ${
+                      onClick={() => setSelectedChallenge(challenge)}
+                      className={`cursor-pointer bg-white dark:bg-[#132B23] rounded-xl border overflow-hidden transition-all duration-200 hover:shadow-md ${
                         isFeaturedChallenge
                           ? "border-[#2F8F6B]/40 ring-1 ring-[#2F8F6B]/20"
                           : "border-slate-200 dark:border-[#1E3B34]"
@@ -1179,7 +1180,7 @@ export function CommunityChallenges() {
                       )}
 
                       {/* Actions - shared by both featured and regular cards */}
-                      <div className="animate-btn-entrance px-4 sm:px-5 pb-4 sm:pb-5" style={{ animationDelay: 'calc(var(--card-delay, 0ms) + 380ms)' }}>
+                      <div className="animate-btn-entrance px-4 sm:px-5 pb-4 sm:pb-5" style={{ animationDelay: 'calc(var(--card-delay, 0ms) + 380ms)' }} onClick={(e) => e.stopPropagation()}>
                         <div className="flex gap-2">
                           {isCompleted ? (
                             <div className="flex-1 py-2 rounded-lg text-sm font-medium bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300 flex items-center justify-center gap-1.5">
@@ -1345,14 +1346,16 @@ export function CommunityChallenges() {
           Challenge Details Drawer
       ────────────��────────────────────────���─────────────────────────────── */}
       {selectedChallenge && (
-        <div className="fixed inset-0 z-50">
-          <div
-            className="absolute inset-0 bg-black/30"
-            onClick={() => setSelectedChallenge(null)}
-            role="button"
-            aria-label="Close"
-          />
-          <div className="absolute right-0 top-0 h-full w-full sm:w-[420px] bg-white dark:bg-[#132B23] shadow-2xl overflow-y-auto">
+        <div
+          className="fixed inset-0 z-40 bg-black/30"
+          onClick={() => setSelectedChallenge(null)}
+          role="button"
+          aria-label="Close"
+        />
+      )}
+      <div className={`fixed top-0 right-0 h-full w-full sm:w-[420px] z-50 bg-white dark:bg-[#132B23] shadow-2xl overflow-y-auto transition-transform duration-[650ms] ease-out ${selectedChallenge ? 'translate-x-0' : 'translate-x-full pointer-events-none'}`}>
+        {selectedChallenge && (
+          <>
             <div className="p-5 border-b border-slate-200 dark:border-[#1E3B34]">
               <div className="flex items-start justify-between gap-3">
                 <div>
@@ -1500,9 +1503,9 @@ export function CommunityChallenges() {
                 })()}
               </div>
             </div>
-          </div>
-        </div>
-      )}
+          </>
+        )}
+      </div>
     </div>
   );
 }

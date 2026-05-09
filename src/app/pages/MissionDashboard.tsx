@@ -935,8 +935,9 @@ export function MissionDashboard() {
                         </div>
 
                         {/* CTA */}
-                        <button
-                          onClick={(e) => { e.stopPropagation(); setSelectedMission(mission); }}
+                        <Link
+                          to={user ? `/missions/${mission.id}` : "/auth"}
+                          onClick={(e) => e.stopPropagation()}
                           style={{ animationDelay: 'calc(var(--card-delay, 0ms) + 320ms)' }}
                           className={`animate-btn-entrance w-full min-h-[44px] flex items-center justify-center gap-1.5 text-sm font-medium rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F8F6B] ${
                             isOwner
@@ -958,7 +959,7 @@ export function MissionDashboard() {
                             ? "View & Apply"
                             : "Sign in to Apply"}
                           <ChevronRight className="w-4 h-4" />
-                        </button>
+                        </Link>
                       </div>
                     </article>
                   );
@@ -1077,7 +1078,7 @@ export function MissionDashboard() {
 
       {/* Drawer */}
       <div
-        className={`fixed top-0 right-0 h-full w-full sm:w-[420px] z-50 bg-white dark:bg-[#0D1F18] shadow-2xl flex flex-col transition-transform duration-300 ease-in-out ${
+        className={`fixed top-0 right-0 h-full w-full sm:w-[420px] z-50 bg-white dark:bg-[#0D1F18] shadow-2xl flex flex-col transition-transform duration-[650ms] ease-[cubic-bezier(0.25,0.46,0.45,0.94)] ${
           selectedMission ? "translate-x-0" : "translate-x-full"
         }`}
       >

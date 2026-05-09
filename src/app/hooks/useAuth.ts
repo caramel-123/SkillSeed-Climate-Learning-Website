@@ -94,52 +94,18 @@ export function useAuth() {
     return { error };
   };
 
-  const signInWithGoogle = async (): Promise<{
-    error: AuthError | null;
-    /** Pop-up when used from a normal tab; null if pop-up was blocked (full-page fallback) or iframe opened _blank. */
-    oauthPopup: Window | null;
-  }> => {
+  const signInWithGoogle = async (): Promise<{ error: AuthError | null }> => {
     const redirectTo = `${window.location.origin}/auth/callback?next=${encodeURIComponent("/dashboard")}`;
 
-    // Google blocks OAuth inside iframes; skipBrowserRedirect lets us open the provider in a real window.
-    const { data, error } = await supabase.auth.signInWithOAuth({
+    const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
         redirectTo,
-        skipBrowserRedirect: true,
-        queryParams: {
-          prompt: "select_account",
-        },
+        queryParams: { prompt: "select_account" },
       },
     });
 
-    if (error || !data?.url) {
-      return { error, oauthPopup: null };
-    }
-
-    const url = data.url;
-
-    // Embedded (iframe / webview): open provider in a new tab.
-    if (window.self !== window.top) {
-      const w = window.open(url, "_blank", "noopener,noreferrer");
-      if (!w) window.location.assign(url);
-      return { error: null, oauthPopup: w };
-    }
-
-    // Top-level: centered pop-up so the auth page stays visible; callback postsMessage to this window.
-    const width = 500;
-    const height = 720;
-    const left = Math.max(0, (window.screen.width - width) / 2);
-    const top = Math.max(0, (window.screen.height - height) / 2);
-    const features = `width=${width},height=${height},left=${left},top=${top},scrollbars=yes,resizable=yes`;
-    const popup = window.open(url, "skillseed-google-oauth", features);
-    if (!popup) {
-      // Pop-up blocked — same-tab redirect so sign-in still works.
-      window.location.assign(url);
-      return { error: null, oauthPopup: null };
-    }
-    popup.focus();
-    return { error: null, oauthPopup: popup };
+    return { error };
   };
 
   const signOut = async (): Promise<{ error: AuthError | null }> => {

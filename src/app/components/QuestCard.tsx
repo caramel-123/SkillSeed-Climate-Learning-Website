@@ -190,7 +190,7 @@ export function QuestCard({ quest, progress, onStart }: QuestCardProps) {
         <div className="animate-btn-entrance" style={{ animationDelay: 'calc(var(--card-delay, 0ms) + 320ms)' }}>
           {status === 'not_started' && (
             <button
-              onClick={() => onStart(quest)}
+              onClick={(e) => { e.stopPropagation(); onStart(quest); }}
               className="w-full min-h-[40px] bg-[#0F3D2E] text-white text-sm font-semibold py-2 rounded-lg hover:bg-[#2F8F6B] transition-colors active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F8F6B] focus-visible:ring-offset-2"
             >
               Start Quest
@@ -198,7 +198,7 @@ export function QuestCard({ quest, progress, onStart }: QuestCardProps) {
           )}
           {status === 'in_progress' && (
             <button
-              onClick={() => onStart(quest)}
+              onClick={(e) => { e.stopPropagation(); onStart(quest); }}
               className="w-full min-h-[40px] border border-[#0F3D2E] dark:border-[#6DD4A8] text-[#0F3D2E] dark:text-[#6DD4A8] text-sm font-semibold py-2 rounded-lg hover:bg-[#E6F4EE] dark:hover:bg-[#1E3B34] transition-colors active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F8F6B] focus-visible:ring-offset-2"
             >
               Continue
@@ -217,7 +217,7 @@ export function QuestCard({ quest, progress, onStart }: QuestCardProps) {
           )}
           {status === 'rejected' && (
             <button
-              onClick={() => onStart(quest)}
+              onClick={(e) => { e.stopPropagation(); onStart(quest); }}
               className="w-full min-h-[40px] bg-rose-50 dark:bg-rose-900/20 text-rose-700 dark:text-rose-300 text-sm font-semibold py-2 rounded-lg hover:bg-rose-100 dark:hover:bg-rose-900/30 transition-colors active:scale-[0.98] inline-flex items-center justify-center gap-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-400 focus-visible:ring-offset-2"
             >
               <FileWarning className="w-4 h-4" />

@@ -50,8 +50,8 @@ const coachMarkdownComponents: Components = {
 
 function AssistantMessageBody({ content }: { content: string }) {
   return (
-    <div className="break-words [&_.coach-md>*:first-child]:mt-0 [&_.coach-md>*:last-child]:mb-0">
-      <ReactMarkdown remarkPlugins={[remarkGfm]} components={coachMarkdownComponents} className="coach-md">
+    <div className="coach-md break-words [&>*:first-child]:mt-0 [&>*:last-child]:mb-0">
+      <ReactMarkdown remarkPlugins={[remarkGfm]} components={coachMarkdownComponents}>
         {content}
       </ReactMarkdown>
     </div>
